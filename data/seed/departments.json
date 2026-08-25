@@ -1,0 +1,47 @@
+[
+  {
+    "id": "dept-edu-001",
+    "code": "EDU_DEPT",
+    "name_en": "Education Department, Government of Bihar",
+    "name_hi": "शिक्षा विभाग, बिहार सरकार",
+    "portal_url": "https://state.bihar.gov.in/educationbihar",
+    "contact_email": "secy-edn-bih@nic.in",
+    "contact_phone": "0612-2217016"
+  },
+  {
+    "id": "dept-agri-002",
+    "code": "AGRI_DEPT",
+    "name_en": "Agriculture Department, Government of Bihar",
+    "name_hi": "कृषि विभाग, बिहार सरकार",
+    "portal_url": "https://dbtagriculture.bihar.gov.in",
+    "contact_email": "krishi-bih@nic.in",
+    "contact_phone": "1800-180-1551"
+  },
+  {
+    "id": "dept-soc-003",
+    "code": "SOC_WELFARE",
+    "name_en": "Social Welfare Department, Government of Bihar",
+    "name_hi": "समाज कल्याण विभाग, बिहार सरकार",
+    "portal_url": "https://state.bihar.gov.in/socialwelfare",
+    "contact_email": "secy-soc-bih@nic.in",
+    "contact_phone": "0612-2234033"
+  },
+  {
+    "id": "dept-lab-004",
+    "code": "LAB_DEPT",
+    "name_en": "Labour Resources Department & BSDM",
+    "name_hi": "श्रम संसाधन विभाग एवं बिहार कौशल विकास मिशन",
+    "portal_url": "https://skillmissionbihar.org",
+    "contact_email": "biharskillmission@gmail.com",
+    "contact_phone": "1800-123-6530"
+  },
+  {
+    "id": "dept-ind-005",
+    "code": "IND_DEPT",
+    "name_en": "Industries Department, Government of Bihar",
+    "name_hi": "उद्योग विभाग, बिहार सरकार",
+    "portal_url": "https://udyami.bihar.gov.in",
+    "contact_email": "dir-ind.bih@nic.in",
+    "contact_phone": "1800-345-6214"
+  }
+]

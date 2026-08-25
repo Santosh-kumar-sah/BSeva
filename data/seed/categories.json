@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cat-edu-001",
+    "slug": "education",
+    "name_en": "Education & Higher Studies",
+    "name_hi": "शिक्षा एवं उच्च शिक्षा",
+    "icon": "graduation-cap",
+    "description": "Scholarships, college fee waivers, coaching incentives, and student loans."
+  },
+  {
+    "id": "cat-agri-002",
+    "slug": "agriculture",
+    "name_en": "Agriculture & Farmers",
+    "name_hi": "कृषि एवं किसान कल्याण",
+    "icon": "tractor",
+    "description": "Farm machinery subsidies, seed grants, diesel subsidies, and organic farming."
+  },
+  {
+    "id": "cat-emp-003",
+    "slug": "employment-skills",
+    "name_en": "Employment & Skill Development",
+    "name_hi": "रोजगार एवं कौशल विकास",
+    "icon": "briefcase",
+    "description": "Skill training, youth allowances, entrepreneurship funds, and self-employment."
+  },
+  {
+    "id": "cat-wom-004",
+    "slug": "women-empowerment",
+    "name_en": "Women Empowerment & Entrepreneurship",
+    "name_hi": "महिला सशक्तिकरण एवं उद्यमिता",
+    "icon": "heart",
+    "description": "Girl-child incentive grants, women entrepreneur loans, and self-help groups."
+  },
+  {
+    "id": "cat-soc-005",
+    "slug": "social-welfare",
+    "name_en": "Social Welfare & Pensions",
+    "name_hi": "सामाजिक सुरक्षा एवं पेंशन",
+    "icon": "shield-check",
+    "description": "Old-age pensions, disability allowances, widow security, and medical support."
+  },
+  {
+    "id": "cat-ent-006",
+    "slug": "business-industry",
+    "name_en": "Business, MSME & Startups",
+    "name_hi": "उद्योग, सूक्ष्म/लघु व्यापार एवं स्टार्टअप",
+    "icon": "building",
+    "description": "Industrial subsidies, Udyami schemes, cluster support, and seed funding."
+  }
+]
