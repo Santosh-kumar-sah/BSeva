@@ -1,0 +1,41 @@
+{
+  "name": "bihar-sahayak-backend",
+  "version": "1.0.0",
+  "description": "Backend API and Deterministic Eligibility Engine for Bihar Sahayak (BSeva)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "jest --detectOpenHandles --forceExit"
+  },
+  "keywords": [
+    "bihar",
+    "govtech",
+    "eligibility-engine",
+    "schemes",
+    "careers"
+  ],
+  "author": "Santosh Kumar Sah",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^11.1.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  }
+}
