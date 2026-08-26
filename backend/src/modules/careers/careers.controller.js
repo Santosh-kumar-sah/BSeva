@@ -4,7 +4,7 @@ const { recommendCareers } = require('./careerRecommender');
 async function getCareers(req, res, next) {
   try {
     const { industry } = req.query;
-    const list = db.getCareers({ industry });
+    const list = await db.getCareers({ industry });
 
     res.json({
       success: true,
@@ -19,7 +19,7 @@ async function getCareers(req, res, next) {
 async function getCareerBySlug(req, res, next) {
   try {
     const { slug } = req.params;
-    const career = db.getCareerBySlugOrId(slug);
+    const career = await db.getCareerBySlugOrId(slug);
 
     if (!career) {
       return res.status(404).json({
@@ -42,7 +42,7 @@ async function recommend(req, res, next) {
     let profile = req.body.profile;
 
     if (!profile && req.user) {
-      profile = db.getProfileByUserId(req.user.id);
+      profile = await db.getProfileByUserId(req.user.id);
     }
 
     if (!profile) {
@@ -52,7 +52,8 @@ async function recommend(req, res, next) {
       });
     }
 
-    const recommendations = recommendCareers(db.careers, profile);
+    const allCareers = await db.getCareers();
+    const recommendations = recommendCareers(allCareers, profile);
 
     res.json({
       success: true,

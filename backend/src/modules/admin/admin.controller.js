@@ -2,27 +2,19 @@ const db = require('../../database/db');
 
 async function getAnalytics(req, res, next) {
   try {
-    const totalUsers = db.users.length;
-    const totalSchemes = db.schemes.length;
-    const totalCareers = db.careers.length;
-    const totalChecks = db.eligibilityLogs.length;
-
-    // Category breakdown
-    const categoryCounts = {};
-    db.schemes.forEach(s => {
-      categoryCounts[s.category_id] = (categoryCounts[s.category_id] || 0) + 1;
-    });
+    const summary = await db.getAnalyticsSummary();
+    const recentAuditLogs = await db.getAuditLogs(10);
 
     res.json({
       success: true,
       metrics: {
-        totalUsers,
-        totalSchemes,
-        totalCareers,
-        totalEligibilityChecks: totalChecks
+        totalUsers: summary.totalUsers,
+        totalSchemes: summary.totalSchemes,
+        totalCareers: summary.totalCareers,
+        totalEligibilityChecks: summary.totalEligibilityChecks
       },
-      categoryDistribution: categoryCounts,
-      recentAuditLogs: db.getAuditLogs(10)
+      categoryDistribution: summary.categoryDistribution,
+      recentAuditLogs
     });
   } catch (error) {
     next(error);
@@ -34,7 +26,7 @@ async function verifyScheme(req, res, next) {
     const { id } = req.params;
     const { status = 'ACTIVE' } = req.body;
 
-    const updated = db.updateSchemeStatus(id, status, req.user.id);
+    const updated = await db.updateSchemeStatus(id, status, req.user.id);
     if (!updated) {
       return res.status(404).json({
         success: false,
@@ -44,7 +36,7 @@ async function verifyScheme(req, res, next) {
 
     res.json({
       success: true,
-      message: `Scheme ${id} updated to ${status} with verification audit entry.`,
+      message: `Scheme ${id} updated to ${status} with verification audit entry in Supabase.`,
       scheme: updated
     });
   } catch (error) {
@@ -55,10 +47,12 @@ async function verifyScheme(req, res, next) {
 async function getAuditLogs(req, res, next) {
   try {
     const limit = parseInt(req.query.limit, 10) || 50;
+    const auditLogs = await db.getAuditLogs(limit);
+
     res.json({
       success: true,
-      count: db.auditLogs.length,
-      auditLogs: db.getAuditLogs(limit)
+      count: auditLogs.length,
+      auditLogs
     });
   } catch (error) {
     next(error);

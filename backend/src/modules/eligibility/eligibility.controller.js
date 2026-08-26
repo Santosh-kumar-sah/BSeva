@@ -7,7 +7,7 @@ async function checkEligibility(req, res, next) {
 
     // If authenticated and no profile in body, fallback to stored user profile
     if (!profile && req.user) {
-      profile = db.getProfileByUserId(req.user.id);
+      profile = await db.getProfileByUserId(req.user.id);
     }
 
     if (!profile) {
@@ -17,21 +17,29 @@ async function checkEligibility(req, res, next) {
       });
     }
 
-    const schemes = db.getSchemes({ status: 'ACTIVE' });
-    const results = evaluateAllSchemes(schemes, db.rules, profile);
+    const schemes = await db.getSchemes({ status: 'ACTIVE' });
+    const allRules = await db.getAllRules();
+
+    // Reconstruct rules grouped by scheme_id
+    const rulesList = schemes.map(s => ({
+      scheme_id: s.id,
+      scheme_slug: s.slug,
+      rules: allRules.filter(r => r.schemeId === s.id)
+    }));
+
+    const results = evaluateAllSchemes(schemes, rulesList, profile);
 
     const potentiallyEligible = results.filter(r => r.status === 'POTENTIALLY_ELIGIBLE');
     const needsVerification = results.filter(r => r.status === 'NEEDS_VERIFICATION');
     const likelyNotEligible = results.filter(r => r.status === 'LIKELY_NOT_ELIGIBLE');
 
-    // Record check log if authenticated
+    // Record check log in Supabase PostgreSQL
     if (req.user) {
-      db.eligibilityLogs.push({
-        id: `check-${Date.now()}`,
+      await db.logEligibilityCheck({
         userId: req.user.id,
-        timestamp: new Date().toISOString(),
         totalEvaluated: results.length,
-        eligibleCount: potentiallyEligible.length
+        eligibleCount: potentiallyEligible.length,
+        matchedSchemes: potentiallyEligible.map(s => ({ id: s.schemeId, slug: s.schemeSlug, title: s.title_hi }))
       });
     }
 
@@ -56,7 +64,7 @@ async function checkEligibility(req, res, next) {
 
 async function getCheckHistory(req, res, next) {
   try {
-    const userLogs = db.eligibilityLogs.filter(l => l.userId === req.user.id);
+    const userLogs = await db.getEligibilityLogs(req.user.id);
     res.json({
       success: true,
       count: userLogs.length,

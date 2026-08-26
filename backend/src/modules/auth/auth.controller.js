@@ -21,7 +21,7 @@ async function register(req, res, next) {
   try {
     const data = registerSchema.parse(req.body);
 
-    const existingUser = db.findUserByEmailOrPhone(data.phone) || (data.email ? db.findUserByEmailOrPhone(data.email) : null);
+    const existingUser = await db.findUserByEmailOrPhone(data.phone) || (data.email ? await db.findUserByEmailOrPhone(data.email) : null);
     if (existingUser) {
       return res.status(409).json({
         success: false,
@@ -32,19 +32,15 @@ async function register(req, res, next) {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(data.password, salt);
 
-    const newUser = {
+    const newUser = await db.createUser({
       id: uuidv4(),
       fullName: data.fullName,
       email: data.email || null,
       phone: data.phone,
       passwordHash,
       role: 'CITIZEN',
-      status: 'ACTIVE',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    db.createUser(newUser);
+      status: 'ACTIVE'
+    });
 
     // Generate JWT token
     const token = jwt.sign(
@@ -62,7 +58,7 @@ async function register(req, res, next) {
 
     res.status(201).json({
       success: true,
-      message: 'Citizen registered successfully',
+      message: 'Citizen registered successfully in Supabase PostgreSQL database',
       token,
       user: {
         id: newUser.id,
@@ -81,7 +77,7 @@ async function login(req, res, next) {
   try {
     const data = loginSchema.parse(req.body);
 
-    const user = db.findUserByEmailOrPhone(data.identifier);
+    const user = await db.findUserByEmailOrPhone(data.identifier);
     if (!user || user.status !== 'ACTIVE') {
       return res.status(401).json({
         success: false,
@@ -135,21 +131,25 @@ async function logout(req, res) {
   });
 }
 
-async function getMe(req, res) {
-  const user = db.findUserById(req.user.id);
-  const profile = db.getProfileByUserId(req.user.id);
+async function getMe(req, res, next) {
+  try {
+    const user = await db.findUserById(req.user.id);
+    const profile = await db.getProfileByUserId(req.user.id);
 
-  res.json({
-    success: true,
-    user: {
-      id: user.id,
-      fullName: user.fullName,
-      email: user.email,
-      phone: user.phone,
-      role: user.role
-    },
-    profile
-  });
+    res.json({
+      success: true,
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        role: user.role
+      },
+      profile
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 module.exports = {

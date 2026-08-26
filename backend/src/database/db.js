@@ -1,219 +1,284 @@
-const { loadSeedData } = require('./seedLoader');
-const bcrypt = require('bcryptjs');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 class DatabaseStore {
   constructor() {
-    this.users = [];
-    this.profiles = new Map(); // userId -> profile
-    this.departments = [];
-    this.categories = [];
-    this.schemes = [];
-    this.rules = [];
-    this.careers = [];
-    this.eligibilityLogs = [];
-    this.auditLogs = [];
-    this.isInitialized = false;
+    this.prisma = prisma;
   }
 
   async init() {
-    if (this.isInitialized) return;
-
-    const seed = loadSeedData();
-    this.departments = [...seed.departments];
-    this.categories = [...seed.categories];
-    this.schemes = [...seed.schemes];
-    this.rules = [...seed.rules];
-    this.careers = [...seed.careers];
-
-    // Seed default admin and sample test citizen
-    const salt = await bcrypt.genSalt(10);
-    const adminPasswordHash = await bcrypt.hash('Admin@Bihar2026', salt);
-    const citizenPasswordHash = await bcrypt.hash('Citizen@123', salt);
-
-    this.users = [
-      {
-        id: 'usr-admin-001',
-        fullName: 'Bihar Sahayak Admin',
-        email: 'admin@biharsahayak.gov.in',
-        phone: '9999900001',
-        passwordHash: adminPasswordHash,
-        role: 'ADMIN',
-        status: 'ACTIVE',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'usr-citizen-001',
-        fullName: 'Ramesh Kumar',
-        email: 'ramesh.kumar@example.com',
-        phone: '9876543210',
-        passwordHash: citizenPasswordHash,
-        role: 'CITIZEN',
-        status: 'ACTIVE',
-        createdAt: new Date().toISOString()
-      }
-    ];
-
-    this.profiles.set('usr-citizen-001', {
-      id: 'prof-citizen-001',
-      userId: 'usr-citizen-001',
-      district: 'Patna',
-      block: 'Danapur',
-      age: 21,
-      gender: 'MALE',
-      socialCategory: 'EBC',
-      isBiharResident: true,
-      education: '12TH_PASS',
-      occupation: 'STUDENT',
-      annualIncome: 120000,
-      landHoldingAcres: 0.5,
-      isDifferentlyAbled: false,
-      skills: ['Basic Computer', 'Hindi Typing'],
-      interests: ['Information Technology', 'Civil Services'],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-
-    this.isInitialized = true;
-    console.log(`[DATABASE] Initialized with ${this.schemes.length} schemes, ${this.departments.length} departments, ${this.careers.length} careers.`);
+    try {
+      await this.prisma.$connect();
+      const schemeCount = await this.prisma.scheme.count();
+      const deptCount = await this.prisma.department.count();
+      const careerCount = await this.prisma.careerPath.count();
+      console.log(`[DATABASE - SUPABASE] Connected! Loaded ${schemeCount} schemes, ${deptCount} departments, ${careerCount} careers from cloud PostgreSQL.`);
+    } catch (err) {
+      console.error('[DATABASE - SUPABASE ERROR]', err.message);
+    }
   }
 
   // Users
-  findUserByEmailOrPhone(identifier) {
-    return this.users.find(u => u.email === identifier || u.phone === identifier);
+  async findUserByEmailOrPhone(identifier) {
+    if (!identifier) return null;
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: identifier },
+          { phone: identifier }
+        ]
+      }
+    });
   }
 
-  findUserById(id) {
-    return this.users.find(u => u.id === id);
+  async findUserById(id) {
+    return this.prisma.user.findUnique({
+      where: { id }
+    });
   }
 
-  createUser(user) {
-    this.users.push(user);
-    return user;
+  async createUser(userData) {
+    return this.prisma.user.create({
+      data: userData
+    });
   }
 
-  // Profile
-  getProfileByUserId(userId) {
-    return this.profiles.get(userId) || null;
+  // Citizen Profile
+  async getProfileByUserId(userId) {
+    return this.prisma.citizenProfile.findUnique({
+      where: { userId }
+    });
   }
 
-  saveProfile(userId, profileData) {
-    const existing = this.profiles.get(userId) || { id: `prof-${Date.now()}`, userId, createdAt: new Date().toISOString() };
-    const updated = {
-      ...existing,
-      ...profileData,
-      updatedAt: new Date().toISOString()
-    };
-    this.profiles.set(userId, updated);
-    return updated;
+  async saveProfile(userId, profileData) {
+    const mappedEdu = profileData.education === '10TH_PASS' 
+      ? 'PASS_10TH' 
+      : (profileData.education === '12TH_PASS' ? 'PASS_12TH' : profileData.education);
+
+    return this.prisma.citizenProfile.upsert({
+      where: { userId },
+      update: {
+        district: profileData.district,
+        block: profileData.block || null,
+        age: profileData.age,
+        gender: profileData.gender,
+        socialCategory: profileData.socialCategory || 'GENERAL',
+        isBiharResident: profileData.isBiharResident !== undefined ? profileData.isBiharResident : true,
+        education: mappedEdu,
+        occupation: profileData.occupation || null,
+        annualIncome: profileData.annualIncome || 0,
+        landHoldingAcres: profileData.landHoldingAcres || 0,
+        isDifferentlyAbled: profileData.isDifferentlyAbled || false,
+        skills: profileData.skills || [],
+        interests: profileData.interests || []
+      },
+      create: {
+        userId,
+        district: profileData.district,
+        block: profileData.block || null,
+        age: profileData.age,
+        gender: profileData.gender,
+        socialCategory: profileData.socialCategory || 'GENERAL',
+        isBiharResident: profileData.isBiharResident !== undefined ? profileData.isBiharResident : true,
+        education: mappedEdu,
+        occupation: profileData.occupation || null,
+        annualIncome: profileData.annualIncome || 0,
+        landHoldingAcres: profileData.landHoldingAcres || 0,
+        isDifferentlyAbled: profileData.isDifferentlyAbled || false,
+        skills: profileData.skills || [],
+        interests: profileData.interests || []
+      }
+    });
   }
 
   // Schemes
-  getSchemes(filters = {}) {
-    let result = [...this.schemes];
+  async getSchemes(filters = {}) {
+    const where = {};
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
 
     if (filters.category) {
-      const cat = this.categories.find(c => c.slug === filters.category || c.id === filters.category);
-      if (cat) {
-        result = result.filter(s => s.category_id === cat.id);
-      }
+      const cat = await this.prisma.schemeCategory.findFirst({
+        where: { OR: [{ slug: filters.category }, { id: filters.category }] }
+      });
+      if (cat) where.categoryId = cat.id;
     }
 
     if (filters.department) {
-      const dept = this.departments.find(d => d.code === filters.department || d.id === filters.department);
-      if (dept) {
-        result = result.filter(s => s.department_id === dept.id);
-      }
+      const dept = await this.prisma.department.findFirst({
+        where: { OR: [{ code: filters.department }, { id: filters.department }] }
+      });
+      if (dept) where.departmentId = dept.id;
     }
 
     if (filters.search) {
-      const query = filters.search.toLowerCase();
-      result = result.filter(s =>
-        s.title_en.toLowerCase().includes(query) ||
-        s.title_hi.toLowerCase().includes(query) ||
-        s.description_en.toLowerCase().includes(query) ||
-        s.description_hi.toLowerCase().includes(query)
-      );
+      where.OR = [
+        { title_en: { contains: filters.search, mode: 'insensitive' } },
+        { title_hi: { contains: filters.search, mode: 'insensitive' } },
+        { description_en: { contains: filters.search, mode: 'insensitive' } },
+        { description_hi: { contains: filters.search, mode: 'insensitive' } }
+      ];
     }
 
-    if (filters.status) {
-      result = result.filter(s => s.status === filters.status);
-    }
-
-    return result;
+    return this.prisma.scheme.findMany({
+      where,
+      include: {
+        department: true,
+        category: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
   }
 
-  getSchemeBySlugOrId(slugOrId) {
-    const scheme = this.schemes.find(s => s.slug === slugOrId || s.id === slugOrId);
-    if (!scheme) return null;
-
-    const department = this.departments.find(d => d.id === scheme.department_id);
-    const category = this.categories.find(c => c.id === scheme.category_id);
-    const ruleset = this.rules.find(r => r.scheme_id === scheme.id || r.scheme_slug === scheme.slug);
-
-    return {
-      ...scheme,
-      department,
-      category,
-      rules: ruleset ? ruleset.rules : []
-    };
+  async getSchemeBySlugOrId(slugOrId) {
+    return this.prisma.scheme.findFirst({
+      where: {
+        OR: [
+          { slug: slugOrId },
+          { id: slugOrId }
+        ]
+      },
+      include: {
+        department: true,
+        category: true,
+        rules: true
+      }
+    });
   }
 
-  updateSchemeStatus(schemeId, status, verifierId) {
-    const index = this.schemes.findIndex(s => s.id === schemeId || s.slug === schemeId);
-    if (index === -1) return null;
+  async getAllRules() {
+    return this.prisma.eligibilityRule.findMany();
+  }
 
-    const oldScheme = { ...this.schemes[index] };
-    this.schemes[index] = {
-      ...this.schemes[index],
-      status,
-      last_verified_date: new Date().toISOString().split('T')[0],
-      verified_by: verifierId
-    };
+  async getCategories() {
+    return this.prisma.schemeCategory.findMany();
+  }
 
-    this.logAudit({
+  async getDepartments() {
+    return this.prisma.department.findMany();
+  }
+
+  async updateSchemeStatus(schemeId, status, verifierId) {
+    const oldScheme = await this.getSchemeBySlugOrId(schemeId);
+    if (!oldScheme) return null;
+
+    const updated = await this.prisma.scheme.update({
+      where: { id: oldScheme.id },
+      data: {
+        status,
+        last_verified_date: new Date().toISOString().split('T')[0],
+        verified_by: verifierId
+      }
+    });
+
+    await this.logAudit({
       actorId: verifierId,
       action: 'SCHEME_STATUS_UPDATED',
       entityName: 'Scheme',
-      entityId: schemeId,
+      entityId: oldScheme.id,
       oldValue: { status: oldScheme.status },
       newValue: { status }
     });
 
-    return this.schemes[index];
-  }
-
-  // Rules
-  getRulesBySchemeId(schemeId) {
-    const ruleset = this.rules.find(r => r.scheme_id === schemeId || r.scheme_slug === schemeId);
-    return ruleset ? ruleset.rules : [];
+    return updated;
   }
 
   // Careers
-  getCareers(filters = {}) {
-    let list = [...this.careers];
+  async getCareers(filters = {}) {
+    const where = {};
     if (filters.industry) {
-      list = list.filter(c => c.industry.toLowerCase() === filters.industry.toLowerCase());
+      where.industry = { equals: filters.industry, mode: 'insensitive' };
     }
-    return list;
+    return this.prisma.careerPath.findMany({ where });
   }
 
-  getCareerBySlugOrId(slugOrId) {
-    return this.careers.find(c => c.slug === slugOrId || c.id === slugOrId) || null;
+  async getCareerBySlugOrId(slugOrId) {
+    return this.prisma.careerPath.findFirst({
+      where: {
+        OR: [
+          { slug: slugOrId },
+          { id: slugOrId }
+        ]
+      }
+    });
+  }
+
+  // Eligibility Check Logs
+  async logEligibilityCheck(data) {
+    return this.prisma.eligibilityCheckLog.create({
+      data: {
+        userId: data.userId || null,
+        totalEvaluated: data.totalEvaluated,
+        eligibleCount: data.eligibleCount,
+        matchedSchemes: data.matchedSchemes || []
+      }
+    });
+  }
+
+  async getEligibilityLogs(userId) {
+    return this.prisma.eligibilityCheckLog.findMany({
+      where: { userId },
+      orderBy: { timestamp: 'desc' }
+    });
   }
 
   // Audit Logs
-  logAudit(entry) {
-    const log = {
-      id: `audit-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-      timestamp: new Date().toISOString(),
-      ...entry
-    };
-    this.auditLogs.unshift(log);
-    return log;
+  async logAudit(entry) {
+    return this.prisma.auditLog.create({
+      data: {
+        actorId: entry.actorId || null,
+        action: entry.action,
+        entityName: entry.entityName,
+        entityId: entry.entityId,
+        oldValue: entry.oldValue || null,
+        newValue: entry.newValue || null
+      }
+    });
   }
 
-  getAuditLogs(limit = 50) {
-    return this.auditLogs.slice(0, limit);
+  async getAuditLogs(limit = 50) {
+    return this.prisma.auditLog.findMany({
+      orderBy: { timestamp: 'desc' },
+      take: limit,
+      include: {
+        actor: {
+          select: { id: true, fullName: true, email: true, role: true }
+        }
+      }
+    });
+  }
+
+  async getAnalyticsSummary() {
+    const [totalUsers, totalSchemes, totalCareers, totalChecks] = await Promise.all([
+      this.prisma.user.count(),
+      this.prisma.scheme.count(),
+      this.prisma.careerPath.count(),
+      this.prisma.eligibilityCheckLog.count()
+    ]);
+
+    const categories = await this.prisma.schemeCategory.findMany({
+      include: {
+        _count: {
+          select: { schemes: true }
+        }
+      }
+    });
+
+    const categoryDistribution = {};
+    categories.forEach(c => {
+      categoryDistribution[c.name_en] = c._count.schemes;
+    });
+
+    return {
+      totalUsers,
+      totalSchemes,
+      totalCareers,
+      totalEligibilityChecks: totalChecks,
+      categoryDistribution
+    };
   }
 }
 

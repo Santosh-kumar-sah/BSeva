@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const db = require('../database/db');
 
-function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
   let token = null;
 
   // Check Authorization header
@@ -22,7 +22,7 @@ function authenticateToken(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
-    const user = db.findUserById(decoded.id);
+    const user = await db.findUserById(decoded.id);
 
     if (!user || user.status !== 'ACTIVE') {
       return res.status(401).json({
@@ -48,7 +48,7 @@ function authenticateToken(req, res, next) {
 }
 
 // Optional Auth for guest eligibility checks
-function optionalAuth(req, res, next) {
+async function optionalAuth(req, res, next) {
   let token = null;
   const authHeader = req.headers['authorization'];
   if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -60,7 +60,7 @@ function optionalAuth(req, res, next) {
   if (token) {
     try {
       const decoded = jwt.verify(token, config.jwtSecret);
-      const user = db.findUserById(decoded.id);
+      const user = await db.findUserById(decoded.id);
       if (user && user.status === 'ACTIVE') {
         req.user = {
           id: user.id,

@@ -8,7 +8,7 @@ const profileUpdateSchema = z.object({
   gender: z.enum(['MALE', 'FEMALE', 'OTHER', 'ALL']),
   socialCategory: z.enum(['GENERAL', 'OBC', 'EBC', 'SC', 'ST', 'EWS', 'ALL']).optional(),
   isBiharResident: z.boolean().default(true),
-  education: z.enum(['BELOW_10TH', '10TH_PASS', '12TH_PASS', 'DIPLOMA', 'GRADUATE', 'POST_GRADUATE', 'DOCTORATE', 'VOCATIONAL']),
+  education: z.enum(['BELOW_10TH', '10TH_PASS', '12TH_PASS', 'PASS_10TH', 'PASS_12TH', 'DIPLOMA', 'GRADUATE', 'POST_GRADUATE', 'DOCTORATE', 'VOCATIONAL']),
   occupation: z.string().optional(),
   annualIncome: z.number().min(0),
   landHoldingAcres: z.number().min(0).optional().default(0),
@@ -19,7 +19,7 @@ const profileUpdateSchema = z.object({
 
 async function getProfile(req, res, next) {
   try {
-    const profile = db.getProfileByUserId(req.user.id);
+    const profile = await db.getProfileByUserId(req.user.id);
     if (!profile) {
       return res.status(404).json({
         success: false,
@@ -39,11 +39,11 @@ async function getProfile(req, res, next) {
 async function updateProfile(req, res, next) {
   try {
     const data = profileUpdateSchema.parse(req.body);
-    const updated = db.saveProfile(req.user.id, data);
+    const updated = await db.saveProfile(req.user.id, data);
 
     res.json({
       success: true,
-      message: 'Citizen profile updated successfully',
+      message: 'Citizen profile updated successfully in Supabase PostgreSQL',
       profile: updated
     });
   } catch (error) {

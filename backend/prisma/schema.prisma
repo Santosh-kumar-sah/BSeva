@@ -1,0 +1,220 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  CITIZEN
+  DATA_VERIFIER
+  ANALYST
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum GenderType {
+  MALE
+  FEMALE
+  OTHER
+  ALL
+}
+
+enum SocialCategory {
+  GENERAL
+  OBC
+  EBC
+  SC
+  ST
+  EWS
+  ALL
+}
+
+enum EducationLevel {
+  BELOW_10TH
+  PASS_10TH
+  PASS_12TH
+  DIPLOMA
+  VOCATIONAL
+  GRADUATE
+  POST_GRADUATE
+  DOCTORATE
+}
+
+enum SchemeStatus {
+  DRAFT
+  UNDER_REVIEW
+  ACTIVE
+  INACTIVE
+  DEPRECATED
+}
+
+enum ApplicationMode {
+  ONLINE
+  OFFLINE
+  HYBRID
+}
+
+model User {
+  id              String                @id @default(uuid())
+  fullName        String                @map("full_name")
+  email           String?               @unique
+  phone           String                @unique
+  passwordHash    String                @map("password_hash")
+  role            UserRole              @default(CITIZEN)
+  status          UserStatus            @default(ACTIVE)
+  createdAt       DateTime              @default(now()) @map("created_at")
+  updatedAt       DateTime              @updatedAt @map("updated_at")
+  profile         CitizenProfile?
+  auditLogs       AuditLog[]
+  eligibilityLogs EligibilityCheckLog[]
+
+  @@map("users")
+}
+
+model CitizenProfile {
+  id                 String          @id @default(uuid())
+  userId             String          @unique @map("user_id")
+  user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  district           String
+  block              String?
+  age                Int
+  gender             GenderType
+  socialCategory     SocialCategory? @default(GENERAL) @map("social_category")
+  isBiharResident    Boolean         @default(true) @map("is_bihar_resident")
+  education          EducationLevel
+  occupation         String?
+  annualIncome       Float           @default(0) @map("annual_income")
+  landHoldingAcres   Float           @default(0) @map("land_holding_acres")
+  isDifferentlyAbled Boolean         @default(false) @map("is_differently_abled")
+  skills             String[]        @default([])
+  interests          String[]        @default([])
+  createdAt          DateTime        @default(now()) @map("created_at")
+  updatedAt          DateTime        @updatedAt @map("updated_at")
+
+  @@map("citizen_profiles")
+}
+
+model Department {
+  id            String   @id @default(uuid())
+  code          String   @unique
+  name_en       String
+  name_hi       String
+  portal_url    String
+  contact_email String?
+  contact_phone String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  schemes       Scheme[]
+
+  @@map("departments")
+}
+
+model SchemeCategory {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name_en     String
+  name_hi     String
+  icon        String?
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  schemes     Scheme[]
+
+  @@map("scheme_categories")
+}
+
+model Scheme {
+  id                     String           @id @default(uuid())
+  slug                   String           @unique
+  departmentId           String           @map("department_id")
+  department             Department       @relation(fields: [departmentId], references: [id])
+  categoryId             String           @map("category_id")
+  category               SchemeCategory   @relation(fields: [categoryId], references: [id])
+  title_en               String
+  title_hi               String
+  description_en         String
+  description_hi         String
+  benefits_en            String
+  benefits_hi            String
+  application_mode       ApplicationMode  @default(ONLINE)
+  official_portal_url    String
+  official_guideline_url String?
+  status                 SchemeStatus     @default(ACTIVE)
+  last_verified_date     String
+  verified_by            String?
+  version                String           @default("1.0")
+  required_documents     String[]         @default([])
+  createdAt              DateTime         @default(now()) @map("created_at")
+  updatedAt              DateTime         @updatedAt @map("updated_at")
+  rules                  EligibilityRule[]
+
+  @@map("schemes")
+}
+
+model EligibilityRule {
+  id           String   @id @default(uuid())
+  schemeId     String   @map("scheme_id")
+  scheme       Scheme   @relation(fields: [schemeId], references: [id], onDelete: Cascade)
+  group        Int      @default(1)
+  field        String
+  operator     String
+  value        Json
+  message_hi   String?
+  message_en   String?
+  is_mandatory Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("eligibility_rules")
+}
+
+model CareerPath {
+  id                      String         @id @default(uuid())
+  slug                    String         @unique
+  title_en                String
+  title_hi                String
+  industry                String
+  min_education           EducationLevel
+  avg_starting_salary_inr Float?
+  growth_prospects        String?
+  description_en          String?
+  description_hi          String?
+  required_skills         String[]       @default([])
+  bsdm_training_path      String[]       @default([])
+  createdAt               DateTime       @default(now()) @map("created_at")
+
+  @@map("career_paths")
+}
+
+model EligibilityCheckLog {
+  id              String   @id @default(uuid())
+  userId          String?  @map("user_id")
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  totalEvaluated  Int
+  eligibleCount   Int
+  matchedSchemes  Json?
+  timestamp       DateTime @default(now())
+
+  @@map("eligibility_check_logs")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?  @map("actor_id")
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  entityName String   @map("entity_name")
+  entityId   String   @map("entity_id")
+  oldValue   Json?    @map("old_value")
+  newValue   Json?    @map("new_value")
+  timestamp  DateTime @default(now())
+
+  @@map("audit_logs")
+}
