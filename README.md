@@ -6,10 +6,12 @@
 ---
 
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![TypeScript: 5.7](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Database: Supabase PostgreSQL](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
 [![ORM: Prisma](https://img.shields.io/badge/ORM-Prisma%205.22-2D3748?logo=prisma&logoColor=white)](https://prisma.io)
 [![Backend: Node.js / Express](https://img.shields.io/badge/Backend-Node.js%20%2F%20Express-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![Frontend: React 18 / Vite](https://img.shields.io/badge/Frontend-React%2018%20%2F%20Vite-61DAFB?logo=react&logoColor=black)](https://reactjs.org)
+[![Frontend: React 18 / TypeScript](https://img.shields.io/badge/Frontend-React%2018%20%2F%20TypeScript-61DAFB?logo=react&logoColor=black)](https://reactjs.org)
+[![Build Tool: Vite](https://img.shields.io/badge/Build-Vite%205.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Styling: Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS%203.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
 
@@ -30,7 +32,7 @@
 
 ## 🚀 Executive Overview
 
-**Bihar Sahayak (BSeva)** is a modern GovTech discovery and intelligence layer designed to eliminate information asymmetry across Bihar's government ecosystem. 
+**Bihar Sahayak (BSeva)** is a modern GovTech discovery and intelligence layer designed to eliminate information asymmetry across Bihar's government ecosystem.
 
 Rather than replacing official government websites, Bihar Sahayak serves as a **smart navigation and eligibility layer** that guides citizens directly to the right official departments, document checklists, and application portals.
 
@@ -44,8 +46,9 @@ Rather than replacing official government websites, Bihar Sahayak serves as a **
 ### Core Design Principles:
 1. **Hindi-First & Simple UX:** Easy language with a 1-click `हिंदी / English` toggle for rural and semi-urban accessibility.
 2. **Deterministic Rule Engine First:** Eligibility is computed via strict logical rules, eliminating AI hallucinations.
-3. **Grounded Information:** Every scheme links directly to verified departmental portals (*ServicePlus, DBT Agriculture, MedhaSoft, BSDM*).
-4. **Privacy-by-Design:** No collection of Aadhaar numbers or banking credentials during scheme discovery.
+3. **100% Type-Safe Architecture:** Frontend written in **TypeScript 5.7 (`.tsx` / `.ts`)** with strict interfaces matching backend Prisma data contracts.
+4. **Grounded Information:** Every scheme links directly to verified departmental portals (*ServicePlus, DBT Agriculture, MedhaSoft, BSDM*).
+5. **Privacy-by-Design:** No collection of Aadhaar numbers or banking credentials during scheme discovery.
 
 ---
 
@@ -53,8 +56,9 @@ Rather than replacing official government websites, Bihar Sahayak serves as a **
 
 ```mermaid
 graph TD
-    subgraph ClientLayer ["Client Layer (Frontend)"]
-        UI["React 18 + Vite + Tailwind CSS (Bilingual Hindi/English)"]
+    subgraph ClientLayer ["Client Layer (TypeScript & React 18)"]
+        UI["React 18 + TypeScript + Tailwind CSS (Bilingual Hindi/English)"]
+        Types["Strict Type Definitions (types/index.ts)"]
         Router["React Router v6"]
         AuthCtx["Auth & Profile State (JWT)"]
     end
@@ -82,9 +86,10 @@ graph TD
         BSDM["Bihar Skill Mission"]
     end
 
+    UI --> Types
     UI --> Router
     Router --> AuthCtx
-    AuthCtx -->|REST API Requests| GW
+    AuthCtx -->|Typed REST API Requests| GW
     GW --> AuthMod & ProfMod & SchemeMod & RuleMod & CareerMod & AdminMod
     AuthMod & ProfMod & SchemeMod & RuleMod & CareerMod & AdminMod --> PrismaClient
     PrismaClient --> PG
@@ -100,14 +105,14 @@ graph TD
 sequenceDiagram
     autonumber
     actor User as Citizen / Student / Farmer
-    participant UI as BSeva Web Portal
+    participant UI as BSeva Web Portal (TypeScript)
     participant API as Backend REST API
     participant Engine as Deterministic Rule Engine
     participant DB as Supabase PostgreSQL
     participant Govt as Official Govt Portal (e.g. ServicePlus)
 
     User->>UI: Enters basic profile (Age, District, Education, Income, Category)
-    UI->>API: POST /api/v1/eligibility/check
+    UI->>API: POST /api/v1/eligibility/check (Typed Request)
     API->>DB: Fetch active scheme criteria
     DB-->>API: Return rulesets for 25+ verified schemes
     API->>Engine: Evaluate profile against rule groups (AND/OR AST)
@@ -202,14 +207,19 @@ BiharAi/
 │   │   └── server.js         # HTTP server entry point
 │   └── tests/                # Jest & Supertest automated test suites
 │
-├── frontend/                 # React 18 + Vite Web Application
+├── frontend/                 # React 18 + TypeScript + Vite Web App
 │   ├── src/
-│   │   ├── components/       # Navbar, Footer, SchemeCard, EligibilityBadge
-│   │   ├── context/          # AuthContext & Bilingual Language state
-│   │   ├── pages/            # Home, Schemes, Details, Eligibility, Careers, Dashboard, Admin
-│   │   ├── services/         # Axios API service client
-│   │   ├── App.jsx           # React Router v6 route configuration
-│   │   └── main.jsx          # Vite React entry point
+│   │   ├── types/            # Strict TypeScript interfaces (User, Scheme, etc.)
+│   │   │   └── index.ts
+│   │   ├── components/       # Navbar.tsx, Footer.tsx, SchemeCard.tsx, EligibilityBadge.tsx
+│   │   │   └── common/
+│   │   ├── context/          # Typed AuthContext.tsx & language state
+│   │   ├── pages/            # 11 Typed pages (Home, Schemes, Details, Eligibility, Careers, etc.)
+│   │   ├── services/         # Typed Axios API client (api.ts)
+│   │   ├── App.tsx           # Typed React Router v6 route configuration
+│   │   └── main.tsx          # Vite React entry point
+│   ├── tsconfig.json         # TypeScript compiler configuration
+│   ├── tsconfig.node.json    # TypeScript Node configuration
 │   ├── tailwind.config.js    # Tailwind CSS styling configuration
 │   └── vite.config.js        # Vite dev server & proxy settings
 │
@@ -271,10 +281,13 @@ npm run dev
 
 ---
 
-### 3. Frontend Setup
+### 3. Frontend Setup (TypeScript)
 ```bash
 cd ../frontend
 npm install
+
+# Type-check and Build
+npm run build
 
 # Start Vite Development Server
 npm run dev
