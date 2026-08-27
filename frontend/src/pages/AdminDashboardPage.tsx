@@ -7,21 +7,20 @@ import {
   CheckSquare, 
   Activity,
   CheckCircle,
-  AlertTriangle,
-  RefreshCw,
-  Eye
+  RefreshCw
 } from 'lucide-react';
 import { adminService, schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { AnalyticsData, Scheme, AuditLog } from '../types';
 
 export default function AdminDashboardPage() {
   const { language } = useAuth();
   
-  const [analytics, setAnalytics] = useState(null);
-  const [schemes, setSchemes] = useState([]);
-  const [auditLogs, setAuditLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [actionMessage, setActionMessage] = useState('');
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [schemes, setSchemes] = useState<Scheme[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [actionMessage, setActionMessage] = useState<string>('');
 
   const fetchAdminData = async () => {
     setLoading(true);
@@ -46,7 +45,7 @@ export default function AdminDashboardPage() {
     fetchAdminData();
   }, []);
 
-  const handleVerify = async (schemeId, newStatus) => {
+  const handleVerify = async (schemeId: string, newStatus: string) => {
     try {
       const res = await adminService.verifyScheme(schemeId, newStatus);
       if (res.success) {

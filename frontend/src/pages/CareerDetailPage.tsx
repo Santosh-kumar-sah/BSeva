@@ -3,26 +3,24 @@ import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
   TrendingUp, 
-  GraduationCap, 
   CheckCircle2, 
-  BookOpen, 
-  Award,
-  ExternalLink,
-  Sparkles
+  Award
 } from 'lucide-react';
 import { careerService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { CareerPath } from '../types';
 
 export default function CareerDetailPage() {
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const { language } = useAuth();
   
-  const [career, setCareer] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [userSkills, setUserSkills] = useState({});
+  const [career, setCareer] = useState<CareerPath | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [userSkills, setUserSkills] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const fetchCareer = async () => {
+      if (!slug) return;
       setLoading(true);
       try {
         const res = await careerService.getCareerBySlug(slug);
@@ -36,7 +34,7 @@ export default function CareerDetailPage() {
     fetchCareer();
   }, [slug]);
 
-  const toggleSkill = (skill) => {
+  const toggleSkill = (skill: string) => {
     setUserSkills(prev => ({
       ...prev,
       [skill]: !prev[skill]
@@ -107,7 +105,7 @@ export default function CareerDetailPage() {
           <div>
             <span className="text-[10px] font-bold text-slate-400 uppercase block">{language === 'hi' ? 'प्रारंभिक वेतन' : 'Avg Starting'}</span>
             <span className="font-extrabold text-base text-slate-900">
-              ₹{(career.avg_starting_salary_inr / 100000).toFixed(1)}L / {language === 'hi' ? 'वर्ष' : 'yr'}
+              ₹{((career.avg_starting_salary_inr || 250000) / 100000).toFixed(1)}L / {language === 'hi' ? 'वर्ष' : 'yr'}
             </span>
           </div>
           <div>

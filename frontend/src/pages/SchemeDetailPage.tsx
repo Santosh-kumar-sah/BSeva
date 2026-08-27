@@ -8,24 +8,25 @@ import {
   FileText, 
   Calendar, 
   ShieldCheck, 
-  Share2, 
   Printer, 
   CheckSquare,
   AlertTriangle
 } from 'lucide-react';
 import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { Scheme } from '../types';
 
 export default function SchemeDetailPage() {
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const { language } = useAuth();
   
-  const [scheme, setScheme] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [checkedDocs, setCheckedDocs] = useState({});
+  const [scheme, setScheme] = useState<Scheme | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const fetchScheme = async () => {
+      if (!slug) return;
       setLoading(true);
       try {
         const res = await schemeService.getSchemeBySlug(slug);
@@ -42,7 +43,7 @@ export default function SchemeDetailPage() {
     fetchScheme();
   }, [slug]);
 
-  const toggleDoc = (docName) => {
+  const toggleDoc = (docName: string) => {
     setCheckedDocs(prev => ({
       ...prev,
       [docName]: !prev[docName]
@@ -171,7 +172,7 @@ export default function SchemeDetailPage() {
             </p>
           </div>
 
-          {/* Eligibility Criteria (Deterministic Rules) */}
+          {/* Eligibility Criteria */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-extrabold text-slate-900">

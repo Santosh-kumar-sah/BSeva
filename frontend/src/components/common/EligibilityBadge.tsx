@@ -1,7 +1,13 @@
 import React from 'react';
 import { CheckCircle2, AlertCircle, HelpCircle } from 'lucide-react';
 
-export default function EligibilityBadge({ status, score, language = 'hi' }) {
+interface EligibilityBadgeProps {
+  status: 'POTENTIALLY_ELIGIBLE' | 'LIKELY_NOT_ELIGIBLE' | 'NEEDS_VERIFICATION' | string;
+  score?: number;
+  language?: 'hi' | 'en';
+}
+
+export default function EligibilityBadge({ status, score, language = 'hi' }: EligibilityBadgeProps) {
   if (status === 'POTENTIALLY_ELIGIBLE') {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">

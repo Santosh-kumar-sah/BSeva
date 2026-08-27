@@ -2,26 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-  User, 
   CheckSquare, 
   Compass, 
   Sparkles, 
-  CheckCircle2, 
-  Building2, 
-  BookOpen, 
   ArrowRight,
-  RefreshCw,
   Edit3
 } from 'lucide-react';
 import { eligibilityService, careerService } from '../services/api';
-import SchemeCard from '../components/common/SchemeCard';
+import { EligibilityCheckResponse, CareerPath } from '../types';
 
 export default function DashboardPage() {
   const { user, profile, language } = useAuth();
   
-  const [eligibilityResults, setEligibilityResults] = useState(null);
-  const [careerRecommendations, setCareerRecommendations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [eligibilityResults, setEligibilityResults] = useState<EligibilityCheckResponse | null>(null);
+  const [careerRecommendations, setCareerRecommendations] = useState<CareerPath[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -158,7 +153,7 @@ export default function DashboardPage() {
               <div key={n} className="bg-white rounded-2xl border border-slate-200 p-6 h-60 animate-pulse"></div>
             ))}
           </div>
-        ) : eligibilityResults?.results?.potentiallyEligible?.length > 0 ? (
+        ) : eligibilityResults?.results?.potentiallyEligible && eligibilityResults.results.potentiallyEligible.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {eligibilityResults.results.potentiallyEligible.slice(0, 6).map((item) => (
               <div key={item.schemeId} className="bg-white rounded-3xl border border-emerald-200 p-6 shadow-sm space-y-4 flex flex-col justify-between">
@@ -233,7 +228,7 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {careerRecommendations.slice(0, 3).map((career) => (
-            <div key={career.careerId} className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4 flex flex-col justify-between">
+            <div key={career.id} className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
@@ -257,7 +252,7 @@ export default function DashboardPage() {
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                 <span className="text-xs font-extrabold text-slate-800">
-                  ₹{(career.avg_starting_salary_inr / 100000).toFixed(1)}L/yr
+                  ₹{((career.avg_starting_salary_inr || 250000) / 100000).toFixed(1)}L/yr
                 </span>
                 <Link
                   to={`/careers/${career.slug}`}

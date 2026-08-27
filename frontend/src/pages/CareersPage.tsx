@@ -2,28 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Compass, 
-  Briefcase, 
   TrendingUp, 
-  BookOpen, 
-  Award, 
-  ArrowRight,
-  Sparkles,
-  GraduationCap
+  ArrowRight
 } from 'lucide-react';
 import { careerService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { CareerPath } from '../types';
 
 export default function CareersPage() {
   const { language } = useAuth();
-  const [careers, setCareers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedIndustry, setSelectedIndustry] = useState('');
+  const [careers, setCareers] = useState<CareerPath[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedIndustry, setSelectedIndustry] = useState<string>('');
 
   useEffect(() => {
     const fetchCareers = async () => {
       setLoading(true);
       try {
-        const params = {};
+        const params: Record<string, string> = {};
         if (selectedIndustry) params.industry = selectedIndustry;
         const res = await careerService.getCareers(params);
         if (res.success) setCareers(res.careers);
@@ -136,7 +132,7 @@ export default function CareersPage() {
                     <div>
                       <span className="text-[10px] font-semibold text-slate-400 block">{language === 'hi' ? 'प्रारंभिक वेतन' : 'Avg Starting'}</span>
                       <span className="font-extrabold text-slate-800">
-                        ₹{(career.avg_starting_salary_inr / 100000).toFixed(1)}L / {language === 'hi' ? 'वर्ष' : 'yr'}
+                        ₹{((career.avg_starting_salary_inr || 250000) / 100000).toFixed(1)}L / {language === 'hi' ? 'वर्ष' : 'yr'}
                       </span>
                     </div>
                     <div>

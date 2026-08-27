@@ -1,18 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   CheckSquare, 
   Sparkles, 
   CheckCircle2, 
-  AlertCircle, 
-  HelpCircle, 
-  ArrowRight, 
-  RefreshCw,
-  Building2,
-  FileText
+  RefreshCw 
 } from 'lucide-react';
 import { eligibilityService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import SchemeCard from '../components/common/SchemeCard';
+import { EligibilityCheckResponse, CitizenProfile } from '../types';
 
 const BIHAR_DISTRICTS = [
   'Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar',
@@ -24,13 +20,13 @@ const BIHAR_DISTRICTS = [
 ];
 
 export default function EligibilityCheckerPage() {
-  const { profile, language, isAuthenticated } = useAuth();
+  const { profile, language } = useAuth();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Partial<CitizenProfile>>({
     district: profile?.district || 'Patna',
     age: profile?.age || 20,
-    gender: profile?.gender || 'MALE',
-    socialCategory: profile?.socialCategory || 'EBC',
+    gender: (profile?.gender as any) || 'MALE',
+    socialCategory: (profile?.socialCategory as any) || 'EBC',
     isBiharResident: profile?.isBiharResident !== undefined ? profile.isBiharResident : true,
     education: profile?.education || '12TH_PASS',
     annualIncome: profile?.annualIncome || 120000,
@@ -38,10 +34,10 @@ export default function EligibilityCheckerPage() {
     isDifferentlyAbled: profile?.isDifferentlyAbled || false
   });
 
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [results, setResults] = useState<EligibilityCheckResponse | null>(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -138,7 +134,7 @@ export default function EligibilityCheckerPage() {
                   </label>
                   <select
                     value={formData.gender}
-                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, gender: e.target.value as any })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white"
                   >
                     <option value="MALE">{language === 'hi' ? 'पुरुष (Male)' : 'Male'}</option>
@@ -156,7 +152,7 @@ export default function EligibilityCheckerPage() {
                   </label>
                   <select
                     value={formData.socialCategory}
-                    onChange={(e) => setFormData({ ...formData, socialCategory: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, socialCategory: e.target.value as any })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white"
                   >
                     <option value="GENERAL">General</option>
@@ -317,7 +313,6 @@ export default function EligibilityCheckerPage() {
                         </span>
                       </div>
 
-                      {/* Passed rules breakdown */}
                       <div className="space-y-1.5 pt-2 border-t border-slate-100">
                         <p className="text-[11px] font-bold text-slate-500 uppercase">
                           {language === 'hi' ? 'संतुष्ट शर्तें (Passed Criteria):' : 'Satisfied Criteria:'}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, 
@@ -12,21 +12,19 @@ import {
   Building2, 
   ArrowRight,
   ChevronRight,
-  FileCheck,
-  Zap,
-  Users,
   Compass
 } from 'lucide-react';
 import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import SchemeCard from '../components/common/SchemeCard';
+import { Scheme, SchemeCategory } from '../types';
 
 export default function HomePage() {
   const { language } = useAuth();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [featuredSchemes, setFeaturedSchemes] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [featuredSchemes, setFeaturedSchemes] = useState<Scheme[]>([]);
+  const [categories, setCategories] = useState<SchemeCategory[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,14 +45,14 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/schemes?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
-  const getCategoryIcon = (slug) => {
+  const getCategoryIcon = (slug: string) => {
     switch (slug) {
       case 'education': return <GraduationCap className="w-6 h-6 text-blue-600" />;
       case 'agriculture': return <Tractor className="w-6 h-6 text-emerald-600" />;
@@ -69,17 +67,14 @@ export default function HomePage() {
     <div className="space-y-16 pb-20">
       {/* 1. Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white pt-16 pb-24 px-4 sm:px-6 lg:px-8">
-        {/* Glow decoration */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-orange-500/20 via-emerald-500/10 to-transparent blur-3xl -z-10"></div>
 
         <div className="max-w-5xl mx-auto text-center space-y-6">
-          {/* Top Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-orange-300 backdrop-blur">
             <Sparkles className="w-3.5 h-3.5 text-orange-400" />
             <span>{language === 'hi' ? 'बिहार सरकार की सभी योजनाएं एक ही मंच पर' : 'One Platform for All Bihar Government Schemes'}</span>
           </div>
 
-          {/* Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
             {language === 'hi' ? (
               <>

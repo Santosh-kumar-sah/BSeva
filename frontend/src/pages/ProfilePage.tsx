@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { User, Save, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
+import { Save, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
+import { CitizenProfile, GenderType, SocialCategory, EducationLevel } from '../types';
 
 const BIHAR_DISTRICTS = [
   'Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar',
@@ -20,10 +21,10 @@ export default function ProfilePage() {
     district: 'Patna',
     block: '',
     age: 20,
-    gender: 'MALE',
-    socialCategory: 'EBC',
+    gender: 'MALE' as GenderType,
+    socialCategory: 'EBC' as SocialCategory,
     isBiharResident: true,
-    education: '12TH_PASS',
+    education: '12TH_PASS' as EducationLevel,
     occupation: 'Student',
     annualIncome: 120000,
     landHoldingAcres: 0,
@@ -32,9 +33,9 @@ export default function ProfilePage() {
     interests: 'Government Services, Higher Education'
   });
 
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (profile) {
@@ -42,10 +43,10 @@ export default function ProfilePage() {
         district: profile.district || 'Patna',
         block: profile.block || '',
         age: profile.age || 20,
-        gender: profile.gender || 'MALE',
-        socialCategory: profile.socialCategory || 'EBC',
+        gender: (profile.gender as GenderType) || 'MALE',
+        socialCategory: (profile.socialCategory as SocialCategory) || 'EBC',
         isBiharResident: profile.isBiharResident !== undefined ? profile.isBiharResident : true,
-        education: profile.education || '12TH_PASS',
+        education: (profile.education as EducationLevel) || '12TH_PASS',
         occupation: profile.occupation || 'Student',
         annualIncome: profile.annualIncome || 0,
         landHoldingAcres: profile.landHoldingAcres || 0,
@@ -56,18 +57,25 @@ export default function ProfilePage() {
     }
   }, [profile]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setMessage('');
     setLoading(true);
 
     try {
-      const payload = {
-        ...formData,
+      const payload: Partial<CitizenProfile> = {
+        district: formData.district,
+        block: formData.block,
+        gender: formData.gender,
+        socialCategory: formData.socialCategory,
+        isBiharResident: formData.isBiharResident,
+        education: formData.education,
+        occupation: formData.occupation,
         age: Number(formData.age),
         annualIncome: Number(formData.annualIncome),
         landHoldingAcres: Number(formData.landHoldingAcres),
+        isDifferentlyAbled: formData.isDifferentlyAbled,
         skills: formData.skills.split(',').map(s => s.trim()).filter(Boolean),
         interests: formData.interests.split(',').map(s => s.trim()).filter(Boolean)
       };
@@ -77,7 +85,7 @@ export default function ProfilePage() {
         setMessage(language === 'hi' ? 'प्रोफ़ाइल सफलतापूर्वक अपडेट हो गई!' : 'Profile saved successfully in Supabase PostgreSQL!');
         setTimeout(() => navigate('/dashboard'), 1500);
       }
-    } catch (err) {
+    } catch (err: any) {
       setError(err.customMessage || 'Error saving profile');
     } finally {
       setLoading(false);
@@ -164,7 +172,7 @@ export default function ProfilePage() {
               min="1"
               max="100"
               value={formData.age}
-              onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, age: Number(e.target.value) })}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
             />
           </div>
@@ -175,7 +183,7 @@ export default function ProfilePage() {
             </label>
             <select
               value={formData.gender}
-              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, gender: e.target.value as GenderType })}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
             >
               <option value="MALE">Male (पुरुष)</option>
@@ -190,7 +198,7 @@ export default function ProfilePage() {
             </label>
             <select
               value={formData.socialCategory}
-              onChange={(e) => setFormData({ ...formData, socialCategory: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, socialCategory: e.target.value as SocialCategory })}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
             >
               <option value="GENERAL">General</option>
@@ -208,7 +216,7 @@ export default function ProfilePage() {
             </label>
             <select
               value={formData.education}
-              onChange={(e) => setFormData({ ...formData, education: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, education: e.target.value as EducationLevel })}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
             >
               <option value="BELOW_10TH">Below 10th</option>
@@ -217,7 +225,6 @@ export default function ProfilePage() {
               <option value="DIPLOMA">Diploma / ITI</option>
               <option value="GRADUATE">Graduate (स्नातक)</option>
               <option value="POST_GRADUATE">Post Graduate</option>
-              <option value="DOCTORATE">Doctorate / PhD</option>
             </select>
           </div>
 
@@ -229,7 +236,7 @@ export default function ProfilePage() {
               type="number"
               min="0"
               value={formData.annualIncome}
-              onChange={(e) => setFormData({ ...formData, annualIncome: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, annualIncome: Number(e.target.value) })}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
             />
           </div>

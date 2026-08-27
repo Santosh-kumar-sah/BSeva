@@ -3,8 +3,14 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ExternalLink, FileText, CheckCircle, Building2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import EligibilityBadge from './EligibilityBadge';
+import { Scheme, SchemeEvaluationResult } from '../../types';
 
-export default function SchemeCard({ scheme, eligibilityResult }) {
+interface SchemeCardProps {
+  scheme: Scheme;
+  eligibilityResult?: SchemeEvaluationResult;
+}
+
+export default function SchemeCard({ scheme, eligibilityResult }: SchemeCardProps) {
   const { language } = useAuth();
 
   const title = language === 'hi' ? scheme.title_hi : scheme.title_en;

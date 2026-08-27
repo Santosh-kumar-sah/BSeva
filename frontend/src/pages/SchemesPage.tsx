@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Filter, RefreshCw, BookOpen, Building2 } from 'lucide-react';
+import { Search, RefreshCw, BookOpen, Building2 } from 'lucide-react';
 import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import SchemeCard from '../components/common/SchemeCard';
+import { Scheme, SchemeCategory, Department } from '../types';
 
 export default function SchemesPage() {
   const { language } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   
-  const [schemes, setSchemes] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [schemes, setSchemes] = useState<Scheme[]>([]);
+  const [categories, setCategories] = useState<SchemeCategory[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Filters state
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
-  const [selectedDept, setSelectedDept] = useState(searchParams.get('department') || '');
+  const [searchTerm, setSearchTerm] = useState<string>(searchParams.get('search') || '');
+  const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || '');
+  const [selectedDept, setSelectedDept] = useState<string>(searchParams.get('department') || '');
 
   useEffect(() => {
     const fetchMetadata = async () => {
@@ -39,7 +40,7 @@ export default function SchemesPage() {
     const fetchSchemes = async () => {
       setLoading(true);
       try {
-        const params = {};
+        const params: Record<string, string> = {};
         if (searchTerm) params.search = searchTerm;
         if (selectedCategory) params.category = selectedCategory;
         if (selectedDept) params.department = selectedDept;

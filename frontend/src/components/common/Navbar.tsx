@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
-  Sparkles, 
   Search, 
   User as UserIcon, 
   LogOut, 
@@ -17,11 +16,11 @@ import {
 
 export default function Navbar() {
   const { user, isAuthenticated, isAdmin, logout, language, toggleLanguage } = useAuth();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const navigate = useNavigate();
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/schemes?search=${encodeURIComponent(searchQuery.trim())}`);
@@ -94,7 +93,6 @@ export default function Navbar() {
 
           {/* Action Buttons */}
           <div className="hidden sm:flex items-center gap-3">
-            {/* Language Switcher */}
             <button
               onClick={toggleLanguage}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 transition"
@@ -111,7 +109,7 @@ export default function Navbar() {
                   className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold bg-orange-50 text-orange-700 border border-orange-200 rounded-lg hover:bg-orange-100 transition"
                 >
                   <UserIcon className="w-4 h-4" />
-                  <span>{user.fullName?.split(' ')[0] || 'Dashboard'}</span>
+                  <span>{user?.fullName?.split(' ')[0] || 'Dashboard'}</span>
                 </Link>
                 <button
                   onClick={logout}

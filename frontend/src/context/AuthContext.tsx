@@ -1,13 +1,29 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authService, profileService } from '../services/api';
+import { User, CitizenProfile } from '../types';
 
-const AuthContext = createContext(null);
+interface AuthContextType {
+  user: User | null;
+  profile: CitizenProfile | null;
+  loading: boolean;
+  language: 'hi' | 'en';
+  isAuthenticated: boolean;
+  isAdmin: boolean;
+  login: (identifier: string, password: string) => Promise<{ success: boolean; token?: string; user?: User }>;
+  register: (fullName: string, phone: string, password: string, email?: string) => Promise<{ success: boolean; token?: string; user?: User }>;
+  logout: () => Promise<void>;
+  saveProfile: (profileData: Partial<CitizenProfile>) => Promise<{ success: boolean; profile?: CitizenProfile }>;
+  toggleLanguage: () => void;
+  setLanguage: (lang: 'hi' | 'en') => void;
+}
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState('hi'); // 'hi' | 'en'
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<CitizenProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [language, setLanguage] = useState<'hi' | 'en'>('hi');
 
   useEffect(() => {
     const initAuth = async () => {
@@ -31,12 +47,11 @@ export function AuthProvider({ children }) {
     initAuth();
   }, []);
 
-  const login = async (identifier, password) => {
+  const login = async (identifier: string, password: string) => {
     const res = await authService.login({ identifier, password });
     if (res.success && res.token) {
       localStorage.setItem('token', res.token);
       setUser(res.user);
-      // Fetch fresh profile
       try {
         const meRes = await authService.getMe();
         if (meRes.success) setProfile(meRes.profile);
@@ -45,7 +60,7 @@ export function AuthProvider({ children }) {
     return res;
   };
 
-  const register = async (fullName, phone, password, email) => {
+  const register = async (fullName: string, phone: string, password: string, email?: string) => {
     const res = await authService.register({ fullName, phone, password, email });
     if (res.success && res.token) {
       localStorage.setItem('token', res.token);
@@ -63,7 +78,7 @@ export function AuthProvider({ children }) {
     setProfile(null);
   };
 
-  const saveProfile = async (profileData) => {
+  const saveProfile = async (profileData: Partial<CitizenProfile>) => {
     const res = await profileService.updateProfile(profileData);
     if (res.success) {
       setProfile(res.profile);
@@ -97,7 +112,7 @@ export function AuthProvider({ children }) {
   );
 }
 
-export function useAuth() {
+export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');

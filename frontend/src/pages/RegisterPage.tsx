@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { UserPlus, User, Phone, Mail, Lock, AlertCircle, RefreshCw } from 'lucide-react';
@@ -7,14 +7,14 @@ export default function RegisterPage() {
   const { register, language } = useAuth();
   const navigate = useNavigate();
 
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [fullName, setFullName] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -24,7 +24,7 @@ export default function RegisterPage() {
       if (res.success) {
         navigate('/profile');
       }
-    } catch (err) {
+    } catch (err: any) {
       setError(err.customMessage || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
