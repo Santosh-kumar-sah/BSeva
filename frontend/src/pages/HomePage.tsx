@@ -12,7 +12,8 @@ import {
   Building2, 
   ArrowRight,
   ChevronRight,
-  Compass
+  Compass,
+  FileCheck
 } from 'lucide-react';
 import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -65,6 +66,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-16 pb-20">
+      
       {/* 1. Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white pt-16 pb-24 px-4 sm:px-6 lg:px-8">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-orange-500/20 via-emerald-500/10 to-transparent blur-3xl -z-10"></div>
@@ -122,6 +124,14 @@ export default function HomePage() {
             </Link>
 
             <Link
+              to="/documents"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-lg shadow-amber-950/40 transition hover:scale-105"
+            >
+              <FileCheck className="w-4 h-4" />
+              <span>{language === 'hi' ? 'दस्तावेज जांच' : 'Document Auditor'}</span>
+            </Link>
+
+            <Link
               to="/careers"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 backdrop-blur transition"
             >
@@ -162,7 +172,142 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. Category Matrix */}
+      {/* 3. Bihar Spotlight Visual Cards */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-extrabold text-orange-600 uppercase tracking-widest mb-1">
+              <Sparkles className="w-4 h-4" />
+              <span>{language === 'hi' ? 'बिहार सरकार की विकास दृष्टि' : 'Development Pillars of Bihar'}</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+              {language === 'hi' ? 'शिक्षा, कृषि, युवा और महिला सशक्तिकरण' : 'Education, Agriculture, Youth & Enterprise'}
+            </h2>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          {/* Visual Card 1: Education (Nalanda) */}
+          <Link
+            to="/schemes?category=education"
+            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[300px]"
+          >
+            <img
+              src="/images/bihar_education_nalanda.jpg"
+              alt="Bihar Higher Education & Nalanda Heritage"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+            <div className="relative p-5 space-y-1.5 text-white">
+              <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/80 backdrop-blur">
+                {language === 'hi' ? 'उच्च शिक्षा एवं छात्रवृत्ति' : 'Higher Education & Loans'}
+              </span>
+              <h3 className="text-base font-extrabold group-hover:text-blue-300 transition">
+                {language === 'hi' ? 'नालंदा से नए बिहार तक ज्ञान' : 'Nalanda Legacy to Modern Tech'}
+              </h3>
+              <p className="text-[11px] text-slate-300 leading-snug line-clamp-2">
+                {language === 'hi'
+                  ? 'स्टूडेंट क्रेडिट कार्ड (₹4 लाख), पोस्ट-मैट्रिक छात्रवृत्ति और कन्या उत्थान योजना।'
+                  : 'Student Credit Card (₹4 Lakhs), PMS scholarships, and higher learning.'}
+              </p>
+              <div className="pt-2 text-[11px] font-bold text-blue-300 flex items-center gap-1">
+                <span>{language === 'hi' ? 'योजनाएं देखें →' : 'Explore Schemes →'}</span>
+              </div>
+            </div>
+          </Link>
+
+          {/* Visual Card 2: Agriculture (Makhana) */}
+          <Link
+            to="/schemes?category=agriculture"
+            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[300px]"
+          >
+            <img
+              src="/images/bihar_makhana_agriculture.jpg"
+              alt="Bihar Agriculture and Makhana Farming"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+            <div className="relative p-5 space-y-1.5 text-white">
+              <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/80 backdrop-blur">
+                {language === 'hi' ? 'कृषि एवं किसान कल्याण' : 'Agriculture & Farming'}
+              </span>
+              <h3 className="text-base font-extrabold group-hover:text-emerald-300 transition">
+                {language === 'hi' ? 'मखाना व समृद्ध हरित बिहार' : 'Makhana & Gangetic Farmlands'}
+              </h3>
+              <p className="text-[11px] text-slate-300 leading-snug line-clamp-2">
+                {language === 'hi'
+                  ? 'कृषि यंत्रीकरण अनुदान (80%), फसल सहायता, डीजल अनुदान व PM-किसान।'
+                  : '80% Farm machinery subsidies, crop insurance, and DBT support.'}
+              </p>
+              <div className="pt-2 text-[11px] font-bold text-emerald-300 flex items-center gap-1">
+                <span>{language === 'hi' ? 'कृषि योजनाएं देखें →' : 'Explore Agriculture →'}</span>
+              </div>
+            </div>
+          </Link>
+
+          {/* Visual Card 3: BSDM Tech Youth */}
+          <Link
+            to="/careers"
+            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[300px]"
+          >
+            <img
+              src="/images/bihar_bsdm_tech_youth.jpg"
+              alt="BSDM Youth and Tech Skill Training"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+            <div className="relative p-5 space-y-1.5 text-white">
+              <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-500/80 backdrop-blur">
+                {language === 'hi' ? 'युवा कौशल एवं IT' : 'Youth Skills & IT Careers'}
+              </span>
+              <h3 className="text-base font-extrabold group-hover:text-orange-300 transition">
+                {language === 'hi' ? 'कुशल युवा कार्यक्रम (KYP)' : 'BSDM Certified Tech Pathways'}
+              </h3>
+              <p className="text-[11px] text-slate-300 leading-snug line-clamp-2">
+                {language === 'hi'
+                  ? 'सॉफ्टवेयर डेवलपमेंट, सोलर PV तकनीशियन और 240 घंटे का निःशुल्क कौशल प्रशिक्षण।'
+                  : 'Software engineering, solar energy tech, and free certified skill courses.'}
+              </p>
+              <div className="pt-2 text-[11px] font-bold text-orange-300 flex items-center gap-1">
+                <span>{language === 'hi' ? 'करियर गाइडेंस देखें →' : 'Explore Careers →'}</span>
+              </div>
+            </div>
+          </Link>
+
+          {/* Visual Card 4: Women Entrepreneurship */}
+          <Link
+            to="/schemes?category=women-empowerment"
+            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[300px]"
+          >
+            <img
+              src="/images/bihar_women_entrepreneur.jpg"
+              alt="Bihar Women Entrepreneurs and Handloom"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+            <div className="relative p-5 space-y-1.5 text-white">
+              <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/80 backdrop-blur">
+                {language === 'hi' ? 'महिला उद्यमिता व स्वावलंबन' : 'Women Entrepreneurship'}
+              </span>
+              <h3 className="text-base font-extrabold group-hover:text-rose-300 transition">
+                {language === 'hi' ? 'महिला उद्यमी व मधुबनी कला' : 'Mahila Udyami & Mithila Art'}
+              </h3>
+              <p className="text-[11px] text-slate-300 leading-snug line-clamp-2">
+                {language === 'hi'
+                  ? 'मुख्यमंत्री महिला उद्यमी योजना में ₹10 लाख (₹5 लाख अनुदान + ₹5 लाख ब्याज-मुक्त ऋण)।'
+                  : '₹10 Lakhs enterprise support (₹5L subsidy + ₹5L interest-free loan).'}
+              </p>
+              <div className="pt-2 text-[11px] font-bold text-rose-300 flex items-center gap-1">
+                <span>{language === 'hi' ? 'महिला योजनाएं देखें →' : 'Explore Schemes →'}</span>
+              </div>
+            </div>
+          </Link>
+
+        </div>
+      </section>
+
+      {/* 4. Category Matrix */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -202,7 +347,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. How It Works */}
+      {/* 5. How It Works */}
       <section className="bg-slate-100/70 border-y border-slate-200 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
@@ -266,7 +411,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. Featured Verified Schemes */}
+      {/* 6. Featured Verified Schemes */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -290,7 +435,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. CTA Banner */}
+      {/* 7. CTA Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 rounded-3xl p-8 sm:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-3 max-w-xl text-center md:text-left">
@@ -314,6 +459,7 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
     </div>
   );
 }
