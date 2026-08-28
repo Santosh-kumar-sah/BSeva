@@ -13,7 +13,8 @@ import {
   ArrowRight,
   ChevronRight,
   Compass,
-  FileCheck
+  FileCheck,
+  Landmark
 } from 'lucide-react';
 import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -67,84 +68,153 @@ export default function HomePage() {
   return (
     <div className="space-y-16 pb-20">
       
-      {/* 1. Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white pt-16 pb-24 px-4 sm:px-6 lg:px-8">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-orange-500/20 via-emerald-500/10 to-transparent blur-3xl -z-10"></div>
+      {/* 1. Proud Hero Section with Bihar Heritage Showcase */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white pt-12 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+        
+        {/* Glow ambient backgrounds */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-orange-600/15 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+        <div className="absolute top-1/3 right-10 w-[450px] h-[450px] bg-emerald-600/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
-        <div className="max-w-5xl mx-auto text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-orange-300 backdrop-blur">
-            <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-            <span>{language === 'hi' ? 'बिहार सरकार की सभी योजनाएं एक ही मंच पर' : 'One Platform for All Bihar Government Schemes'}</span>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          
+          {/* Left Column: Headline, Search & CTAs */}
+          <div className="lg:col-span-7 space-y-6 text-left">
+            
+            {/* Proud State Emblem / Heritage Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 via-amber-500/20 to-emerald-500/20 border border-orange-400/30 text-xs font-bold text-orange-300 backdrop-blur shadow-sm">
+              <Landmark className="w-4 h-4 text-orange-400" />
+              <span>
+                {language === 'hi' ? 'ज्ञान, शांति और प्रगति की पावन भूमि • बिहार' : 'Land of Wisdom, Peace & Progress • Bihar'}
+              </span>
+            </div>
+
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-[1.15]">
+              {language === 'hi' ? (
+                <>
+                  नालंदा की विरासत से प्रेरित, <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-300">
+                    डिजिटल बिहार
+                  </span>{' '}
+                  का अपना सेवा मंच
+                </>
+              ) : (
+                <>
+                  Rooted in Heritage, <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-300">
+                    Empowering Modern Bihar
+                  </span>{' '}
+                  with Direct GovTech Access
+                </>
+              )}
+            </h1>
+
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
+              {language === 'hi'
+                ? 'बिहार सरकार के सभी 5 विभागों की 25+ छात्रवृत्ति, कृषि अनुदान, महिला स्वावलंबन एवं रोजगार योजनाओं की पात्रता तुरंत जांचें।'
+                : 'Instant eligibility matching, document verification checklists, and direct official portal links across 25+ verified Bihar Govt schemes.'}
+            </p>
+
+            {/* Search Box */}
+            <form onSubmit={handleSearch} className="relative flex items-center max-w-xl pt-2">
+              <input
+                type="text"
+                placeholder={language === 'hi' ? 'उदा. कन्या उत्थान, स्टूडेंट क्रेडिट कार्ड, कृषि यंत्र, पोस्ट मैट्रिक...' : 'e.g. Kanya Utthan, Student Credit Card, Krishi Yantra, KYP...'}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-28 py-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white/20 transition shadow-xl"
+              />
+              <Search className="w-5 h-5 text-slate-400 absolute left-4" />
+              <button
+                type="submit"
+                className="absolute right-2 px-5 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold text-xs rounded-xl shadow-md transition"
+              >
+                {language === 'hi' ? 'खोजें' : 'Search'}
+              </button>
+            </form>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Link
+                to="/eligibility"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs shadow-lg shadow-emerald-950/40 transition hover:scale-105"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>{language === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}</span>
+              </Link>
+
+              <Link
+                to="/documents"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-extrabold text-xs shadow-lg shadow-amber-950/40 transition hover:scale-105"
+              >
+                <FileCheck className="w-4 h-4" />
+                <span>{language === 'hi' ? 'दस्तावेज चेकलिस्ट' : 'Document Auditor'}</span>
+              </Link>
+
+              <Link
+                to="/careers"
+                className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 backdrop-blur transition"
+              >
+                <Compass className="w-4 h-4 text-orange-400" />
+                <span>{language === 'hi' ? 'करियर' : 'Careers'}</span>
+              </Link>
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-            {language === 'hi' ? (
-              <>
-                अपने लिए सही <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-300 to-amber-300">सरकारी योजना</span> और <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">करियर अवसर</span> खोजिए
-              </>
-            ) : (
-              <>
-                Discover the Right <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">Govt Schemes</span> & <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Career Paths</span> in Bihar
-              </>
-            )}
-          </h1>
+          {/* Right Column: Dual Cinematic Heritage Showcase */}
+          <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            {/* Heritage Card 1: Rajgir Buddha */}
+            <div className="group relative rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-900/60 aspect-[4/5] flex flex-col justify-end">
+              <img
+                src="/images/bihar_rajgir_buddha.jpg"
+                alt="Ghora Katora Buddha Statue Rajgir Bihar"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+              
+              <div className="relative p-4 space-y-1 text-white">
+                <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-500/80 text-white backdrop-blur border border-amber-400/40">
+                  {language === 'hi' ? 'राजगीर • शांति व विरासत' : 'Rajgir • Peace & Heritage'}
+                </span>
+                <h3 className="text-sm font-black tracking-tight leading-snug">
+                  {language === 'hi' ? 'घोड़ा कटोरा बुद्ध प्रतिमा' : 'Ghora Katora Buddha'}
+                </h3>
+                <p className="text-[10px] text-slate-300 line-clamp-2">
+                  {language === 'hi' ? 'पंचपहाड़ियों के बीच शांति का वैश्विक प्रतीक।' : 'Serene symbol of peace amidst the five hills of Rajgir.'}
+                </p>
+              </div>
+            </div>
 
-          <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-300 leading-relaxed">
-            {language === 'hi'
-              ? 'बिना किसी परेशानी के अपनी पात्रता जांचें, आवश्यक दस्तावेजों की सूची पाएं और सीधे आधिकारिक सरकारी पोर्टल पर आवेदन करें।'
-              : 'Evaluate your eligibility with deterministic rules, get complete document checklists, and connect directly to official department portals.'}
-          </p>
+            {/* Heritage Card 2: Vikramshila / Nalanda Mahavihara */}
+            <div className="group relative rounded-3xl overflow-hidden border border-orange-500/30 shadow-2xl bg-slate-900/60 aspect-[4/5] flex flex-col justify-end">
+              <img
+                src="/images/bihar_nalanda_vikramshila.jpg"
+                alt="Ancient Vikramshila and Nalanda Mahavihara Bihar"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+              
+              <div className="relative p-4 space-y-1 text-white">
+                <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-extrabold bg-orange-500/80 text-white backdrop-blur border border-orange-400/40">
+                  {language === 'hi' ? 'नालंदा • विश्व ज्ञानस्थली' : 'Nalanda • Global Seat of Wisdom'}
+                </span>
+                <h3 className="text-sm font-black tracking-tight leading-snug">
+                  {language === 'hi' ? 'प्राचीन महाविहार धरोहर' : 'Ancient Mahavihara Heritage'}
+                </h3>
+                <p className="text-[10px] text-slate-300 line-clamp-2">
+                  {language === 'hi' ? 'विश्व का प्रथम आवासीय विश्वविद्यालय।' : "World's ancient beacon of universal higher education."}
+                </p>
+              </div>
+            </div>
 
-          {/* Search Box */}
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative flex items-center pt-4">
-            <input
-              type="text"
-              placeholder={language === 'hi' ? 'उदा. कन्या उत्थान, स्टूडेंट क्रेडिट कार्ड, कृषि यंत्र, पोस्ट मैट्रिक...' : 'e.g. Kanya Utthan, Student Credit Card, Krishi Yantra, KYP...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-32 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white/20 transition shadow-xl"
-            />
-            <Search className="w-5 h-5 text-slate-400 absolute left-4" />
-            <button
-              type="submit"
-              className="absolute right-2 px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-xs rounded-xl shadow-md transition"
-            >
-              {language === 'hi' ? 'खोजें' : 'Search'}
-            </button>
-          </form>
-
-          {/* Quick Action CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <Link
-              to="/eligibility"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg shadow-emerald-950/40 transition hover:scale-105"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>{language === 'hi' ? 'मेरी पात्रता जांचें' : 'Check My Eligibility'}</span>
-            </Link>
-
-            <Link
-              to="/documents"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-lg shadow-amber-950/40 transition hover:scale-105"
-            >
-              <FileCheck className="w-4 h-4" />
-              <span>{language === 'hi' ? 'दस्तावेज जांच' : 'Document Auditor'}</span>
-            </Link>
-
-            <Link
-              to="/careers"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 backdrop-blur transition"
-            >
-              <Compass className="w-4 h-4 text-orange-400" />
-              <span>{language === 'hi' ? 'करियर और स्किल ट्रेनिंग' : 'Explore Careers'}</span>
-            </Link>
           </div>
+
         </div>
       </section>
 
       {/* 2. Key Metrics Strip */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-lg p-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
           <div className="pt-3 sm:pt-0">
             <div className="text-3xl font-extrabold text-slate-900">25+</div>
             <div className="text-xs font-semibold text-slate-500 mt-1">
@@ -172,7 +242,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. Bihar Spotlight Visual Cards */}
+      {/* 3. Bihar Development Pillars Visual Spotlight */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
@@ -188,10 +258,10 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
-          {/* Visual Card 1: Education (Nalanda) */}
+          {/* Visual Card 1: Education */}
           <Link
             to="/schemes?category=education"
-            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[300px]"
+            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[290px]"
           >
             <img
               src="/images/bihar_education_nalanda.jpg"
@@ -220,7 +290,7 @@ export default function HomePage() {
           {/* Visual Card 2: Agriculture (Makhana) */}
           <Link
             to="/schemes?category=agriculture"
-            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[300px]"
+            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[290px]"
           >
             <img
               src="/images/bihar_makhana_agriculture.jpg"
@@ -249,7 +319,7 @@ export default function HomePage() {
           {/* Visual Card 3: BSDM Tech Youth */}
           <Link
             to="/careers"
-            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[300px]"
+            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[290px]"
           >
             <img
               src="/images/bihar_bsdm_tech_youth.jpg"
@@ -278,7 +348,7 @@ export default function HomePage() {
           {/* Visual Card 4: Women Entrepreneurship */}
           <Link
             to="/schemes?category=women-empowerment"
-            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[300px]"
+            className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col justify-end min-h-[290px]"
           >
             <img
               src="/images/bihar_women_entrepreneur.jpg"
