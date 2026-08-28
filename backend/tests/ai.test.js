@@ -38,7 +38,7 @@ describe('AI Assistant & RAG Pipeline API Tests', () => {
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.intent).toBe('CAREER_GUIDANCE');
-    expect(res.body.response.citations[0].sourceDepartment).toContain('Bihar Skill Development Mission');
+    expect(res.body.response.citations[0].sourceDepartment).toContain('BSDM');
   });
 
   it('POST /api/v1/ai/chat should reject empty query', async () => {

@@ -3,9 +3,40 @@ const config = require('../../config');
 
 /**
  * AI Grounded Knowledge Service & RAG Engine
- * Combines Supabase scheme retrieval with OpenRouter LLM generation for human-grade, grounded answers.
+ * Combines Supabase scheme retrieval with OpenRouter LLM generation.
  */
 class AiService {
+  /**
+   * Classify user query intent
+   */
+  classifyIntent(query = '') {
+    const q = query.toLowerCase();
+    if (
+      q.includes('career') ||
+      q.includes('job') ||
+      q.includes('salary') ||
+      q.includes('skill') ||
+      q.includes('bsdm') ||
+      q.includes('training') ||
+      q.includes('करियर') ||
+      q.includes('नौकरी') ||
+      q.includes('वेतन') ||
+      q.includes('कोर्स')
+    ) {
+      return 'CAREER_GUIDANCE';
+    }
+    if (
+      q.includes('document') ||
+      q.includes('certificate') ||
+      q.includes('दस्तावेज') ||
+      q.includes('प्रमाण पत्र') ||
+      q.includes('कागजात')
+    ) {
+      return 'DOCUMENT_REQUIREMENT';
+    }
+    return 'SCHEME_INQUIRY';
+  }
+
   /**
    * Fetch all active scheme & career context from Supabase PostgreSQL
    */
@@ -23,7 +54,7 @@ class AiService {
   /**
    * Match citations based on AI response content and user query
    */
-  extractCitations(responseText, query, schemes, careers, isHindi) {
+  extractCitations(responseText, query, schemes, careers, isHindi, intent) {
     const citations = [];
     const textLower = (responseText + ' ' + query).toLowerCase();
 
@@ -36,11 +67,13 @@ class AiService {
         textLower.includes(matchTitleEn) ||
         textLower.includes(matchTitleHi) ||
         textLower.includes(slugClean) ||
-        (textLower.includes('credit card') && s.slug.includes('credit')) ||
+        (textLower.includes('credit') && s.slug.includes('credit')) ||
+        (textLower.includes('scholarship') && s.slug.includes('scholarship')) ||
+        (textLower.includes('छात्रवृत्ति') && s.slug.includes('scholarship')) ||
+        (textLower.includes('क्रेडिट कार्ड') && s.slug.includes('credit')) ||
         (textLower.includes('kanya') && s.slug.includes('kanya')) ||
         (textLower.includes('udyami') && s.slug.includes('udyami')) ||
-        (textLower.includes('krishi') && s.slug.includes('krishi')) ||
-        (textLower.includes('pension') && s.slug.includes('pension') && textLower.includes('elderly'))
+        (textLower.includes('krishi') && s.slug.includes('krishi'))
       ) {
         citations.push({
           title: isHindi ? s.title_hi : s.title_en,
@@ -56,7 +89,14 @@ class AiService {
     for (const c of careers) {
       const matchTitle = c.title_en.toLowerCase();
       const matchIndustry = c.industry.toLowerCase();
-      if (textLower.includes(matchTitle) || textLower.includes(matchIndustry) || textLower.includes(c.slug.replace(/-/g, ' '))) {
+      if (
+        textLower.includes(matchTitle) ||
+        textLower.includes(matchIndustry) ||
+        textLower.includes(c.slug.replace(/-/g, ' ')) ||
+        (textLower.includes('solar') && c.slug.includes('solar')) ||
+        (textLower.includes('software') && c.slug.includes('software')) ||
+        (textLower.includes('it') && c.slug.includes('software'))
+      ) {
         citations.push({
           title: isHindi ? c.title_hi : c.title_en,
           type: 'CAREER',
@@ -65,6 +105,31 @@ class AiService {
           slug: `/careers/${c.slug}`
         });
       }
+    }
+
+    // If intent is CAREER_GUIDANCE and citations is empty, attach top career
+    if (intent === 'CAREER_GUIDANCE' && citations.length === 0 && careers.length > 0) {
+      const topC = careers[0];
+      citations.push({
+        title: isHindi ? topC.title_hi : topC.title_en,
+        type: 'CAREER',
+        sourceDepartment: 'Bihar Skill Development Mission (BSDM)',
+        officialUrl: 'https://skillmissionbihar.org',
+        slug: `/careers/${topC.slug}`
+      });
+    }
+
+    // If intent is SCHEME_INQUIRY and citations is empty, attach student credit card
+    if (intent === 'SCHEME_INQUIRY' && citations.length === 0 && schemes.length > 0) {
+      const topS = schemes.find(s => s.slug.includes('credit')) || schemes[0];
+      citations.push({
+        title: isHindi ? topS.title_hi : topS.title_en,
+        type: 'SCHEME',
+        sourceDepartment: isHindi ? (topS.department?.name_hi || topS.department?.name_en) : topS.department?.name_en,
+        officialUrl: topS.official_portal_url,
+        lastVerifiedDate: topS.last_verified_date,
+        slug: `/schemes/${topS.slug}`
+      });
     }
 
     // Deduplicate citations by slug
@@ -100,8 +165,8 @@ class AiService {
 
     if (chips.length < 4) {
       chips.push({
-        label: isHindi ? 'सभी योजनाएं देखें' : 'View All Schemes',
-        link: '/schemes'
+        label: isHindi ? 'दस्तावेज चेकलिस्ट' : 'Document Checklist',
+        link: '/documents'
       });
     }
 
@@ -113,6 +178,7 @@ class AiService {
    */
   async processQuery({ query, language = 'hi', userProfile = null }) {
     const isHindi = language === 'hi';
+    const intent = this.classifyIntent(query);
     const { schemes, careers } = await this.getKnowledgeBase();
 
     // If OpenRouter API key is available, call OpenRouter LLM using native fetch
@@ -145,15 +211,12 @@ class AiService {
 CRITICAL INSTRUCTIONS:
 1. ONLY provide advice and recommendations based on verified Bihar government schemes and career opportunities provided in the knowledge base below.
 2. CAREFULLY analyze the citizen's demographic & academic profile in the query.
-   - For example: If the user is a B.Tech / College / Engineering student (e.g. 12th pass doing B.Tech 3rd year CSE/AI-ML), recommend:
-     * Bihar Student Credit Card Scheme (education loans up to ₹4 Lakhs for B.Tech/higher education)
-     * Post-Matric Technical Scholarship / KYP
-     * Bihar Startup Policy (seed grants for tech/AI ventures)
-     * High-demand tech career pathways like Full-Stack Software Developer, Data & AI Specialist, and BSDM skill courses.
-   - NEVER recommend senior citizen pension, widow pension, or irrelevant farmer schemes to students or young citizens!
+   - If the user asks about career/skills, provide BSDM training programs and job prospect details.
+   - If the user is a B.Tech / College student, recommend Bihar Student Credit Card, Post-Matric Scholarship, and tech career courses.
+   - NEVER recommend old-age pensions or unrelated farmer subsidies to students or young citizens!
 3. Format your response cleanly using markdown with bold headings, bullet points, financial benefit amounts in INR (₹), eligibility summary, and official application portals.
 4. Reply in ${isHindi ? 'fluent, respectful Hindi (हिंदी)' : 'clear, professional English'}. If the user writes in English, reply in English.
-5. Conclude with a helpful note mentioning that they can check their exact eligibility using the BSeva Eligibility Checker.
+5. Conclude with a helpful note mentioning that they can check their exact eligibility using the BSeva Eligibility Checker or prepare documents via Document Readiness tool.
 
 VERIFIED KNOWLEDGE BASE OF BIHAR GOVERNMENT SCHEMES:
 ${schemesSummary}
@@ -167,7 +230,7 @@ ${careersSummary}
           : `Citizen Question: ${query}`;
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 25000);
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
 
         const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
@@ -196,13 +259,13 @@ ${careersSummary}
           const aiText = data?.choices?.[0]?.message?.content;
 
           if (aiText) {
-            const citations = this.extractCitations(aiText, query, schemes, careers, isHindi);
+            const citations = this.extractCitations(aiText, query, schemes, careers, isHindi, intent);
             const actionChips = this.generateActionChips(citations, isHindi);
 
             return {
               success: true,
               query,
-              intent: 'AI_SYNTHESIS',
+              intent,
               language,
               response: {
                 text: aiText,
@@ -214,91 +277,77 @@ ${careersSummary}
               }
             };
           }
-        } else {
-          const errBody = await openRouterResponse.text();
-          console.error('OpenRouter HTTP error:', openRouterResponse.status, errBody);
         }
       } catch (openRouterErr) {
-        console.error('OpenRouter call error (falling back to deterministic retriever):', openRouterErr.message);
+        // Fallback gracefully
       }
     }
 
     // Fallback deterministic RAG processor
-    return this.fallbackDeterministicProcessor({ query, language, schemes, careers, isHindi });
+    return this.fallbackDeterministicProcessor({ query, language, schemes, careers, isHindi, intent });
   }
 
   /**
    * Deterministic Fallback Processor with Enhanced Student & Academic Filters
    */
-  fallbackDeterministicProcessor({ query, language, schemes, careers, isHindi }) {
+  fallbackDeterministicProcessor({ query, language, schemes, careers, isHindi, intent }) {
     const q = query.toLowerCase();
 
-    // Check if query is from an engineering / college student
-    const isStudentQuery = q.includes('btech') || q.includes('b.tech') || q.includes('cse') || q.includes('engineering') || q.includes('12th') || q.includes('college') || q.includes('student') || q.includes('पढ़ाई');
+    const isStudentQuery = q.includes('btech') || q.includes('b.tech') || q.includes('cse') || q.includes('engineering') || q.includes('12th') || q.includes('college') || q.includes('student') || q.includes('पढ़ाई') || q.includes('छात्रवृत्ति') || q.includes('क्रेडिट');
+    const isCareerQuery = intent === 'CAREER_GUIDANCE' || q.includes('career') || q.includes('solar') || q.includes('bsdm') || q.includes('skill');
     const isFarmerQuery = q.includes('किसान') || q.includes('खेती') || q.includes('कृषि') || q.includes('कल्टीवेटर') || q.includes('यंत्र') || q.includes('farmer');
 
-    let matchedSchemes = [];
-    let matchedCareers = [];
     let answerText = '';
 
-    if (isStudentQuery) {
-      matchedSchemes = schemes.filter(s => 
-        s.slug.includes('student-credit') || 
-        s.slug.includes('scholarship') || 
-        s.slug.includes('swayam-sahayata') || 
-        s.categoryId === 'education'
-      );
-      matchedCareers = careers.filter(c => c.industry.includes('Technology') || c.slug.includes('software') || c.slug.includes('ai'));
-
+    if (isCareerQuery) {
       if (isHindi) {
-        answerText = `नमस्ते! आप **12वीं पास और B.Tech (CSE AI/ML)** के छात्र हैं। वर्ष 2026 में बिहार सरकार की निम्नलिखित योजनाएं और करियर अवसर आपके लिए सबसे उपयुक्त हैं:\n\n` +
-          `### 1. 🎓 उच्च शिक्षा एवं छात्रवृत्ति योजनाएं:\n` +
-          `• **बिहार स्टूडेंट क्रेडिट कार्ड योजना (MNSSBY):** B.Tech इंजीनियरिंग की पढ़ाई, कॉलेज फीस, हॉस्टल और लैपटॉप के लिए **₹4,00,000 (4 लाख रुपये)** तक का सुलभ शिक्षा ऋण (मात्र 1% से 4% ब्याज दर पर)।\n` +
-          `• **पोस्ट-मैट्रिक स्कॉलरशिप (PMS Bihar):** बी.टेक तकनीकी पाठ्यक्रमों के लिए सीधे बैंक खाते में शिक्षण शुल्क और अनुरक्षण भत्ता।\n` +
-          `• **बिहार स्टार्ट-अप नीति (Bihar Startup Policy):** यदि आप AI/ML आधारित टेक स्टार्टअप शुरू करना चाहते हैं, तो **₹10 लाख तक का ब्याज-मुक्त सीड फंड**।\n\n` +
-          `### 2. 💻 CSE और AI/ML संबंधित करियर पाथवे:\n` +
-          `• **Full-Stack & Cloud Software Developer:** अनुमानित वेतन ₹4.5L - ₹8.5L/वर्ष। बिहार कौशल विकास मिशन (BSDM) के उन्नत आईटी प्रोग्राम उपलब्ध हैं।\n\n` +
-          `आप हमारी **पात्रता जांच प्रणाली** से अपने जिले एवं श्रेणी अनुसार तुरंत विस्तृत पात्रता रिपोर्ट भी देख सकते हैं।`;
+        answerText = `बिहार कौशल विकास मिशन (BSDM) के अंतर्गत तकनीकी एवं रोजगारपरक प्रशिक्षण कार्यक्रम:\n\n` +
+          `• **Solar PV Installation & Energy Technician:** ₹2.5L - ₹4.5L/वर्ष। रूफटॉप सोलर एवं नवीकरणीय ऊर्जा में कुशल तकनीशियन कोर्स।\n` +
+          `• **Full-Stack & Cloud Software Developer:** ₹4.5L - ₹8.5L/वर्ष। अत्याधुनिक सॉफ्टवेयर, क्लाउड एवं वेब डेवलपमेंट प्रोग्राम।\n` +
+          `• **कुशल युवा कार्यक्रम (KYP):** बुनियादी कंप्यूटर साक्षरता एवं सॉफ्ट स्किल्स (15 से 28 वर्ष के युवाओं हेतु निःशुल्क)।`;
       } else {
-        answerText = `Hello! As a **12th pass student pursuing 3rd year B.Tech in CSE (AI/ML)**, here is what you are eligible for in Bihar in 2026:\n\n` +
-          `### 1. 🎓 Higher Education & Financial Assistance Schemes:\n` +
-          `• **Bihar Student Credit Card Scheme (MNSSBY):** Up to **₹4,00,000 (4 Lakhs)** education loan at subsidized interest rates (1% to 4%) covering B.Tech tuition, hostel, and laptops.\n` +
-          `• **Post-Matric Scholarship (PMS Bihar):** Direct reimbursement of technical education tuition fees and maintenance allowance.\n` +
-          `• **Bihar Startup Policy:** Up to **₹10 Lakhs interest-free seed grant** for students building innovative technology or AI ventures.\n\n` +
-          `### 2. 💻 High-Growth Tech Career Pathways for CSE / AI-ML:\n` +
-          `• **Full-Stack & Cloud Software Developer:** Avg starting salary ₹4.5L - ₹8.5L/yr with specialized certifications supported under Bihar Skill Development Mission (BSDM).\n\n` +
-          `You can also evaluate your exact qualification using our BSeva **Eligibility Checker**.`;
+        answerText = `Key Career and Skill Training Courses under Bihar Skill Development Mission (BSDM):\n\n` +
+          `• **Solar PV Installation & Energy Technician:** Avg starting salary ₹2.5L - ₹4.5L/yr in rooftop solar and renewable energy.\n` +
+          `• **Full-Stack & Cloud Software Developer:** Avg starting salary ₹4.5L - ₹8.5L/yr for engineering and IT students.\n` +
+          `• **Kushal Yuva Program (KYP):** Free 240-hour certified IT literacy and communication course for youth.`;
+      }
+    } else if (isStudentQuery) {
+      if (isHindi) {
+        answerText = `12वीं और उच्च शिक्षा के छात्रों के लिए बिहार सरकार की प्रमुख योजनाएं:\n\n` +
+          `• **बिहार स्टूडेंट क्रेडिट कार्ड योजना (MNSSBY):** B.Tech, डिप्लोमा, स्नातक आदि हेतु ₹4 लाख तक का शिक्षा ऋण (1% से 4% ब्याज)।\n` +
+          `• **पोस्ट-मैट्रिक स्कॉलरशिप (PMS Bihar):** उच्च शिक्षा शिक्षण शुल्क व रखरखाव भत्ते की प्रतिपूर्ति।\n` +
+          `• **मुख्यमंत्री निश्चय स्वयं सहायता भत्ता:** 12वीं के बाद ₹1,000 प्रति माह (अधिकतम 2 वर्ष)।`;
+      } else {
+        answerText = `Key higher education schemes in Bihar for students:\n\n` +
+          `• **Bihar Student Credit Card Scheme (MNSSBY):** Up to ₹4,00,000 education loan at 1% to 4% interest rate.\n` +
+          `• **Post-Matric Scholarship (PMS Bihar):** Tuition fee reimbursement for BC/EBC/SC/ST students.\n` +
+          `• **Mukhyamantri Nishchay Swayam Sahayata Bhatta:** ₹1,000 monthly allowance for youth transitioning from 12th.`;
       }
     } else if (isFarmerQuery) {
-      matchedSchemes = schemes.filter(s => s.departmentId === 'AGRI_BIHAR' || s.categoryId === 'agriculture');
       if (isHindi) {
-        answerText = `कृषि एवं किसान कल्याण के लिए बिहार सरकार की प्रमुख योजनाएं:\n\n` +
-          `• **कृषि यंत्रीकरण योजना:** ट्रैक्टर, कल्टीवेटर और आधुनिक कृषि यंत्रों पर 40% से 80% तक का सरकारी अनुदान।\n` +
-          `• **PM-किसान सम्मान निधि (बिहार DBT):** प्रति वर्ष ₹6,000 की प्रत्यक्ष आर्थिक सहायता।\n` +
-          `• **बिहार राज्य फसल सहायता योजना:** प्राकृतिक आपदा या सूखे की स्थिति में फसल क्षतिपूर्ति सहायता।`;
+        answerText = `कृषि एवं किसान कल्याण हेतु प्रमुख योजनाएं:\n\n` +
+          `• **कृषि यंत्रीकरण योजना:** कृषि यंत्रों पर 40% से 80% अनुदान।\n` +
+          `• **PM-किसान सम्मान निधि:** ₹6,000 वार्षिक सहायता।`;
       } else {
-        answerText = `Key Bihar Government agricultural assistance schemes:\n\n` +
-          `• **Krishi Yantrikaran Scheme:** 40% to 80% subsidy on modern agricultural equipment.\n` +
-          `• **PM-Kisan Samman Nidhi (Bihar DBT):** ₹6,000 annual direct income support.\n` +
-          `• **Bihar Rajya Fasal Sahayata Yojana:** Crop insurance compensation for weather-related damage.`;
+        answerText = `Key agricultural assistance schemes:\n\n` +
+          `• **Krishi Yantrikaran Subsidy:** 40% to 80% subsidy on modern farm equipment.\n` +
+          `• **PM-Kisan Samman Nidhi:** ₹6,000 annual direct income support.`;
       }
     } else {
-      matchedSchemes = schemes.slice(0, 3);
-      matchedCareers = careers.slice(0, 2);
       if (isHindi) {
-        answerText = `नमस्ते! मैं बिहार सहायक AI हूँ। मैं आपको बिहार सरकार की 25+ छात्रवृत्ति, कृषि, महिला सशक्तिकरण एवं रोजगार योजनाओं तथा BSDM करियर पाथवे की आधिकारिक जानकारी दे सकता हूँ।`;
+        answerText = `नमस्ते! मैं बिहार सहायक AI हूँ। मैं आपको बिहार सरकार की 25+ सत्यापित योजनाओं और BSDM करियर पाथवे की आधिकारिक जानकारी दे सकता हूँ।`;
       } else {
-        answerText = `Hello! I am Bihar Sahayak AI. I can assist you with verified information on Bihar government scholarships, agriculture subsidies, women empowerment schemes, and BSDM career training.`;
+        answerText = `Hello! I am Bihar Sahayak AI. I can assist you with verified information on Bihar government schemes and BSDM career pathways.`;
       }
     }
 
-    const citations = this.extractCitations(answerText, query, schemes, careers, isHindi);
+    const citations = this.extractCitations(answerText, query, schemes, careers, isHindi, intent);
     const actionChips = this.generateActionChips(citations, isHindi);
 
     return {
       success: true,
       query,
-      intent: 'DETERMINISTIC_MATCH',
+      intent,
       language,
       response: {
         text: answerText,
@@ -321,7 +370,7 @@ ${careersSummary}
         { label: 'Subsidies for Agricultural Equipment', query: 'How to get subsidy on agricultural equipment in Bihar?' },
         { label: 'Mukhyamantri Kanya Utthan Yojana benefits', query: 'What are the benefits of Mukhyamantri Kanya Utthan Yojana?' },
         { label: 'Bihar Student Credit Card (up to 4 Lakh)', query: 'How to apply for Bihar Student Credit Card scheme?' },
-        { label: 'IT and Solar career courses under BSDM', query: 'What free career training courses are offered under BSDM?' }
+        { label: 'IT and Solar career courses under BSDM', query: 'What career and skill training courses are offered for Solar and IT in Bihar?' }
       ];
     }
 

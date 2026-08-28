@@ -7,32 +7,43 @@ import {
   CheckSquare, 
   Activity,
   CheckCircle,
-  RefreshCw
+  RefreshCw,
+  Search,
+  Building2,
+  ExternalLink
 } from 'lucide-react';
 import { adminService, schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { AnalyticsData, Scheme, AuditLog } from '../types';
+import { AnalyticsData, Scheme, AuditLog, Department } from '../types';
 
 export default function AdminDashboardPage() {
   const { language } = useAuth();
   
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [schemes, setSchemes] = useState<Scheme[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [actionMessage, setActionMessage] = useState<string>('');
 
+  // Table filters
+  const [searchScheme, setSearchScheme] = useState<string>('');
+  const [selectedDept, setSelectedDept] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
+
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [analyticsRes, schemesRes, logsRes] = await Promise.all([
+      const [analyticsRes, schemesRes, deptRes, logsRes] = await Promise.all([
         adminService.getAnalytics(),
         schemeService.getSchemes({ limit: 50 }),
-        adminService.getAuditLogs(15)
+        schemeService.getDepartments(),
+        adminService.getAuditLogs(20)
       ]);
 
       if (analyticsRes.success) setAnalytics(analyticsRes);
       if (schemesRes.success) setSchemes(schemesRes.schemes);
+      if (deptRes.success) setDepartments(deptRes.departments);
       if (logsRes.success) setAuditLogs(logsRes.auditLogs || []);
     } catch (e) {
       console.error('Error fetching admin data:', e);
@@ -49,7 +60,7 @@ export default function AdminDashboardPage() {
     try {
       const res = await adminService.verifyScheme(schemeId, newStatus);
       if (res.success) {
-        setActionMessage(`Scheme ${schemeId} updated to ${newStatus}`);
+        setActionMessage(`Scheme status updated to ${newStatus} in Supabase!`);
         fetchAdminData();
         setTimeout(() => setActionMessage(''), 3000);
       }
@@ -57,6 +68,16 @@ export default function AdminDashboardPage() {
       console.error('Error updating scheme:', err);
     }
   };
+
+  // Filter schemes
+  const filteredSchemes = schemes.filter(s => {
+    const matchQuery = searchScheme === '' || 
+      s.title_en.toLowerCase().includes(searchScheme.toLowerCase()) || 
+      s.title_hi.toLowerCase().includes(searchScheme.toLowerCase());
+    const matchDept = selectedDept === '' || s.departmentId === selectedDept || s.department?.code === selectedDept;
+    const matchStatus = selectedStatus === '' || s.status === selectedStatus;
+    return matchQuery && matchDept && matchStatus;
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
@@ -69,12 +90,12 @@ export default function AdminDashboardPage() {
             <span>{language === 'hi' ? 'प्रशासनिक नियंत्रण कक्ष' : 'Admin & Governance Control'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900">
-            {language === 'hi' ? 'बिहार सहायक एडमिन डैशबोर्ड' : 'Platform Administration'}
+            {language === 'hi' ? 'बिहार सहायक एडमिन व सत्यापन डैशबोर्ड' : 'Platform Administration & Verification'}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             {language === 'hi'
               ? 'सुपाबेस डेटाबेस, सत्यापन कार्यप्रवाह और ऑडिट लॉग की लाइव निगरानी।'
-              : 'Live Supabase PostgreSQL metrics, scheme verification, and immutable audit trails.'}
+              : 'Live Supabase PostgreSQL metrics, scheme verification workflows, and immutable audit trails.'}
           </p>
         </div>
 
@@ -137,15 +158,56 @@ export default function AdminDashboardPage() {
 
       {/* Scheme Verification Table */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
-        <div>
-          <h2 className="text-lg font-black text-slate-900">
-            {language === 'hi' ? 'योजना सत्यापन एवं प्रबंधन (Scheme Verification)' : 'Scheme Verification Workflow'}
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            {language === 'hi'
-              ? 'आधिकारिक स्रोतों से सत्यापित करने के पश्चात स्थिति अपडेट करें'
-              : 'Review and update verification status across departmental schemes'}
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-black text-slate-900">
+              {language === 'hi' ? 'योजना सत्यापन एवं प्रबंधन (Scheme Verification)' : 'Scheme Verification Workflow'}
+            </h2>
+            <p className="text-xs text-slate-500 mt-1">
+              {language === 'hi'
+                ? 'आधिकारिक स्रोतों से सत्यापित करने के पश्चात स्थिति अपडेट करें'
+                : 'Review and update verification status across departmental schemes'}
+            </p>
+          </div>
+
+          <span className="text-xs font-bold text-slate-500">
+            Showing {filteredSchemes.length} of {schemes.length} schemes
+          </span>
+        </div>
+
+        {/* Filter Controls */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search scheme title..."
+              value={searchScheme}
+              onChange={(e) => setSearchScheme(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-purple-500"
+            />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          </div>
+
+          <select
+            value={selectedDept}
+            onChange={(e) => setSelectedDept(e.target.value)}
+            className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 focus:ring-2 focus:ring-purple-500"
+          >
+            <option value="">All Departments (सभी विभाग)</option>
+            {departments.map((d) => (
+              <option key={d.id} value={d.code}>{d.name_en}</option>
+            ))}
+          </select>
+
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 focus:ring-2 focus:ring-purple-500"
+          >
+            <option value="">All Statuses (सभी स्थितियां)</option>
+            <option value="ACTIVE">ACTIVE (सक्रिय)</option>
+            <option value="UNDER_REVIEW">UNDER_REVIEW (समीक्षाधीन)</option>
+          </select>
         </div>
 
         <div className="overflow-x-auto">
@@ -160,7 +222,7 @@ export default function AdminDashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {schemes.map((s) => (
+              {filteredSchemes.map((s) => (
                 <tr key={s.id} className="hover:bg-slate-50/80 transition">
                   <td className="py-3 px-4 font-bold text-slate-900 max-w-xs truncate">
                     {s.title_hi || s.title_en}
@@ -185,8 +247,17 @@ export default function AdminDashboardPage() {
                       onClick={() => handleVerify(s.id, s.status === 'ACTIVE' ? 'UNDER_REVIEW' : 'ACTIVE')}
                       className="px-3 py-1 bg-purple-50 text-purple-700 hover:bg-purple-100 rounded-lg text-xs font-bold transition"
                     >
-                      {s.status === 'ACTIVE' ? 'Re-verify' : 'Approve Active'}
+                      {s.status === 'ACTIVE' ? 'Set Review' : 'Set Active'}
                     </button>
+                    <a
+                      href={s.official_portal_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg inline-block"
+                      title="Open Portal"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5 inline" />
+                    </a>
                   </td>
                 </tr>
               ))}

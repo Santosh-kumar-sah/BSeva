@@ -11,7 +11,8 @@ import {
   Compass, 
   CheckSquare, 
   ShieldCheck,
-  Languages
+  Languages,
+  FileCheck
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -58,7 +59,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="hidden md:flex items-center relative w-72 lg:w-96">
+          <form onSubmit={handleSearchSubmit} className="hidden md:flex items-center relative w-64 lg:w-80">
             <input
               type="text"
               placeholder={language === 'hi' ? 'योजना या छात्रवृत्ति खोजें...' : 'Search schemes, scholarships...'}
@@ -77,11 +78,15 @@ export default function Navbar() {
             </Link>
             <Link to="/eligibility" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-emerald-600 transition flex items-center gap-1.5">
               <CheckSquare className="w-4 h-4" />
-              {language === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}
+              {language === 'hi' ? 'पात्रता जांचें' : 'Eligibility'}
+            </Link>
+            <Link to="/documents" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-amber-600 transition flex items-center gap-1.5">
+              <FileCheck className="w-4 h-4" />
+              {language === 'hi' ? 'दस्तावेज जांच' : 'Documents'}
             </Link>
             <Link to="/careers" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-blue-600 transition flex items-center gap-1.5">
               <Compass className="w-4 h-4" />
-              {language === 'hi' ? 'करियर गाइडेंस' : 'Careers'}
+              {language === 'hi' ? 'करियर' : 'Careers'}
             </Link>
             {isAdmin && (
               <Link to="/admin" className="px-3 py-2 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 transition flex items-center gap-1.5">
@@ -186,6 +191,14 @@ export default function Navbar() {
             >
               <CheckSquare className="w-4 h-4 text-emerald-600" />
               {language === 'hi' ? 'पात्रता जांचें (Check Eligibility)' : 'Check Eligibility'}
+            </Link>
+            <Link 
+              to="/documents" 
+              onClick={() => setMobileOpen(false)}
+              className="px-3 py-2 rounded-lg hover:bg-slate-100 flex items-center gap-2"
+            >
+              <FileCheck className="w-4 h-4 text-amber-600" />
+              {language === 'hi' ? 'दस्तावेज तैयारी जांच (Documents)' : 'Document Check'}
             </Link>
             <Link 
               to="/careers" 

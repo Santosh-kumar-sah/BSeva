@@ -10,5 +10,5 @@ module.exports = {
   allowedOrigins: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5173').split(','),
   seedDataPath: process.env.SEED_DATA_PATH || '../../data/seed',
   openRouterApiKey: process.env.OPENROUTER_API_KEY || '',
-  openRouterModel: process.env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-001'
+  openRouterModel: process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free'
 };

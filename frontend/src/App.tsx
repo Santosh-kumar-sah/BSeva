@@ -10,6 +10,7 @@ import HomePage from './pages/HomePage';
 import SchemesPage from './pages/SchemesPage';
 import SchemeDetailPage from './pages/SchemeDetailPage';
 import EligibilityCheckerPage from './pages/EligibilityCheckerPage';
+import DocumentReadinessPage from './pages/DocumentReadinessPage';
 import CareersPage from './pages/CareersPage';
 import CareerDetailPage from './pages/CareerDetailPage';
 import DashboardPage from './pages/DashboardPage';
@@ -53,6 +54,7 @@ export default function App() {
               <Route path="/schemes" element={<SchemesPage />} />
               <Route path="/schemes/:slug" element={<SchemeDetailPage />} />
               <Route path="/eligibility" element={<EligibilityCheckerPage />} />
+              <Route path="/documents" element={<DocumentReadinessPage />} />
               <Route path="/careers" element={<CareersPage />} />
               <Route path="/careers/:slug" element={<CareerDetailPage />} />
 
