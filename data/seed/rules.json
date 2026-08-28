@@ -5,7 +5,7 @@
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "केवल बिहार के मूल निवासी पात्र हैं।" },
       { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 25, "message_hi": "आयु अधिकतम 25 वर्ष होनी चाहिए।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "न्यूनतम 12वीं या समकक्ष उत्तीर्ण होना आवश्यक है।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "न्यूनतम 12वीं या समकक्ष उत्तीर्ण होना आवश्यक है।" }
     ]
   },
   {
@@ -15,7 +15,7 @@
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "केवल बिहार के निवासी पात्र हैं।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 20, "message_hi": "न्यूनतम आयु 20 वर्ष होनी चाहिए।" },
       { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 25, "message_hi": "अधिकतम आयु 25 वर्ष होनी चाहिए।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS"], "message_hi": "12वीं पास होना चाहिए एवं आगे की नियमित पढ़ाई नहीं कर रहे हों।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH"], "message_hi": "12वीं पास होना चाहिए एवं आगे की नियमित पढ़ाई नहीं कर रहे हों।" }
     ]
   },
   {
@@ -25,7 +25,7 @@
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी होना आवश्यक है।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 15, "message_hi": "न्यूनतम आयु 15 वर्ष होनी चाहिए।" },
       { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 28, "message_hi": "अधिकतम आयु 28 वर्ष (SC/ST/Divyang को 33 वर्ष तक छूट)।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["10TH_PASS", "12TH_PASS", "DIPLOMA", "GRADUATE"], "message_hi": "न्यूनतम 10वीं पास होना आवश्यक है।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["10TH_PASS", "PASS_10TH", "12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE"], "message_hi": "न्यूनतम 10वीं पास होना आवश्यक है।" }
     ]
   },
   {
@@ -34,7 +34,7 @@
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी होना चाहिए।" },
       { "group": 1, "field": "gender", "operator": "EQUALS", "value": "FEMALE", "message_hi": "केवल अविवाहित छात्राएं पात्र हैं।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "GRADUATE"], "message_hi": "बिहार बोर्ड से 12वीं उत्तीर्ण होना चाहिए।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH"], "message_hi": "बिहार बोर्ड से 12वीं उत्तीर्ण होना चाहिए।" }
     ]
   },
   {
@@ -51,7 +51,7 @@
     "scheme_slug": "mukhyamantri-balak-balika-protsahan-yojana-10th",
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी होना अनिवार्य है।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["10TH_PASS", "12TH_PASS", "GRADUATE"], "message_hi": "बिहार बोर्ड (BSEB) से 10वीं उत्तीर्ण।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["10TH_PASS", "PASS_10TH"], "message_hi": "बिहार बोर्ड (BSEB) से 10वीं उत्तीर्ण।" }
     ]
   },
   {
@@ -61,7 +61,7 @@
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी होना अनिवार्य है।" },
       { "group": 1, "field": "social_category", "operator": "IN", "value": ["OBC", "EBC", "SC", "ST"], "message_hi": "केवल पिछड़ा, अत्यंत पिछड़ा, अनुसूचित जाति एवं जनजाति के छात्र।" },
       { "group": 1, "field": "annual_income", "operator": "LESS_THAN_OR_EQUAL", "value": 300000, "message_hi": "वार्षिक पारिवारिक आय ₹3,00,000 से कम होनी चाहिए।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["10TH_PASS", "12TH_PASS", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "10वीं के बाद उच्च शिक्षा में नामांकित होना चाहिए।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["10TH_PASS", "PASS_10TH", "12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "10वीं के बाद उच्च शिक्षा में नामांकित होना चाहिए।" }
     ]
   },
   {
@@ -70,7 +70,8 @@
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी होना चाहिए।" },
       { "group": 1, "field": "social_category", "operator": "IN", "value": ["SC", "ST", "EBC"], "message_hi": "SC, ST, EBC या सभी वर्ग की महिला अभ्यर्थी।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["GRADUATE", "POST_GRADUATE"], "message_hi": "स्नातक एवं BPSC/UPSC PT पास होना चाहिए।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["GRADUATE", "POST_GRADUATE", "DOCTORATE"], "message_hi": "स्नातक उत्तीर्ण होना चाहिए।" },
+      { "group": 1, "field": "has_cleared_prelims", "operator": "EQUALS", "value": true, "message_hi": "BPSC या UPSC प्रारंभिक परीक्षा (PT) उत्तीर्ण होना अनिवार्य है।" }
     ]
   },
   {
@@ -80,7 +81,7 @@
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी होना चाहिए।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "न्यूनतम आयु 18 वर्ष होनी चाहिए।" },
       { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 50, "message_hi": "अधिकतम आयु 50 वर्ष होनी चाहिए।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "DIPLOMA", "GRADUATE", "POST_GRADUATE", "VOCATIONAL"], "message_hi": "न्यूनतम 12वीं, ITI, पॉलिटेक्निक या समकक्ष उत्तीर्ण।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE", "VOCATIONAL"], "message_hi": "न्यूनतम 12वीं, ITI, पॉलिटेक्निक या स्नातक उत्तीर्ण।" }
     ]
   },
   {
@@ -88,7 +89,8 @@
     "scheme_slug": "bihar-startup-policy-seed-fund",
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी या बिहार में पंजीकृत स्टार्टअप।" },
-      { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "संस्थापक की न्यूनतम आयु 18 वर्ष होनी चाहिए।" }
+      { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "संस्थापक की न्यूनतम आयु 18 वर्ष होनी चाहिए।" },
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "न्यूनतम 12वीं अथवा उच्च तकनीकी शिक्षा।" }
     ]
   },
   {
@@ -96,28 +98,31 @@
     "scheme_slug": "krishi-yantra-subsidy-scheme",
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी किसान होना चाहिए।" },
-      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN", "value": 0, "message_hi": "खेती योग्य भूमि का स्वामित्व या वैध लीज रसीद आवश्यक है।" }
+      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN", "value": 0, "message_hi": "खेती योग्य भूमि (न्यूनतम 0.1 एकड़) का स्वामित्व या वैध लीज रसीद आवश्यक है।" }
     ]
   },
   {
     "scheme_id": "sch-012",
     "scheme_slug": "bihar-diesel-anudan-subsidy",
     "rules": [
-      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का पंजीकृत किसान होना चाहिए।" }
+      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का पंजीकृत किसान होना चाहिए।" },
+      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN", "value": 0, "message_hi": "सिंचाई योग्य कृषि भूमि होना आवश्यक है।" }
     ]
   },
   {
     "scheme_id": "sch-013",
     "scheme_slug": "mukhyamantri-tivra-beej-vistar-yojana",
     "rules": [
-      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का किसान होना चाहिए।" }
+      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का किसान होना चाहिए।" },
+      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN", "value": 0, "message_hi": "बीज बुवाई हेतु कृषि भूमि होना आवश्यक है।" }
     ]
   },
   {
     "scheme_id": "sch-014",
     "scheme_slug": "bihar-rajya-fasal-sahayata-yojana",
     "rules": [
-      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का रैयत या गैर-रैयत (बटाईदार) किसान होना चाहिए।" }
+      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का रैयत या गैर-रैयत (बटाईदार) किसान होना चाहिए।" },
+      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN", "value": 0, "message_hi": "फसल बुवाई की गई कृषि भूमि होना आवश्यक है।" }
     ]
   },
   {
@@ -177,23 +182,26 @@
     "scheme_slug": "bihar-matsya-palan-protsahan-yojana",
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी होना चाहिए।" },
-      { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "न्यूनतम आयु 18 वर्ष।" }
+      { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "न्यूनतम आयु 18 वर्ष।" },
+      { "group": 1, "field": "has_fishery_pond", "operator": "EQUALS", "value": true, "message_hi": "मत्स्य पालन हेतु निजी अथवा लीज पर तालाब/जलक्षेत्र उपलब्ध होना चाहिए।" }
     ]
   },
   {
     "scheme_id": "sch-022",
     "scheme_slug": "bihar-rajya-pravasi-mazdoor-durghatna-anudan",
     "rules": [
-      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी प्रवासी मजदूर।" },
+      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी होना चाहिए।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "आयु 18 से 65 वर्ष के बीच।" },
-      { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 65, "message_hi": "आयु 65 वर्ष से कम।" }
+      { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 65, "message_hi": "आयु 65 वर्ष से कम।" },
+      { "group": 1, "field": "is_migrant_worker", "operator": "EQUALS", "value": true, "message_hi": "बिहार से बाहर पंजीकृत प्रवासी कामगार/मजदूर होना अनिवार्य है।" }
     ]
   },
   {
     "scheme_id": "sch-023",
     "scheme_slug": "bihar-solar-street-light-rooftop-yojana",
     "rules": [
-      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का बिजली उपभोक्ता होना चाहिए।" }
+      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी होना चाहिए।" },
+      { "group": 1, "field": "has_electricity_connection", "operator": "EQUALS", "value": true, "message_hi": "बिहार डिस्कॉम (SBPDCL/NBPDCL) का वैध उपभोक्ता खाता संख्या (CA Number)।" }
     ]
   },
   {
@@ -208,7 +216,8 @@
     "scheme_id": "sch-025",
     "scheme_slug": "mukhyamantri-khel-vikas-protsahan-yojana",
     "rules": [
-      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी पदक विजेता खिलाड़ी।" }
+      { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी होना चाहिए।" },
+      { "group": 1, "field": "is_sports_medalist", "operator": "EQUALS", "value": true, "message_hi": "राष्ट्रीय अथवा अंतर्राष्ट्रीय खेल प्रतियोगिता में पदक विजेता (Medal Winner)।" }
     ]
   }
 ]
