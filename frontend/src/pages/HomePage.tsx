@@ -2,7 +2,6 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, 
-  Sparkles, 
   CheckCircle2, 
   GraduationCap, 
   Tractor, 
@@ -13,8 +12,7 @@ import {
   ArrowRight,
   ChevronRight,
   Compass,
-  FileCheck,
-  Landmark
+  FileCheck
 } from 'lucide-react';
 import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -68,75 +66,71 @@ export default function HomePage() {
   return (
     <div className="space-y-16 pb-20">
       
-      {/* 1. Proud Hero Section with Bihar Heritage Showcase */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white pt-12 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+      {/* 1. Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white pt-14 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
         
-        {/* Glow ambient backgrounds */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-orange-600/15 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-        <div className="absolute top-1/3 right-10 w-[450px] h-[450px] bg-emerald-600/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+        {/* Subtle ambient glow */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-orange-600/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+        <div className="absolute bottom-0 right-10 w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Left Column: Headline, Search & CTAs */}
-          <div className="lg:col-span-7 space-y-6 text-left">
+          {/* Left Column */}
+          <div className="lg:col-span-7 space-y-5 text-left">
             
-            {/* Proud State Emblem / Heritage Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 via-amber-500/20 to-emerald-500/20 border border-orange-400/30 text-xs font-bold text-orange-300 backdrop-blur shadow-sm">
-              <Landmark className="w-4 h-4 text-orange-400" />
-              <span>
-                {language === 'hi' ? 'ज्ञान, शांति और प्रगति की पावन भूमि • बिहार' : 'Land of Wisdom, Peace & Progress • Bihar'}
-              </span>
+            {/* Simple product badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-slate-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Bihar Sahayak • बिहार सहायक</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-[1.15]">
+            <h1 className="text-3xl sm:text-[2.75rem] font-extrabold tracking-tight leading-[1.2]">
               {language === 'hi' ? (
                 <>
-                  नालंदा की विरासत से प्रेरित, <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-300">
-                    डिजिटल बिहार
-                  </span>{' '}
-                  का अपना सेवा मंच
+                  बिहार की सरकारी योजनाएं,{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
+                    एक ही जगह
+                  </span>
                 </>
               ) : (
                 <>
-                  Rooted in Heritage, <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-300">
-                    Empowering Modern Bihar
-                  </span>{' '}
-                  with Direct GovTech Access
+                  Every Bihar Govt Scheme,{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
+                    One Platform
+                  </span>
                 </>
               )}
             </h1>
 
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
+            <p className="text-sm text-slate-400 leading-relaxed max-w-lg">
               {language === 'hi'
-                ? 'बिहार सरकार के सभी 5 विभागों की 25+ छात्रवृत्ति, कृषि अनुदान, महिला स्वावलंबन एवं रोजगार योजनाओं की पात्रता तुरंत जांचें।'
-                : 'Instant eligibility matching, document verification checklists, and direct official portal links across 25+ verified Bihar Govt schemes.'}
+                ? 'छात्रवृत्ति, कृषि अनुदान, रोजगार — अपनी पात्रता जांचें, ज़रूरी दस्तावेज़ देखें, और सीधे सरकारी पोर्टल पर आवेदन करें।'
+                : 'Scholarships, farm subsidies, jobs — check your eligibility, see required documents, and apply on official portals.'}
             </p>
 
             {/* Search Box */}
-            <form onSubmit={handleSearch} className="relative flex items-center max-w-xl pt-2">
+            <form onSubmit={handleSearch} className="relative flex items-center max-w-lg pt-1">
               <input
                 type="text"
-                placeholder={language === 'hi' ? 'उदा. कन्या उत्थान, स्टूडेंट क्रेडिट कार्ड, कृषि यंत्र, पोस्ट मैट्रिक...' : 'e.g. Kanya Utthan, Student Credit Card, Krishi Yantra, KYP...'}
+                placeholder={language === 'hi' ? 'योजना खोजें... जैसे Student Credit Card, कन्या उत्थान' : 'Search schemes... e.g. Student Credit Card, Kanya Utthan'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-28 py-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white/20 transition shadow-xl"
+                className="w-full pl-11 pr-24 py-3 rounded-xl bg-white/8 backdrop-blur border border-white/15 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/60 focus:bg-white/12 transition"
               />
-              <Search className="w-5 h-5 text-slate-400 absolute left-4" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3.5" />
               <button
                 type="submit"
-                className="absolute right-2 px-5 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold text-xs rounded-xl shadow-md transition"
+                className="absolute right-1.5 px-4 py-1.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg transition"
               >
                 {language === 'hi' ? 'खोजें' : 'Search'}
               </button>
             </form>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <Link
                 to="/eligibility"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs shadow-lg shadow-emerald-950/40 transition hover:scale-105"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-lg shadow-orange-900/30 transition"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>{language === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}</span>
@@ -144,66 +138,48 @@ export default function HomePage() {
 
               <Link
                 to="/documents"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-extrabold text-xs shadow-lg shadow-amber-950/40 transition hover:scale-105"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/8 hover:bg-white/15 text-white font-semibold text-sm border border-white/15 transition"
               >
-                <FileCheck className="w-4 h-4" />
-                <span>{language === 'hi' ? 'दस्तावेज चेकलिस्ट' : 'Document Auditor'}</span>
+                <FileCheck className="w-4 h-4 text-slate-400" />
+                <span>{language === 'hi' ? 'दस्तावेज़ जांचें' : 'Document Checklist'}</span>
               </Link>
 
               <Link
                 to="/careers"
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 backdrop-blur transition"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/8 hover:bg-white/15 text-white font-semibold text-sm border border-white/15 transition"
               >
-                <Compass className="w-4 h-4 text-orange-400" />
-                <span>{language === 'hi' ? 'करियर' : 'Careers'}</span>
+                <Compass className="w-4 h-4 text-slate-400" />
+                <span>{language === 'hi' ? 'करियर गाइड' : 'Career Guide'}</span>
               </Link>
             </div>
           </div>
 
-          {/* Right Column: Dual Cinematic Heritage Showcase */}
-          <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Right Column: Heritage Images */}
+          <div className="lg:col-span-5 grid grid-cols-2 gap-3">
             
-            {/* Heritage Card 1: Rajgir Buddha */}
-            <div className="group relative rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-900/60 aspect-[4/5] flex flex-col justify-end">
+            {/* Image 1: Buddha Rajgir */}
+            <div className="group relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
               <img
                 src="/images/bihar_rajgir_buddha.jpg"
-                alt="Ghora Katora Buddha Statue Rajgir Bihar"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                alt="Buddha statue, Rajgir"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
-              
-              <div className="relative p-4 space-y-1 text-white">
-                <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-500/80 text-white backdrop-blur border border-amber-400/40">
-                  {language === 'hi' ? 'राजगीर • शांति व विरासत' : 'Rajgir • Peace & Heritage'}
-                </span>
-                <h3 className="text-sm font-black tracking-tight leading-snug">
-                  {language === 'hi' ? 'घोड़ा कटोरा बुद्ध प्रतिमा' : 'Ghora Katora Buddha'}
-                </h3>
-                <p className="text-[10px] text-slate-300 line-clamp-2">
-                  {language === 'hi' ? 'पंचपहाड़ियों के बीच शांति का वैश्विक प्रतीक।' : 'Serene symbol of peace amidst the five hills of Rajgir.'}
-                </p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-3">
+                <p className="text-[11px] font-semibold text-white/90">Rajgir, Bihar</p>
               </div>
             </div>
 
-            {/* Heritage Card 2: Vikramshila / Nalanda Mahavihara */}
-            <div className="group relative rounded-3xl overflow-hidden border border-orange-500/30 shadow-2xl bg-slate-900/60 aspect-[4/5] flex flex-col justify-end">
+            {/* Image 2: Nalanda Ruins */}
+            <div className="group relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4] mt-6">
               <img
                 src="/images/bihar_nalanda_vikramshila.jpg"
-                alt="Ancient Vikramshila and Nalanda Mahavihara Bihar"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                alt="Nalanda Mahavihara ruins"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
-              
-              <div className="relative p-4 space-y-1 text-white">
-                <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-extrabold bg-orange-500/80 text-white backdrop-blur border border-orange-400/40">
-                  {language === 'hi' ? 'नालंदा • विश्व ज्ञानस्थली' : 'Nalanda • Global Seat of Wisdom'}
-                </span>
-                <h3 className="text-sm font-black tracking-tight leading-snug">
-                  {language === 'hi' ? 'प्राचीन महाविहार धरोहर' : 'Ancient Mahavihara Heritage'}
-                </h3>
-                <p className="text-[10px] text-slate-300 line-clamp-2">
-                  {language === 'hi' ? 'विश्व का प्रथम आवासीय विश्वविद्यालय।' : "World's ancient beacon of universal higher education."}
-                </p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-3">
+                <p className="text-[11px] font-semibold text-white/90">Nalanda, Bihar</p>
               </div>
             </div>
 
@@ -242,18 +218,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. Bihar Development Pillars Visual Spotlight */}
+      {/* 3. Explore by Sector */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-extrabold text-orange-600 uppercase tracking-widest mb-1">
-              <Sparkles className="w-4 h-4" />
-              <span>{language === 'hi' ? 'बिहार सरकार की विकास दृष्टि' : 'Development Pillars of Bihar'}</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-              {language === 'hi' ? 'शिक्षा, कृषि, युवा और महिला सशक्तिकरण' : 'Education, Agriculture, Youth & Enterprise'}
-            </h2>
-          </div>
+        <div>
+          <h2 className="text-2xl font-extrabold text-slate-900">
+            {language === 'hi' ? 'क्षेत्र अनुसार योजनाएं देखें' : 'Explore by Sector'}
+          </h2>
+          <p className="text-sm text-slate-500 mt-1">
+            {language === 'hi' ? 'शिक्षा, कृषि, कौशल या उद्यमिता — अपने क्षेत्र की योजनाएं खोजें' : 'Education, agriculture, skills, or enterprise — find schemes in your area'}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -425,7 +398,7 @@ export default function HomePage() {
               {language === 'hi' ? 'बिहार सहायक कैसे काम करता है?' : 'How Bihar Sahayak Works'}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-2">
-              {language === 'hi' ? 'केवल 4 सरल चरणों में अपनी योजना खोजें और आवेदन करें' : 'A 4-step streamlined journey from discovery to application'}
+              {language === 'hi' ? 'योजना खोजने से लेकर आवेदन तक — बस 4 आसान स्टेप' : 'From finding a scheme to applying — just 4 simple steps'}
             </p>
           </div>
 
@@ -450,7 +423,7 @@ export default function HomePage() {
                 {language === 'hi' ? 'पात्रता विश्लेषण' : 'Eligibility Check'}
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                {language === 'hi' ? 'नियम इंजन तुरंत बताता है कि आप किस योजना के पात्र हैं और क्यों।' : 'Deterministic engine evaluates exact criteria and explains why you qualify.'}
+                {language === 'hi' ? 'आपकी जानकारी के आधार पर तुरंत पता चलता है कि कौनसी योजना मिलेगी।' : 'We check official rules and show exactly which schemes match your profile.'}
               </p>
             </div>
 
