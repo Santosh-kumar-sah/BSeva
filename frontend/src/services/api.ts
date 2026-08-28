@@ -8,7 +8,9 @@ import {
   EligibilityCheckResponse, 
   CareerPath, 
   AnalyticsData, 
-  AuditLog 
+  AuditLog,
+  AiResponse,
+  AiSuggestion
 } from '../types';
 
 const api = axios.create({
@@ -83,6 +85,14 @@ export const careerService = {
     api.get(`/careers/${slug}`),
   recommendCareers: (profileData: Partial<CitizenProfile>): Promise<{ success: boolean; totalCareers: number; recommendations: CareerPath[] }> => 
     api.post('/careers/recommend', { profile: profileData })
+};
+
+// AI Assistant Services
+export const aiService = {
+  chat: (data: { query: string; language?: string; profile?: Partial<CitizenProfile> | null }): Promise<AiResponse> => 
+    api.post('/ai/chat', data),
+  getSuggestions: (lang: string = 'hi'): Promise<{ success: boolean; language: string; suggestions: AiSuggestion[] }> => 
+    api.get('/ai/suggest', { params: { lang } })
 };
 
 // Admin Services

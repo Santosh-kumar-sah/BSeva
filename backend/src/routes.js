@@ -7,6 +7,7 @@ const schemesRoutes = require('./modules/schemes/schemes.routes');
 const eligibilityRoutes = require('./modules/eligibility/eligibility.routes');
 const careersRoutes = require('./modules/careers/careers.routes');
 const adminRoutes = require('./modules/admin/admin.routes');
+const aiRoutes = require('./modules/ai/ai.routes');
 
 // Health Check
 router.get('/health', (req, res) => {
@@ -25,5 +26,6 @@ router.use('/schemes', schemesRoutes);
 router.use('/eligibility', eligibilityRoutes);
 router.use('/careers', careersRoutes);
 router.use('/admin', adminRoutes);
+router.use('/ai', aiRoutes);
 
 module.exports = router;

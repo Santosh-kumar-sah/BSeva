@@ -18,12 +18,13 @@ describe('Bihar Sahayak REST API Integration Tests', () => {
   });
 
   test('POST /api/v1/auth/register should register a new citizen and return token', async () => {
+    const uniqueSuffix = Date.now().toString().slice(-7);
     const res = await request(app)
       .post('/api/v1/auth/register')
       .send({
         fullName: 'Priya Kumari',
-        phone: '9876500002',
-        email: 'priya.test@example.com',
+        phone: `987${uniqueSuffix}`,
+        email: `priya.${uniqueSuffix}@example.com`,
         password: 'Password123!'
       });
 

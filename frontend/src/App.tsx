@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
+import AiChatWidget from './components/chat/AiChatWidget';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -43,7 +44,7 @@ export default function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+        <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 relative">
           <Navbar />
           <main className="flex-1">
             <Routes>
@@ -92,6 +93,9 @@ export default function App() {
             </Routes>
           </main>
           <Footer />
+
+          {/* Global Floating AI Assistant Widget */}
+          <AiChatWidget />
         </div>
       </Router>
     </AuthProvider>

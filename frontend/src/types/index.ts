@@ -182,3 +182,45 @@ export interface AnalyticsData {
   categoryDistribution?: Record<string, number>;
   recentAuditLogs?: AuditLog[];
 }
+
+// AI Assistant Types
+export interface SourceCitation {
+  title: string;
+  type: 'SCHEME' | 'CAREER';
+  sourceDepartment: string;
+  officialUrl: string;
+  lastVerifiedDate?: string;
+  slug: string;
+}
+
+export interface ActionChip {
+  label: string;
+  link: string;
+}
+
+export interface AiResponse {
+  success: boolean;
+  query: string;
+  intent: string;
+  language: 'hi' | 'en';
+  response: {
+    text: string;
+    citations: SourceCitation[];
+    actionChips: ActionChip[];
+    disclaimer: string;
+  };
+}
+
+export interface AiSuggestion {
+  label: string;
+  query: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  sender: 'user' | 'assistant';
+  text: string;
+  citations?: SourceCitation[];
+  actionChips?: ActionChip[];
+  timestamp: string;
+}
