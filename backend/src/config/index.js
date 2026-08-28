@@ -8,5 +8,7 @@ module.exports = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   cookieMaxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
   allowedOrigins: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5173').split(','),
-  seedDataPath: process.env.SEED_DATA_PATH || '../../data/seed'
+  seedDataPath: process.env.SEED_DATA_PATH || '../../data/seed',
+  openRouterApiKey: process.env.OPENROUTER_API_KEY || '',
+  openRouterModel: process.env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-001'
 };
