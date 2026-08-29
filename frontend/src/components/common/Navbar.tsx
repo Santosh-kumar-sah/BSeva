@@ -1,6 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useSavedSchemes } from '../../context/SavedSchemesContext';
 import { 
   Search, 
   User as UserIcon, 
@@ -12,11 +13,13 @@ import {
   CheckSquare, 
   ShieldCheck,
   Languages,
-  FileCheck
+  FileCheck,
+  Bookmark
 } from 'lucide-react';
 
 export default function Navbar() {
   const { user, isAuthenticated, isAdmin, logout, language, toggleLanguage } = useAuth();
+  const { savedCount } = useSavedSchemes();
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const navigate = useNavigate();
@@ -59,13 +62,13 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="hidden md:flex items-center relative w-64 lg:w-80">
+          <form onSubmit={handleSearchSubmit} className="hidden md:flex items-center relative w-64 lg:w-72">
             <input
               type="text"
-              placeholder={language === 'hi' ? 'योजना या छात्रवृत्ति खोजें...' : 'Search schemes, scholarships...'}
+              placeholder={language === 'hi' ? 'योजना खोजें...' : 'Search schemes...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm bg-slate-100/80 border border-slate-200 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition"
+              className="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-100/80 border border-slate-200 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3" />
           </form>
@@ -74,24 +77,33 @@ export default function Navbar() {
           <nav className="hidden lg:flex items-center gap-1 text-sm font-semibold text-slate-700">
             <Link to="/schemes" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-orange-600 transition flex items-center gap-1.5">
               <BookOpen className="w-4 h-4" />
-              {language === 'hi' ? 'योजनाएं' : 'Schemes'}
+              <span>{language === 'hi' ? 'योजनाएं' : 'Schemes'}</span>
             </Link>
             <Link to="/eligibility" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-emerald-600 transition flex items-center gap-1.5">
               <CheckSquare className="w-4 h-4" />
-              {language === 'hi' ? 'पात्रता जांचें' : 'Eligibility'}
+              <span>{language === 'hi' ? 'पात्रता जांच' : 'Eligibility'}</span>
             </Link>
             <Link to="/documents" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-amber-600 transition flex items-center gap-1.5">
               <FileCheck className="w-4 h-4" />
-              {language === 'hi' ? 'दस्तावेज जांच' : 'Documents'}
+              <span>{language === 'hi' ? 'दस्तावेज' : 'Documents'}</span>
             </Link>
             <Link to="/careers" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-blue-600 transition flex items-center gap-1.5">
               <Compass className="w-4 h-4" />
-              {language === 'hi' ? 'करियर' : 'Careers'}
+              <span>{language === 'hi' ? 'करियर' : 'Careers'}</span>
+            </Link>
+            <Link to="/saved" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-orange-600 transition flex items-center gap-1.5 relative">
+              <Bookmark className="w-4 h-4 text-orange-500" />
+              <span>{language === 'hi' ? 'ट्रैकर' : 'Saved'}</span>
+              {savedCount > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold bg-orange-600 text-white">
+                  {savedCount}
+                </span>
+              )}
             </Link>
             {isAdmin && (
               <Link to="/admin" className="px-3 py-2 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 transition flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4" />
-                {language === 'hi' ? 'एडमिन' : 'Admin'}
+                <span>{language === 'hi' ? 'एडमिन' : 'Admin'}</span>
               </Link>
             )}
           </nav>
@@ -190,7 +202,7 @@ export default function Navbar() {
               className="px-3 py-2 rounded-lg hover:bg-slate-100 flex items-center gap-2"
             >
               <CheckSquare className="w-4 h-4 text-emerald-600" />
-              {language === 'hi' ? 'पात्रता जांचें (Check Eligibility)' : 'Check Eligibility'}
+              {language === 'hi' ? 'पात्रता जांचें (Eligibility)' : 'Check Eligibility'}
             </Link>
             <Link 
               to="/documents" 
@@ -199,6 +211,21 @@ export default function Navbar() {
             >
               <FileCheck className="w-4 h-4 text-amber-600" />
               {language === 'hi' ? 'दस्तावेज तैयारी जांच (Documents)' : 'Document Check'}
+            </Link>
+            <Link 
+              to="/saved" 
+              onClick={() => setMobileOpen(false)}
+              className="px-3 py-2 rounded-lg hover:bg-slate-100 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <Bookmark className="w-4 h-4 text-orange-600" />
+                <span>{language === 'hi' ? 'मेरी सुरक्षित योजनाएं (Saved)' : 'Saved Schemes'}</span>
+              </div>
+              {savedCount > 0 && (
+                <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-orange-600 text-white">
+                  {savedCount}
+                </span>
+              )}
             </Link>
             <Link 
               to="/careers" 

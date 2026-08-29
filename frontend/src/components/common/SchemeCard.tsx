@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ExternalLink, FileText, CheckCircle, Building2 } from 'lucide-react';
+import { ArrowRight, ExternalLink, FileText, CheckCircle, Building2, Bookmark } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useSavedSchemes } from '../../context/SavedSchemesContext';
 import EligibilityBadge from './EligibilityBadge';
 import { Scheme, SchemeEvaluationResult } from '../../types';
 
@@ -12,13 +13,26 @@ interface SchemeCardProps {
 
 export default function SchemeCard({ scheme, eligibilityResult }: SchemeCardProps) {
   const { language } = useAuth();
+  const { isSaved, saveScheme, removeScheme } = useSavedSchemes();
+
+  const saved = isSaved(scheme.id);
 
   const title = language === 'hi' ? scheme.title_hi : scheme.title_en;
   const description = language === 'hi' ? scheme.description_hi : scheme.description_en;
   const benefits = language === 'hi' ? scheme.benefits_hi : scheme.benefits_en;
 
+  const handleToggleSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (saved) {
+      removeScheme(scheme.id);
+    } else {
+      saveScheme(scheme);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-200 p-6 flex flex-col justify-between group">
+    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-200 p-6 flex flex-col justify-between group relative">
       <div>
         {/* Top Header Tags */}
         <div className="flex items-center justify-between gap-2 mb-3">
@@ -26,19 +40,28 @@ export default function SchemeCard({ scheme, eligibilityResult }: SchemeCardProp
             {scheme.category?.name_hi && language === 'hi' ? scheme.category.name_hi : (scheme.category?.name_en || 'General')}
           </span>
 
-          {eligibilityResult && (
-            <EligibilityBadge 
-              status={eligibilityResult.status} 
-              score={eligibilityResult.matchScore} 
-              language={language} 
-            />
-          )}
+          <div className="flex items-center gap-2">
+            {eligibilityResult && (
+              <EligibilityBadge 
+                status={eligibilityResult.status} 
+                score={eligibilityResult.matchScore} 
+                language={language} 
+              />
+            )}
 
-          {!eligibilityResult && (
-            <span className="text-[11px] font-medium text-slate-400">
-              {scheme.application_mode}
-            </span>
-          )}
+            {/* Bookmark button */}
+            <button
+              onClick={handleToggleSave}
+              title={saved ? (language === 'hi' ? 'सुरक्षित सूची से हटाएं' : 'Remove from saved') : (language === 'hi' ? 'योजना सुरक्षित करें' : 'Save scheme')}
+              className={`p-1.5 rounded-lg border transition ${
+                saved 
+                  ? 'bg-amber-50 border-amber-300 text-amber-600 hover:bg-amber-100' 
+                  : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? 'fill-amber-500 text-amber-500' : ''}`} />
+            </button>
+          </div>
         </div>
 
         {/* Department Name */}

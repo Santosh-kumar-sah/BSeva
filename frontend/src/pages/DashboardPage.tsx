@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSavedSchemes } from '../context/SavedSchemesContext';
 import { 
   CheckSquare, 
   Compass, 
   Sparkles, 
   ArrowRight,
-  Edit3
+  Edit3,
+  Bookmark,
+  Building2,
+  FileCheck
 } from 'lucide-react';
 import { eligibilityService, careerService } from '../services/api';
 import { EligibilityCheckResponse, CareerPath } from '../types';
+import SchemeCard from '../components/common/SchemeCard';
 
 export default function DashboardPage() {
   const { user, profile, language } = useAuth();
+  const { savedCount, savedItems } = useSavedSchemes();
   
   const [eligibilityResults, setEligibilityResults] = useState<EligibilityCheckResponse | null>(null);
   const [careerRecommendations, setCareerRecommendations] = useState<CareerPath[]>([]);
@@ -59,12 +65,19 @@ export default function DashboardPage() {
               </span>
             </div>
             <p className="text-xs text-slate-400 mt-1">
-              {profile?.district ? `${profile.district}, Bihar` : 'Bihar, India'} • {profile?.education || 'Student'}
+              {profile?.district ? `${profile.district}, Bihar` : 'Bihar, India'} • {profile?.education || 'Citizen'}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            to="/saved"
+            className="px-4 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-xl text-xs font-bold border border-orange-400/30 backdrop-blur transition flex items-center gap-1.5"
+          >
+            <Bookmark className="w-3.5 h-3.5" />
+            <span>{language === 'hi' ? `ट्रैकर (${savedCount})` : `Tracker (${savedCount})`}</span>
+          </Link>
           <Link
             to="/profile"
             className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold border border-white/20 backdrop-blur transition flex items-center gap-1.5"
@@ -83,188 +96,207 @@ export default function DashboardPage() {
       </div>
 
       {/* Summary Metrics */}
-      {eligibilityResults && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="bg-white rounded-2xl border border-emerald-200 p-6 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-black text-xl">
-              {eligibilityResults.summary.potentiallyEligibleCount}
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
-                {language === 'hi' ? 'पात्र योजनाएं' : 'Eligible Schemes'}
-              </h4>
-              <p className="text-sm font-extrabold text-slate-900 mt-0.5">
-                {language === 'hi' ? 'तत्काल आवेदन योग्य' : 'Directly Qualified'}
-              </p>
-            </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="bg-white rounded-2xl border border-emerald-200 p-5 sm:p-6 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-black text-xl">
+            {eligibilityResults?.summary.potentiallyEligibleCount ?? '-'}
           </div>
-
-          <div className="bg-white rounded-2xl border border-blue-200 p-6 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center font-black text-xl">
-              {careerRecommendations.length}
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
-                {language === 'hi' ? 'अनुकूल करियर पाथवे' : 'Matched Careers'}
-              </h4>
-              <p className="text-sm font-extrabold text-slate-900 mt-0.5">
-                {language === 'hi' ? 'स्किल आधारित अवसर' : 'Skill-fit opportunities'}
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl border border-amber-200 p-6 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-black text-xl">
-              {eligibilityResults.summary.needsVerificationCount}
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
-                {language === 'hi' ? 'सत्यापन आवश्यक' : 'Needs Verification'}
-              </h4>
-              <p className="text-sm font-extrabold text-slate-900 mt-0.5">
-                {language === 'hi' ? 'अतिरिक्त कागजात चाहिए' : 'Missing some attributes'}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Matched Schemes Section */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-emerald-600" />
-              <span>{language === 'hi' ? 'आपके लिए अनुशंसित सरकारी योजनाएं' : 'Matched Schemes for Your Profile'}</span>
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              {language === 'hi' ? 'आपके आयु, जिले एवं शैक्षणिक योग्यता के आधार पर' : 'Based on your age, district, and educational background'}
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+              {language === 'hi' ? 'पात्र योजनाएं' : 'Eligible Schemes'}
+            </h4>
+            <p className="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5">
+              {language === 'hi' ? 'आवेदन योग्य' : 'Directly Qualified'}
             </p>
           </div>
-          <Link to="/schemes" className="text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1">
-            <span>{language === 'hi' ? 'सभी देखें' : 'View All'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
         </div>
 
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map(n => (
-              <div key={n} className="bg-white rounded-2xl border border-slate-200 p-6 h-60 animate-pulse"></div>
-            ))}
+        <Link
+          to="/saved"
+          className="bg-white rounded-2xl border border-amber-200 p-5 sm:p-6 shadow-sm hover:shadow-md transition flex items-center gap-4 group"
+        >
+          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-black text-xl group-hover:scale-110 transition">
+            {savedCount}
           </div>
-        ) : eligibilityResults?.results?.potentiallyEligible && eligibilityResults.results.potentiallyEligible.length > 0 ? (
+          <div>
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+              {language === 'hi' ? 'ट्रैक की जा रही योजनाएं' : 'Tracked Schemes'}
+            </h4>
+            <p className="text-xs sm:text-sm font-extrabold text-amber-700 mt-0.5 flex items-center gap-1">
+              <span>{language === 'hi' ? 'ट्रैकर देखें' : 'View Tracker'}</span>
+              <ArrowRight className="w-3 h-3" />
+            </p>
+          </div>
+        </Link>
+
+        <div className="bg-white rounded-2xl border border-blue-200 p-5 sm:p-6 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center font-black text-xl">
+            {careerRecommendations.length}
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+              {language === 'hi' ? 'करियर पाथवे' : 'Career Pathways'}
+            </h4>
+            <p className="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5">
+              {language === 'hi' ? 'BSDM स्किल फिट' : 'Skill-fit opportunities'}
+            </p>
+          </div>
+        </div>
+
+        <Link
+          to="/documents"
+          className="bg-white rounded-2xl border border-purple-200 p-5 sm:p-6 shadow-sm hover:shadow-md transition flex items-center gap-4 group"
+        >
+          <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center font-black text-xl group-hover:scale-110 transition">
+            <FileCheck className="w-6 h-6" />
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+              {language === 'hi' ? 'दस्तावेज ऑडिटर' : 'Doc Auditor'}
+            </h4>
+            <p className="text-xs sm:text-sm font-extrabold text-purple-700 mt-0.5 flex items-center gap-1">
+              <span>{language === 'hi' ? 'RTPS चेकलिस्ट' : 'RTPS Ready'}</span>
+              <ArrowRight className="w-3 h-3" />
+            </p>
+          </div>
+        </Link>
+      </div>
+
+      {/* Matched Schemes Section */}
+      {eligibilityResults && eligibilityResults.results.potentiallyEligible.length > 0 && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-emerald-600" />
+                <span>{language === 'hi' ? 'आपके लिए अनुशंसित सरकारी योजनाएं' : 'Matched Schemes for Your Profile'}</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                {language === 'hi' ? 'आपकी प्रोफ़ाइल के अनुसार 100% सटीक पात्रता विश्लेषण' : 'Schemes matching your district, age, income, and educational profile'}
+              </p>
+            </div>
+            <Link to="/eligibility" className="text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1">
+              <span>{language === 'hi' ? 'सभी देखें' : 'View All'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {eligibilityResults.results.potentiallyEligible.slice(0, 6).map((item) => (
-              <div key={item.schemeId} className="bg-white rounded-3xl border border-emerald-200 p-6 shadow-sm space-y-4 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                      {language === 'hi' ? '100% पात्र' : '100% Eligible'}
+            {eligibilityResults.results.potentiallyEligible.slice(0, 6).map((res) => (
+              <div key={res.schemeId} className="bg-white rounded-2xl border border-emerald-200/80 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                      {res.matchScore}% Match
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-400">
+                      {language === 'hi' ? 'पात्र' : 'Eligible'}
                     </span>
                   </div>
 
-                  <Link to={`/schemes/${item.schemeSlug}`}>
+                  <Link to={`/schemes/${res.schemeSlug}`}>
                     <h3 className="text-base font-bold text-slate-900 hover:text-emerald-700 transition line-clamp-2">
-                      {language === 'hi' ? item.title_hi : item.title_en}
+                      {language === 'hi' && res.title_hi ? res.title_hi : res.title_en}
                     </h3>
                   </Link>
 
-                  <div className="mt-3 p-3 rounded-xl bg-emerald-50 text-xs font-semibold text-emerald-900">
-                    {language === 'hi' ? item.benefits_hi : item.benefits_en}
-                  </div>
+                  {(res.benefits_hi || res.benefits_en) && (
+                    <p className="text-xs text-slate-600 line-clamp-2">
+                      {language === 'hi' && res.benefits_hi ? res.benefits_hi : res.benefits_en}
+                    </p>
+                  )}
                 </div>
 
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                   <Link
-                    to={`/schemes/${item.schemeSlug}`}
-                    className="text-xs font-bold text-slate-700 hover:text-emerald-700"
+                    to={`/schemes/${res.schemeSlug}`}
+                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
                   >
-                    {language === 'hi' ? 'दस्तावेज देखें →' : 'View Docs →'}
+                    <span>{language === 'hi' ? 'विवरण' : 'Details'}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                   <a
-                    href={item.officialPortalUrl}
+                    href={res.officialPortalUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-extrabold text-orange-600 hover:text-orange-700"
+                    className="text-xs font-semibold text-slate-500 hover:text-slate-800"
                   >
-                    {language === 'hi' ? 'आवेदन लिंक ↗' : 'Apply Portal ↗'}
+                    {language === 'hi' ? 'पोर्टल →' : 'Portal →'}
                   </a>
                 </div>
               </div>
             ))}
           </div>
-        ) : (
-          <div className="bg-white rounded-3xl border border-slate-200 p-8 text-center space-y-3">
-            <p className="text-xs text-slate-600">
-              {language === 'hi'
-                ? 'अपनी प्रोफ़ाइल पूरी करें ताकि सही योजनाओं की सूची दिख सके।'
-                : 'Complete your profile to see personalized scheme recommendations.'}
-            </p>
-            <Link to="/profile" className="inline-block px-4 py-2 bg-orange-600 text-white rounded-xl text-xs font-bold">
-              {language === 'hi' ? 'प्रोफ़ाइल भरें' : 'Complete Profile'}
+        </div>
+      )}
+
+      {/* Career Recommendations Section */}
+      {careerRecommendations.length > 0 && (
+        <div className="space-y-6 pt-4 border-t border-slate-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                <Compass className="w-5 h-5 text-blue-600" />
+                <span>{language === 'hi' ? 'सुझाए गए करियर और कौशल पाथवे' : 'Recommended Career & Skill Pathways'}</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                {language === 'hi' ? 'आपकी शिक्षा और रुचि के आधार पर बिहार कौशल विकास मिशन (BSDM) सर्टिफाइड कोर्स' : 'Personalized training paths mapped with Bihar Skill Development Mission'}
+              </p>
+            </div>
+            <Link to="/careers" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+              <span>{language === 'hi' ? 'सभी करियर देखें' : 'Explore All'}</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-        )}
-      </div>
 
-      {/* Recommended Career Pathways */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-              <Compass className="w-5 h-5 text-blue-600" />
-              <span>{language === 'hi' ? 'स्किल आधारित करियर मार्गदर्शन' : 'Career Opportunities Based on Your Skills'}</span>
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              {language === 'hi' ? 'आपके कौशलों और रुचियों से मेल खाते करियर विकल्प' : 'Careers that match your current skillset and interests'}
-            </p>
-          </div>
-          <Link to="/careers" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-            <span>{language === 'hi' ? 'सभी करियर देखें' : 'View All'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {careerRecommendations.slice(0, 3).map((career) => (
-            <div key={career.id} className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                    {career.industry}
-                  </span>
-                  <span className="text-xs font-extrabold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">
-                    {career.matchScore}% Match
-                  </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {careerRecommendations.slice(0, 4).map((career) => (
+              <div
+                key={career.id}
+                className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition space-y-4"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                      {career.industry}
+                    </span>
+                    <h3 className="text-base font-black text-slate-900 mt-2">
+                      {language === 'hi' && career.title_hi ? career.title_hi : career.title_en}
+                    </h3>
+                  </div>
+                  {career.avg_starting_salary_inr && (
+                    <div className="text-right shrink-0">
+                      <span className="text-[10px] font-bold text-slate-400 block uppercase">
+                        {language === 'hi' ? 'औसत वेतन' : 'Avg Salary'}
+                      </span>
+                      <span className="text-sm font-black text-emerald-600">
+                        ₹{(career.avg_starting_salary_inr / 100000).toFixed(1)}L / वर्ष
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                <Link to={`/careers/${career.slug}`}>
-                  <h3 className="text-base font-bold text-slate-900 hover:text-blue-600 transition line-clamp-2">
-                    {language === 'hi' ? career.title_hi : career.title_en}
-                  </h3>
-                </Link>
-
-                <p className="text-xs text-slate-600 mt-2 line-clamp-2">
-                  {language === 'hi' ? career.description_hi : career.description_en}
+                <p className="text-xs text-slate-600 line-clamp-2">
+                  {language === 'hi' && career.description_hi ? career.description_hi : career.description_en}
                 </p>
-              </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-extrabold text-slate-800">
-                  ₹{((career.avg_starting_salary_inr || 250000) / 100000).toFixed(1)}L/yr
-                </span>
-                <Link
-                  to={`/careers/${career.slug}`}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-700"
-                >
-                  {language === 'hi' ? 'स्किल रोडमैप देखें →' : 'View Skill Path →'}
-                </Link>
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-slate-500">
+                    {career.bsdm_training_path?.length || 3} {language === 'hi' ? 'प्रशिक्षण चरण' : 'Training Steps'}
+                  </span>
+                  <Link
+                    to={`/careers/${career.slug}`}
+                    className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                  >
+                    <span>{language === 'hi' ? 'रोडमैप देखें' : 'View Roadmap'}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   );
