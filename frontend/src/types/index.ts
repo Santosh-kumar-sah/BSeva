@@ -6,6 +6,12 @@ export type GenderType = 'MALE' | 'FEMALE' | 'OTHER' | 'ALL';
 
 export type SocialCategory = 'GENERAL' | 'OBC' | 'EBC' | 'SC' | 'ST' | 'EWS' | 'ALL';
 
+export type MaritalStatus = 'UNMARRIED' | 'MARRIED' | 'WIDOW' | 'DIVORCED';
+export type EmploymentStatus = 'STUDENT' | 'UNEMPLOYED' | 'SELF_EMPLOYED' | 'SALARIED_PRIVATE' | 'GOVT_EMPLOYEE';
+export type RationCardType = 'BPL_AAY' | 'BPL_PHH' | 'APL' | 'NONE';
+export type AreaType = 'RURAL' | 'URBAN';
+export type FarmerType = 'NOT_FARMER' | 'LANDOWNER_RAIYAT' | 'TENANT_SHARECROPPER' | 'LANDLESS_LABORER';
+
 export type EducationLevel =
   | 'BELOW_10TH'
   | '10TH_PASS'
@@ -42,6 +48,20 @@ export interface CitizenProfile {
   annualIncome: number;
   landHoldingAcres?: number;
   isDifferentlyAbled?: boolean;
+  maritalStatus?: MaritalStatus;
+  employmentStatus?: EmploymentStatus;
+  rationCardType?: RationCardType;
+  areaType?: AreaType;
+  farmerType?: FarmerType;
+  isMinority?: boolean;
+  hasGovtEmployeeInFamily?: boolean;
+  isIncomeTaxPayer?: boolean;
+  isAadhaarDbtLinked?: boolean;
+  hasClearedPrelims?: boolean;
+  hasFisheryPond?: boolean;
+  isMigrantWorker?: boolean;
+  hasElectricityConnection?: boolean;
+  isSportsMedalist?: boolean;
   skills?: string[];
   interests?: string[];
   createdAt?: string;

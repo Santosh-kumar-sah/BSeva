@@ -5,7 +5,8 @@
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "केवल बिहार के मूल निवासी पात्र हैं।" },
       { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 25, "message_hi": "आयु अधिकतम 25 वर्ष होनी चाहिए।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "न्यूनतम 12वीं या समकक्ष उत्तीर्ण होना आवश्यक है।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "न्यूनतम 12वीं या समकक्ष उत्तीर्ण होना आवश्यक है।" },
+      {"field": "employment_status", "operator": "IN", "value": ["STUDENT", "UNEMPLOYED"], "group": 1, "is_mandatory": true, "message_hi": "आवेदक छात्र या बेरोजगार होना चाहिए", "message_en": "Applicant must be a student or unemployed"}
     ]
   },
   {
@@ -15,7 +16,8 @@
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "केवल बिहार के निवासी पात्र हैं।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 20, "message_hi": "न्यूनतम आयु 20 वर्ष होनी चाहिए।" },
       { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 25, "message_hi": "अधिकतम आयु 25 वर्ष होनी चाहिए।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH"], "message_hi": "12वीं पास होना चाहिए एवं आगे की नियमित पढ़ाई नहीं कर रहे हों।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH"], "message_hi": "12वीं पास होना चाहिए एवं आगे की नियमित पढ़ाई नहीं कर रहे हों।" },
+      {"field": "employment_status", "operator": "IN", "value": ["STUDENT", "UNEMPLOYED"], "group": 1, "is_mandatory": true, "message_hi": "आवेदक छात्र या बेरोजगार होना चाहिए", "message_en": "Applicant must be a student or unemployed"}
     ]
   },
   {
@@ -25,7 +27,8 @@
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी होना आवश्यक है।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 15, "message_hi": "न्यूनतम आयु 15 वर्ष होनी चाहिए।" },
       { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 28, "message_hi": "अधिकतम आयु 28 वर्ष (SC/ST/Divyang को 33 वर्ष तक छूट)।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["10TH_PASS", "PASS_10TH", "12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE"], "message_hi": "न्यूनतम 10वीं पास होना आवश्यक है।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["10TH_PASS", "PASS_10TH", "12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE"], "message_hi": "न्यूनतम 10वीं पास होना आवश्यक है।" },
+      {"field": "is_aadhaar_dbt_linked", "operator": "EQUALS", "value": true, "group": 1, "is_mandatory": false, "message_hi": "आधार से बैंक खाता लिंक (DBT सीडिंग) होना चाहिए", "message_en": "Bank account must be Aadhaar-linked for DBT transfer"}
     ]
   },
   {
@@ -34,7 +37,8 @@
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी होना चाहिए।" },
       { "group": 1, "field": "gender", "operator": "EQUALS", "value": "FEMALE", "message_hi": "केवल अविवाहित छात्राएं पात्र हैं।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH"], "message_hi": "बिहार बोर्ड से 12वीं उत्तीर्ण होना चाहिए।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH"], "message_hi": "बिहार बोर्ड से 12वीं उत्तीर्ण होना चाहिए।" },
+      {"field": "marital_status", "operator": "EQUALS", "value": "UNMARRIED", "group": 1, "is_mandatory": true, "message_hi": "बालिका अविवाहित होनी चाहिए", "message_en": "Girl must be unmarried"}
     ]
   },
   {
@@ -43,7 +47,8 @@
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी होना चाहिए।" },
       { "group": 1, "field": "gender", "operator": "EQUALS", "value": "FEMALE", "message_hi": "केवल छात्राएं पात्र हैं।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["GRADUATE", "POST_GRADUATE", "DOCTORATE"], "message_hi": "बिहार के मान्यता प्राप्त विश्वविद्यालय से स्नातक उत्तीर्ण।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["GRADUATE", "POST_GRADUATE", "DOCTORATE"], "message_hi": "बिहार के मान्यता प्राप्त विश्वविद्यालय से स्नातक उत्तीर्ण।" },
+      {"field": "marital_status", "operator": "EQUALS", "value": "UNMARRIED", "group": 1, "is_mandatory": true, "message_hi": "विवाह हेतु कन्या अविवाहित होनी चाहिए", "message_en": "Bride must be unmarried"}
     ]
   },
   {
@@ -81,7 +86,8 @@
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का मूल निवासी होना चाहिए।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "न्यूनतम आयु 18 वर्ष होनी चाहिए।" },
       { "group": 1, "field": "age", "operator": "LESS_THAN_OR_EQUAL", "value": 50, "message_hi": "अधिकतम आयु 50 वर्ष होनी चाहिए।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE", "VOCATIONAL"], "message_hi": "न्यूनतम 12वीं, ITI, पॉलिटेक्निक या स्नातक उत्तीर्ण।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE", "VOCATIONAL"], "message_hi": "न्यूनतम 12वीं, ITI, पॉलिटेक्निक या स्नातक उत्तीर्ण।" },
+      {"field": "employment_status", "operator": "EQUALS", "value": "UNEMPLOYED", "group": 1, "is_mandatory": true, "message_hi": "आवेदक बेरोजगार होना चाहिए (कहीं नियोजित नहीं)", "message_en": "Applicant must be unemployed and not currently employed"}
     ]
   },
   {
@@ -90,7 +96,8 @@
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी या बिहार में पंजीकृत स्टार्टअप।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "संस्थापक की न्यूनतम आयु 18 वर्ष होनी चाहिए।" },
-      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "न्यूनतम 12वीं अथवा उच्च तकनीकी शिक्षा।" }
+      { "group": 1, "field": "education", "operator": "IN", "value": ["12TH_PASS", "PASS_12TH", "DIPLOMA", "GRADUATE", "POST_GRADUATE"], "message_hi": "न्यूनतम 12वीं अथवा उच्च तकनीकी शिक्षा।" },
+      {"field": "employment_status", "operator": "IN", "value": ["UNEMPLOYED", "STUDENT"], "group": 1, "is_mandatory": true, "message_hi": "आवेदक छात्र या बेरोजगार होना चाहिए", "message_en": "Applicant must be a student or unemployed youth"}
     ]
   },
   {
@@ -98,7 +105,9 @@
     "scheme_slug": "krishi-yantra-subsidy-scheme",
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी किसान होना चाहिए।" },
-      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN", "value": 0, "message_hi": "खेती योग्य भूमि (न्यूनतम 0.1 एकड़) का स्वामित्व या वैध लीज रसीद आवश्यक है।" }
+      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN", "value": 0, "message_hi": "खेती योग्य भूमि (न्यूनतम 0.1 एकड़) का स्वामित्व या वैध लीज रसीद आवश्यक है।" },
+      {"field": "farmer_type", "operator": "IN", "value": ["LANDOWNER_RAIYAT", "TENANT_SHARECROPPER"], "group": 1, "is_mandatory": true, "message_hi": "आवेदक रैयत या बटाईदार किसान होना चाहिए", "message_en": "Applicant must be a registered farmer (raiyat or sharecropper)"},
+      {"field": "is_income_tax_payer", "operator": "EQUALS", "value": false, "group": 1, "is_mandatory": true, "message_hi": "आवेदक आयकर दाता नहीं होना चाहिए", "message_en": "Applicant must not be an income tax payer"}
     ]
   },
   {
@@ -130,7 +139,8 @@
     "scheme_slug": "mukhyamantri-bagwani-mission-horticulture",
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का निवासी होना चाहिए।" },
-      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN_OR_EQUAL", "value": 0.1, "message_hi": "बागवानी हेतु न्यूनतम 0.1 एकड़ जमीन होनी चाहिए।" }
+      { "group": 1, "field": "land_holding_acres", "operator": "GREATER_THAN_OR_EQUAL", "value": 0.1, "message_hi": "बागवानी हेतु न्यूनतम 0.1 एकड़ जमीन होनी चाहिए।" },
+      {"field": "area_type", "operator": "EQUALS", "value": "RURAL", "group": 1, "is_mandatory": true, "message_hi": "आवेदक ग्रामीण पंचायत क्षेत्र का निवासी होना चाहिए", "message_en": "Applicant must be a resident of rural panchayat area"}
     ]
   },
   {
@@ -165,7 +175,9 @@
     "rules": [
       { "group": 1, "field": "is_bihar_resident", "operator": "EQUALS", "value": true, "message_hi": "बिहार का स्थायी निवासी होना चाहिए।" },
       { "group": 1, "field": "age", "operator": "GREATER_THAN_OR_EQUAL", "value": 18, "message_hi": "विवाह के समय कन्या की न्यूनतम आयु 18 वर्ष।" },
-      { "group": 1, "field": "annual_income", "operator": "LESS_THAN_OR_EQUAL", "value": 60000, "message_hi": "BPL परिवार या वार्षिक आय ₹60,000 से कम।" }
+      { "group": 1, "field": "annual_income", "operator": "LESS_THAN_OR_EQUAL", "value": 60000, "message_hi": "BPL परिवार या वार्षिक आय ₹60,000 से कम।" },
+      {"field": "is_income_tax_payer", "operator": "EQUALS", "value": false, "group": 1, "is_mandatory": true, "message_hi": "आवेदक आयकर दाता नहीं होना चाहिए", "message_en": "Applicant must not be an income tax payer"},
+      {"field": "has_govt_employee_in_family", "operator": "EQUALS", "value": false, "group": 1, "is_mandatory": true, "message_hi": "परिवार में कोई सरकारी पेंशनभोगी नहीं होना चाहिए", "message_en": "No retired govt pensioner in family"}
     ]
   },
   {

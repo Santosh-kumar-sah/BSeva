@@ -50,6 +50,40 @@ enum EducationLevel {
   DOCTORATE
 }
 
+enum MaritalStatus {
+  UNMARRIED
+  MARRIED
+  WIDOW
+  DIVORCED
+}
+
+enum EmploymentStatus {
+  STUDENT
+  UNEMPLOYED
+  SELF_EMPLOYED
+  SALARIED_PRIVATE
+  GOVT_EMPLOYEE
+}
+
+enum RationCardType {
+  BPL_AAY
+  BPL_PHH
+  APL
+  NONE
+}
+
+enum AreaType {
+  RURAL
+  URBAN
+}
+
+enum FarmerType {
+  NOT_FARMER
+  LANDOWNER_RAIYAT
+  TENANT_SHARECROPPER
+  LANDLESS_LABORER
+}
+
 enum SchemeStatus {
   DRAFT
   UNDER_REVIEW
@@ -96,6 +130,20 @@ model CitizenProfile {
   annualIncome       Float           @default(0) @map("annual_income")
   landHoldingAcres   Float           @default(0) @map("land_holding_acres")
   isDifferentlyAbled Boolean         @default(false) @map("is_differently_abled")
+  maritalStatus      MaritalStatus   @default(UNMARRIED) @map("marital_status")
+  employmentStatus   EmploymentStatus @default(STUDENT) @map("employment_status")
+  rationCardType     RationCardType  @default(NONE) @map("ration_card_type")
+  areaType           AreaType        @default(RURAL) @map("area_type")
+  farmerType         FarmerType      @default(NOT_FARMER) @map("farmer_type")
+  isMinority         Boolean         @default(false) @map("is_minority")
+  hasGovtEmployeeInFamily Boolean    @default(false) @map("has_govt_employee_in_family")
+  isIncomeTaxPayer   Boolean         @default(false) @map("is_income_tax_payer")
+  isAadhaarDbtLinked Boolean         @default(false) @map("is_aadhaar_dbt_linked")
+  hasClearedPrelims  Boolean         @default(false) @map("has_cleared_prelims")
+  hasFisheryPond     Boolean         @default(false) @map("has_fishery_pond")
+  isMigrantWorker    Boolean         @default(false) @map("is_migrant_worker")
+  hasElectricityConnection Boolean   @default(false) @map("has_electricity_connection")
+  isSportsMedalist   Boolean         @default(false) @map("is_sports_medalist")
   skills             String[]        @default([])
   interests          String[]        @default([])
   createdAt          DateTime        @default(now()) @map("created_at")

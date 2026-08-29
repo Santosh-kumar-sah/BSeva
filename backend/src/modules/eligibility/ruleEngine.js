@@ -17,7 +17,22 @@ function normalizeProfile(profile = {}) {
     skills: profile.skills || [],
     interests: profile.interests || [],
     district: profile.district,
-    block: profile.block
+    block: profile.block,
+    // Enhanced profile factors with intelligent schema-aligned defaults
+    marital_status: profile.marital_status || profile.maritalStatus || 'UNMARRIED',
+    employment_status: profile.employment_status || profile.employmentStatus || (profile.age && Number(profile.age) <= 25 ? 'STUDENT' : 'UNEMPLOYED'),
+    ration_card_type: profile.ration_card_type || profile.rationCardType || 'NONE',
+    area_type: profile.area_type || profile.areaType || 'RURAL',
+    farmer_type: profile.farmer_type || profile.farmerType || (Number(profile.land_holding_acres !== undefined ? profile.land_holding_acres : profile.landHoldingAcres) > 0 ? 'LANDOWNER_RAIYAT' : 'NOT_FARMER'),
+    is_minority: profile.is_minority !== undefined ? profile.is_minority : (profile.isMinority !== undefined ? profile.isMinority : false),
+    has_govt_employee_in_family: profile.has_govt_employee_in_family !== undefined ? profile.has_govt_employee_in_family : (profile.hasGovtEmployeeInFamily !== undefined ? profile.hasGovtEmployeeInFamily : false),
+    is_income_tax_payer: profile.is_income_tax_payer !== undefined ? profile.is_income_tax_payer : (profile.isIncomeTaxPayer !== undefined ? profile.isIncomeTaxPayer : false),
+    is_aadhaar_dbt_linked: profile.is_aadhaar_dbt_linked !== undefined ? profile.is_aadhaar_dbt_linked : (profile.isAadhaarDbtLinked !== undefined ? profile.isAadhaarDbtLinked : true),
+    has_cleared_prelims: profile.has_cleared_prelims !== undefined ? profile.has_cleared_prelims : (profile.hasClearedPrelims !== undefined ? profile.hasClearedPrelims : false),
+    has_fishery_pond: profile.has_fishery_pond !== undefined ? profile.has_fishery_pond : (profile.hasFisheryPond !== undefined ? profile.hasFisheryPond : false),
+    is_migrant_worker: profile.is_migrant_worker !== undefined ? profile.is_migrant_worker : (profile.isMigrantWorker !== undefined ? profile.isMigrantWorker : false),
+    has_electricity_connection: profile.has_electricity_connection !== undefined ? profile.has_electricity_connection : (profile.hasElectricityConnection !== undefined ? profile.hasElectricityConnection : true),
+    is_sports_medalist: profile.is_sports_medalist !== undefined ? profile.is_sports_medalist : (profile.isSportsMedalist !== undefined ? profile.isSportsMedalist : false)
   };
 }
 

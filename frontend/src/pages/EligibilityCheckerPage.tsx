@@ -42,7 +42,21 @@ export default function EligibilityCheckerPage() {
     education: profile?.education || 'GRADUATE',
     annualIncome: profile?.annualIncome || 120000,
     landHoldingAcres: profile?.landHoldingAcres || 0,
-    isDifferentlyAbled: profile?.isDifferentlyAbled || false
+    isDifferentlyAbled: profile?.isDifferentlyAbled || false,
+    maritalStatus: 'UNMARRIED',
+    employmentStatus: 'STUDENT',
+    rationCardType: 'NONE',
+    areaType: 'RURAL',
+    farmerType: 'NOT_FARMER',
+    isMinority: false,
+    hasGovtEmployeeInFamily: false,
+    isIncomeTaxPayer: false,
+    isAadhaarDbtLinked: false,
+    hasClearedPrelims: false,
+    hasFisheryPond: false,
+    isMigrantWorker: false,
+    hasElectricityConnection: false,
+    isSportsMedalist: false,
   });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -272,6 +286,187 @@ export default function EligibilityCheckerPage() {
                 <label htmlFor="divyang" className="text-xs text-slate-700 font-medium">
                   {language === 'hi' ? 'दिव्यांगजन (Differently Abled 40%+)' : 'Differently Abled (40%+)'}
                 </label>
+              </div>
+
+              {/* ── Advanced Profile Factors (for better matching) ── */}
+              <div className="pt-4 border-t border-slate-200 space-y-4">
+                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <span>🎯</span>
+                  <span>{language === 'hi' ? 'बेहतर मिलान हेतु अतिरिक्त विवरण' : 'Additional Details for Better Matching'}</span>
+                </h3>
+                <p className="text-[11px] text-slate-500">
+                  {language === 'hi' ? 'ये वैकल्पिक फ़ील्ड भरने से अधिक सटीक योजना सुझाव मिलेंगे।' : 'Fill these optional fields to get more accurate scheme recommendations.'}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Marital Status */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      {language === 'hi' ? 'वैवाहिक स्थिति (Marital Status)' : 'Marital Status'}
+                    </label>
+                    <select
+                      value={formData.maritalStatus}
+                      onChange={(e) => setFormData({ ...formData, maritalStatus: e.target.value as any })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white"
+                    >
+                      <option value="UNMARRIED">अविवाहित (Unmarried)</option>
+                      <option value="MARRIED">विवाहित (Married)</option>
+                      <option value="WIDOW">विधवा (Widow)</option>
+                      <option value="DIVORCED">तलाकशुदा (Divorced)</option>
+                    </select>
+                  </div>
+
+                  {/* Employment Status */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      {language === 'hi' ? 'रोजगार स्थिति (Employment Status)' : 'Employment Status'}
+                    </label>
+                    <select
+                      value={formData.employmentStatus}
+                      onChange={(e) => setFormData({ ...formData, employmentStatus: e.target.value as any })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white"
+                    >
+                      <option value="STUDENT">छात्र (Student)</option>
+                      <option value="UNEMPLOYED">बेरोजगार (Unemployed)</option>
+                      <option value="SELF_EMPLOYED">स्वरोजगार (Self Employed)</option>
+                      <option value="SALARIED_PRIVATE">निजी नौकरी (Private Salaried)</option>
+                      <option value="GOVT_EMPLOYEE">सरकारी कर्मचारी (Govt Employee)</option>
+                    </select>
+                  </div>
+
+                  {/* Ration Card Type */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      {language === 'hi' ? 'राशन कार्ड (Ration Card Type)' : 'Ration Card Type'}
+                    </label>
+                    <select
+                      value={formData.rationCardType}
+                      onChange={(e) => setFormData({ ...formData, rationCardType: e.target.value as any })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white"
+                    >
+                      <option value="NONE">कोई नहीं / पता नहीं</option>
+                      <option value="BPL_AAY">BPL - अंत्योदय (AAY)</option>
+                      <option value="BPL_PHH">BPL - प्राथमिकता (PHH)</option>
+                      <option value="APL">APL (सामान्य)</option>
+                    </select>
+                  </div>
+
+                  {/* Area Type */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      {language === 'hi' ? 'निवास क्षेत्र (Area Type)' : 'Area Type'}
+                    </label>
+                    <select
+                      value={formData.areaType}
+                      onChange={(e) => setFormData({ ...formData, areaType: e.target.value as any })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white"
+                    >
+                      <option value="RURAL">ग्रामीण (Rural / Panchayat)</option>
+                      <option value="URBAN">शहरी (Urban / Nagar Nigam)</option>
+                    </select>
+                  </div>
+
+                  {/* Farmer Type */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      {language === 'hi' ? 'किसान प्रकार (Farmer Type)' : 'Farmer Classification'}
+                    </label>
+                    <select
+                      value={formData.farmerType}
+                      onChange={(e) => setFormData({ ...formData, farmerType: e.target.value as any })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white"
+                    >
+                      <option value="NOT_FARMER">किसान नहीं (Not a Farmer)</option>
+                      <option value="LANDOWNER_RAIYAT">रैयत / भूस्वामी (Landowner)</option>
+                      <option value="TENANT_SHARECROPPER">बटाईदार / गैर-रैयत (Tenant/Sharecropper)</option>
+                      <option value="LANDLESS_LABORER">भूमिहीन मजदूर (Landless Laborer)</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Toggle Switches Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  {/* Minority */}
+                  <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                    <input
+                      type="checkbox"
+                      checked={formData.isMinority}
+                      onChange={(e) => setFormData({ ...formData, isMinority: e.target.checked })}
+                      className="w-4 h-4 accent-orange-600 rounded"
+                    />
+                    <span className="text-xs font-medium text-slate-700">
+                      {language === 'hi' ? 'अल्पसंख्यक समुदाय (Minority Community)' : 'Minority Community'}
+                    </span>
+                  </label>
+
+                  {/* Govt Employee in Family */}
+                  <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                    <input
+                      type="checkbox"
+                      checked={formData.hasGovtEmployeeInFamily}
+                      onChange={(e) => setFormData({ ...formData, hasGovtEmployeeInFamily: e.target.checked })}
+                      className="w-4 h-4 accent-orange-600 rounded"
+                    />
+                    <span className="text-xs font-medium text-slate-700">
+                      {language === 'hi' ? 'परिवार में सरकारी कर्मचारी / पेंशनभोगी' : 'Govt employee / pensioner in family'}
+                    </span>
+                  </label>
+
+                  {/* Income Tax Payer */}
+                  <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                    <input
+                      type="checkbox"
+                      checked={formData.isIncomeTaxPayer}
+                      onChange={(e) => setFormData({ ...formData, isIncomeTaxPayer: e.target.checked })}
+                      className="w-4 h-4 accent-orange-600 rounded"
+                    />
+                    <span className="text-xs font-medium text-slate-700">
+                      {language === 'hi' ? 'आयकर दाता (Income Tax Payer)' : 'Income Tax Payer'}
+                    </span>
+                  </label>
+
+                  {/* Aadhaar DBT Linked */}
+                  <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                    <input
+                      type="checkbox"
+                      checked={formData.isAadhaarDbtLinked}
+                      onChange={(e) => setFormData({ ...formData, isAadhaarDbtLinked: e.target.checked })}
+                      className="w-4 h-4 accent-orange-600 rounded"
+                    />
+                    <span className="text-xs font-medium text-slate-700">
+                      {language === 'hi' ? 'आधार से बैंक खाता लिंक (DBT सीडिंग)' : 'Aadhaar-linked Bank Account (DBT)'}
+                    </span>
+                  </label>
+                </div>
+
+                {/* Specialty Flags - Collapsible */}
+                <details className="pt-2">
+                  <summary className="text-xs font-bold text-slate-600 cursor-pointer hover:text-orange-600">
+                    {language === 'hi' ? '▸ विशेष श्रेणी (UPSC, मत्स्य, प्रवासी, खेल, सोलर)' : '▸ Specialty Categories (UPSC, Fishery, Migrant, Sports, Solar)'}
+                  </summary>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3">
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                      <input type="checkbox" checked={formData.hasClearedPrelims} onChange={(e) => setFormData({ ...formData, hasClearedPrelims: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
+                      <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'UPSC / BPSC प्रारंभिक परीक्षा उत्तीर्ण' : 'Cleared UPSC/BPSC Prelims'}</span>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                      <input type="checkbox" checked={formData.hasFisheryPond} onChange={(e) => setFormData({ ...formData, hasFisheryPond: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
+                      <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'मत्स्य पालन तालाब है' : 'Own a fishery pond'}</span>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                      <input type="checkbox" checked={formData.isMigrantWorker} onChange={(e) => setFormData({ ...formData, isMigrantWorker: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
+                      <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'प्रवासी मजदूर (Migrant Worker)' : 'Migrant Worker'}</span>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                      <input type="checkbox" checked={formData.isSportsMedalist} onChange={(e) => setFormData({ ...formData, isSportsMedalist: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
+                      <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'राज्य / राष्ट्रीय स्तर पदक विजेता (Sports Medalist)' : 'State/National Sports Medalist'}</span>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+                      <input type="checkbox" checked={formData.hasElectricityConnection} onChange={(e) => setFormData({ ...formData, hasElectricityConnection: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
+                      <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'विद्युत कनेक्शन है (Electricity Connection)' : 'Has Electricity Connection'}</span>
+                    </label>
+                  </div>
+                </details>
               </div>
 
               <button
