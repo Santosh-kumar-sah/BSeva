@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, RefreshCw, BookOpen, Building2 } from 'lucide-react';
+import { Search, RefreshCw, BookOpen, Building2, X } from 'lucide-react';
 import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import SchemeCard from '../components/common/SchemeCard';
@@ -87,15 +87,24 @@ export default function SchemesPage() {
       {/* Search & Filter Controls */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         {/* Search Bar */}
-        <div className="relative">
+        <div className="relative flex items-center">
           <input
             type="text"
-            placeholder={language === 'hi' ? 'योजना का नाम, कीवर्ड या लाभ खोजें...' : 'Search by scheme name, keyword, or benefit...'}
+            placeholder={language === 'hi' ? 'योजना का नाम, कीवर्ड या लाभ खोजें... जैसे Student Credit Card' : 'Search by scheme name, keyword, or benefit... e.g. Student Credit Card'}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition"
+            className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition"
           />
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="absolute right-3 p-1 text-slate-400 hover:text-slate-600 rounded-full"
+              title="Clear search"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         {/* Category Pills */}

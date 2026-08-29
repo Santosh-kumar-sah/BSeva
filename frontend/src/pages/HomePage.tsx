@@ -1,7 +1,6 @@
-import React, { useState, useEffect, FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
-  Search, 
   CheckCircle2, 
   GraduationCap, 
   Tractor, 
@@ -18,14 +17,13 @@ import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import SchemeCard from '../components/common/SchemeCard';
 import { Scheme, SchemeCategory } from '../types';
+import SearchAutocomplete from '../components/common/SearchAutocomplete';
 
 export default function HomePage() {
   const { language } = useAuth();
-  const [searchQuery, setSearchQuery] = useState<string>('');
   const [featuredSchemes, setFeaturedSchemes] = useState<Scheme[]>([]);
   const [categories, setCategories] = useState<SchemeCategory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,13 +42,6 @@ export default function HomePage() {
     };
     fetchData();
   }, []);
-
-  const handleSearch = (e: FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/schemes?search=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
 
   const getCategoryIcon = (slug: string) => {
     switch (slug) {
@@ -108,23 +99,8 @@ export default function HomePage() {
                 : 'Scholarships, farm subsidies, jobs — check your eligibility, see required documents, and apply on official portals.'}
             </p>
 
-            {/* Search Box */}
-            <form onSubmit={handleSearch} className="relative flex items-center max-w-lg pt-1">
-              <input
-                type="text"
-                placeholder={language === 'hi' ? 'योजना खोजें... जैसे Student Credit Card, कन्या उत्थान' : 'Search schemes... e.g. Student Credit Card, Kanya Utthan'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-24 py-3 rounded-xl bg-white/8 backdrop-blur border border-white/15 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/60 focus:bg-white/12 transition"
-              />
-              <Search className="w-4 h-4 text-slate-500 absolute left-3.5" />
-              <button
-                type="submit"
-                className="absolute right-1.5 px-4 py-1.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg transition"
-              >
-                {language === 'hi' ? 'खोजें' : 'Search'}
-              </button>
-            </form>
+            {/* Search Box with Live Autocomplete & Suggestions */}
+            <SearchAutocomplete variant="hero" className="max-w-lg pt-1" />
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-3 pt-1">
