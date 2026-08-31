@@ -4,11 +4,11 @@ const config = require('./config');
 let server = null;
 
 if (process.env.NODE_ENV !== 'test') {
-  server = app.listen(config.port, () => {
+  server = app.listen(config.port, '0.0.0.0', () => {
     console.log(`=======================================================`);
     console.log(`🚀 Bihar Sahayak (BSeva) Backend API running`);
-    console.log(`📡 URL: http://localhost:${config.port}/api/v1`);
-    console.log(`🩺 Health: http://localhost:${config.port}/api/v1/health`);
+    console.log(`📡 URL: http://0.0.0.0:${config.port}/api/v1`);
+    console.log(`🩺 Health: http://0.0.0.0:${config.port}/api/v1/health`);
     console.log(`⚙️  Environment: ${config.nodeEnv}`);
     console.log(`=======================================================`);
   });
