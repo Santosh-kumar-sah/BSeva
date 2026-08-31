@@ -51,7 +51,13 @@ api.interceptors.response.use(
 export const authService = {
   login: (data: { identifier: string; password: string }): Promise<{ success: boolean; token: string; user: User }> => 
     api.post('/auth/login', data),
-  register: (data: { fullName: string; phone: string; password: string; email?: string }): Promise<{ success: boolean; token: string; user: User }> => 
+  sendRegistrationOtp: (data: { fullName: string; phone: string; password: string; email: string }): Promise<{ success: boolean; message: string; email: string }> => 
+    api.post('/auth/register', data),
+  resendRegistrationOtp: (data: { email: string }): Promise<{ success: boolean; message: string }> => 
+    api.post('/auth/resend-otp', data),
+  verifyOtpAndRegister: (data: { email: string; otp: string }): Promise<{ success: boolean; token: string; user: User; message: string }> => 
+    api.post('/auth/verify-otp', data),
+  register: (data: { fullName: string; phone: string; password: string; email?: string }): Promise<{ success: boolean; message: string }> => 
     api.post('/auth/register', data),
   logout: (): Promise<{ success: boolean; message: string }> => 
     api.post('/auth/logout'),

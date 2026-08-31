@@ -10,7 +10,10 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   login: (identifier: string, password: string) => Promise<{ success: boolean; token?: string; user?: User }>;
-  register: (fullName: string, phone: string, password: string, email?: string) => Promise<{ success: boolean; token?: string; user?: User }>;
+  sendRegistrationOtp: (data: { fullName: string; phone: string; password: string; email: string }) => Promise<{ success: boolean; message: string; email: string }>;
+  resendRegistrationOtp: (email: string) => Promise<{ success: boolean; message: string }>;
+  verifyOtpAndRegister: (data: { email: string; otp: string }) => Promise<{ success: boolean; token?: string; user?: User; message: string }>;
+  register: (fullName: string, phone: string, password: string, email?: string) => Promise<{ success: boolean; message: string }>;
   logout: () => Promise<void>;
   saveProfile: (profileData: Partial<CitizenProfile>) => Promise<{ success: boolean; profile?: CitizenProfile }>;
   toggleLanguage: () => void;
@@ -60,13 +63,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return res;
   };
 
-  const register = async (fullName: string, phone: string, password: string, email?: string) => {
-    const res = await authService.register({ fullName, phone, password, email });
+  const sendRegistrationOtp = async (data: { fullName: string; phone: string; password: string; email: string }) => {
+    return await authService.sendRegistrationOtp(data);
+  };
+
+  const resendRegistrationOtp = async (email: string) => {
+    return await authService.resendRegistrationOtp({ email });
+  };
+
+  const verifyOtpAndRegister = async (data: { email: string; otp: string }) => {
+    const res = await authService.verifyOtpAndRegister(data);
     if (res.success && res.token) {
       localStorage.setItem('token', res.token);
       setUser(res.user);
+      try {
+        const meRes = await authService.getMe();
+        if (meRes.success) setProfile(meRes.profile);
+      } catch (e) {}
     }
     return res;
+  };
+
+  const register = async (fullName: string, phone: string, password: string, email?: string) => {
+    return await authService.sendRegistrationOtp({
+      fullName,
+      phone,
+      password,
+      email: email || ''
+    });
   };
 
   const logout = async () => {
@@ -100,6 +124,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         isAdmin: user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN',
         login,
+        sendRegistrationOtp,
+        resendRegistrationOtp,
+        verifyOtpAndRegister,
         register,
         logout,
         saveProfile,

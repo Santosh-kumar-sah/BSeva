@@ -17,21 +17,40 @@ describe('Bihar Sahayak REST API Integration Tests', () => {
     expect(res.body.platform).toBe('Bihar Sahayak (BSeva)');
   });
 
-  test('POST /api/v1/auth/register should register a new citizen and return token', async () => {
+  test('POST /api/v1/auth/register and /verify-otp should complete OTP registration and return token', async () => {
+    const { _getOtpForTesting } = require('../src/modules/auth/auth.controller');
     const uniqueSuffix = Date.now().toString().slice(-7);
-    const res = await request(app)
+    const testEmail = `priya.${uniqueSuffix}@example.com`;
+
+    // Step 1: Request OTP
+    const regRes = await request(app)
       .post('/api/v1/auth/register')
       .send({
         fullName: 'Priya Kumari',
         phone: `987${uniqueSuffix}`,
-        email: `priya.${uniqueSuffix}@example.com`,
+        email: testEmail,
         password: 'Password123!'
       });
 
-    expect(res.statusCode).toBe(201);
-    expect(res.body.success).toBe(true);
-    expect(res.body.token).toBeDefined();
-    citizenToken = res.body.token;
+    expect(regRes.statusCode).toBe(200);
+    expect(regRes.body.success).toBe(true);
+
+    const generatedOtp = _getOtpForTesting(testEmail);
+    expect(generatedOtp).toBeDefined();
+    expect(generatedOtp.length).toBe(6);
+
+    // Step 2: Verify OTP
+    const verifyRes = await request(app)
+      .post('/api/v1/auth/verify-otp')
+      .send({
+        email: testEmail,
+        otp: generatedOtp
+      });
+
+    expect(verifyRes.statusCode).toBe(201);
+    expect(verifyRes.body.success).toBe(true);
+    expect(verifyRes.body.token).toBeDefined();
+    citizenToken = verifyRes.body.token;
   });
 
   test('POST /api/v1/auth/login should authenticate admin user', async () => {
