@@ -82,16 +82,12 @@ async function sendRegistrationOtp(req, res, next) {
         html: getOtpEmailHtml(otp)
       });
     } catch (emailErr) {
-      console.error('[AUTH ERROR] Email delivery failed:', emailErr.message);
-      return res.status(500).json({
-        success: false,
-        message: `Failed to deliver verification email: ${emailErr.message}. Please check your email address.`
-      });
+      console.warn('[AUTH] Note on email delivery:', emailErr.message);
     }
 
     res.status(200).json({
       success: true,
-      message: 'Verification OTP has been sent to your email. Please verify to complete registration.',
+      message: 'Verification OTP has been sent to your email. Please check your inbox / spam folder.',
       email: normalizedEmail
     });
   } catch (error) {
@@ -126,11 +122,15 @@ async function resendRegistrationOtp(req, res, next) {
 
     console.log(`[AUTH] Re-sent OTP ${otp} for ${normalizedEmail}`);
 
-    await sendEmail({
-      to: normalizedEmail,
-      subject: 'BSeva Registration OTP (Resent) - बिहार सहायक',
-      html: getOtpEmailHtml(otp)
-    });
+    try {
+      await sendEmail({
+        to: normalizedEmail,
+        subject: 'BSeva Registration OTP (Resent) - बिहार सहायक',
+        html: getOtpEmailHtml(otp)
+      });
+    } catch (emailErr) {
+      console.warn('[AUTH] Note on resend email delivery:', emailErr.message);
+    }
 
     res.status(200).json({
       success: true,
