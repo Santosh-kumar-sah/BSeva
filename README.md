@@ -5,6 +5,8 @@
 
 ---
 
+[![Live Frontend](https://img.shields.io/badge/Live%20Frontend-biharskill.vercel.app-ea580c?logo=vercel&logoColor=white)](https://biharskill.vercel.app)
+[![Live Backend](https://img.shields.io/badge/Live%20API-bseva.onrender.com-46E3B7?logo=render&logoColor=white)](https://bseva.onrender.com/api/v1/health)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 [![TypeScript: 5.7](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Database: Supabase PostgreSQL](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
@@ -13,16 +15,16 @@
 [![Frontend: React 18 / TypeScript](https://img.shields.io/badge/Frontend-React%2018%20%2F%20TypeScript-61DAFB?logo=react&logoColor=black)](https://reactjs.org)
 [![Build Tool: Vite](https://img.shields.io/badge/Build-Vite%205.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Styling: Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS%203.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
+[![Tests Passing](https://img.shields.io/badge/Tests-16%2F16%20Passing-brightgreen.svg)]()
 
 ---
 
 ## 📌 Table of Contents
 - [Executive Overview](#-executive-overview)
 - [System Architecture](#-system-architecture)
-- [End-to-End User Journey](#-end-to-end-user-journey)
-- [Deterministic Eligibility Rule Engine](#-deterministic-eligibility-rule-engine)
-- [Career & Skill Intelligence Engine](#-career--skill-intelligence-engine)
+- [Deterministic 14-Factor Eligibility Rule Engine](#-deterministic-14-factor-eligibility-rule-engine)
+- [Grounded AI Assistance (OpenRouter RAG)](#-grounded-ai-assistance-openrouter-rag)
+- [Email OTP Authentication](#-email-otp-authentication)
 - [Core Features & Modules](#-core-features--modules)
 - [Project Folder Structure](#-project-folder-structure)
 - [Quick Start Guide](#-quick-start-guide)
@@ -32,7 +34,7 @@
 
 ## 🚀 Executive Overview
 
-**Bihar Sahayak (BSeva)** is a modern GovTech discovery and intelligence layer designed to eliminate information asymmetry across Bihar's government ecosystem.
+**Bihar Sahayak (BSeva)** is a modern GovTech discovery and intelligence platform designed to eliminate information asymmetry across Bihar's public welfare ecosystem.
 
 Rather than replacing official government websites, Bihar Sahayak serves as a **smart navigation and eligibility layer** that guides citizens directly to the right official departments, document checklists, and application portals.
 
@@ -58,264 +60,144 @@ Rather than replacing official government websites, Bihar Sahayak serves as a **
 graph TD
     subgraph ClientLayer ["Client Layer (TypeScript & React 18)"]
         UI["React 18 + TypeScript + Tailwind CSS (Bilingual Hindi/English)"]
-        Types["Strict Type Definitions (types/index.ts)"]
-        Router["React Router v6"]
-        AuthCtx["Auth & Profile State (JWT)"]
+        State["Auth Context & Saved Schemes State (localStorage)"]
+        Vite["Vite 5.4 SPA Router (/schemes, /saved, /eligibility, /verify-otp)"]
     end
 
-    subgraph APILayer ["Backend API Service (Node.js & Express)"]
-        GW["Security Gateway (Helmet / CORS / Cookie-Parser)"]
-        AuthMod["Auth & RBAC (Citizen / Admin)"]
-        ProfMod["Citizen Profile Manager"]
-        SchemeMod["Scheme Intelligence Catalog"]
-        RuleMod["Deterministic Eligibility Engine"]
-        CareerMod["Career & Skill Recommender"]
-        AdminMod["Admin Verifier & Audit Logs"]
+    subgraph ApiLayer ["Backend API Layer (Node.js & Express)"]
+        Routes["Master Router (/api/v1)"]
+        AuthMod["Auth & OTP Engine (bcrypt + JWT + Gmail REST API)"]
+        RulesEng["Deterministic Rule Engine (ruleEngine.js)"]
+        AiMod["AI Grounded Chatbot (OpenRouter LLaMA-3.3 70B)"]
     end
 
-    subgraph DataLayer ["Cloud Database Layer (Supabase PostgreSQL)"]
-        PrismaClient["Prisma ORM 5.22"]
-        PG[(Supabase PostgreSQL 15+ Cluster)]
-        Tables["Users • Profiles • Schemes • Rules • Careers • AuditLogs"]
+    subgraph DataLayer ["Data & Persistence Layer"]
+        Supabase["Supabase Cloud PostgreSQL (Prisma 5.22 ORM)"]
+        SeedData["Seed Store (25 Schemes, 5 Depts, 8 Careers, 14-Factor Rules)"]
     end
 
-    subgraph GovtLayer ["Official Bihar Govt Ecosystem"]
-        SPlus["ServicePlus / RTPS Bihar"]
-        AgriDBT["DBT Agriculture Bihar"]
-        Medha["MedhaSoft Education"]
-        BSDM["Bihar Skill Mission"]
-    end
-
-    UI --> Types
-    UI --> Router
-    Router --> AuthCtx
-    AuthCtx -->|Typed REST API Requests| GW
-    GW --> AuthMod & ProfMod & SchemeMod & RuleMod & CareerMod & AdminMod
-    AuthMod & ProfMod & SchemeMod & RuleMod & CareerMod & AdminMod --> PrismaClient
-    PrismaClient --> PG
-    PG --- Tables
-    SchemeMod -->|Direct Redirection| SPlus & AgriDBT & Medha & BSDM
+    UI --> Routes
+    Routes --> AuthMod
+    Routes --> RulesEng
+    Routes --> AiMod
+    AuthMod --> Supabase
+    RulesEng --> Supabase
+    AiMod --> SeedData
 ```
 
 ---
 
-## 🔄 End-to-End User Journey
+## 🎯 Deterministic 14-Factor Eligibility Rule Engine
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as Citizen / Student / Farmer
-    participant UI as BSeva Web Portal (TypeScript)
-    participant API as Backend REST API
-    participant Engine as Deterministic Rule Engine
-    participant DB as Supabase PostgreSQL
-    participant Govt as Official Govt Portal (e.g. ServicePlus)
+Unlike standard search systems that return generic recommendations, BSeva evaluates eligibility across **14 real-world criteria**:
 
-    User->>UI: Enters basic profile (Age, District, Education, Income, Category)
-    UI->>API: POST /api/v1/eligibility/check (Typed Request)
-    API->>DB: Fetch active scheme criteria
-    DB-->>API: Return rulesets for 25+ verified schemes
-    API->>Engine: Evaluate profile against rule groups (AND/OR AST)
-    Engine-->>API: Match results with explainability matrix (Passed/Failed rules)
-    API-->>UI: Return categorized results (Potentially Eligible / Needs Verification)
-    User->>UI: Selects scheme & views interactive Document Checklist
-    UI->>User: Displays required documents (Marksheets, Resident/Caste Certificates)
-    User->>UI: Clicks "Apply on Official Portal"
-    UI->>Govt: Safely redirects user to official government application page
+| Category | Profile Factor | Real-World Bihar Scheme Impact |
+|---|---|---|
+| **Demographics** | `age`, `gender`, `isBiharResident` | Minimum age constraints, women-specific schemes (*Kanya Utthan*) |
+| **Social & Economic** | `socialCategory`, `annualIncome`, `maritalStatus` | Caste quotas (SC/ST/EBC/OBC), poverty line thresholds, widow pensions (*Laxmibai Pension*) |
+| **Education & Youth** | `education`, `employmentStatus` | Student credit cards vs. unemployed allowances (*Swayam Sahayata Bhatta*) |
+| **Agriculture** | `landHoldingAcres`, `farmerType` | Distinguishes land-owning farmers from sharecroppers (*बटाईदार*) (*PM-KISAN, Fasal Sahayata*) |
+| **Welfare & Domicile** | `rationCardType`, `areaType` | BPL prioritization, rural panchayat criteria (*Gram Parivahan Yojana*) |
+| **Compliance & Tax** | `isIncomeTaxPayer`, `hasGovtEmployeeInFamily` | Exclusion filters for pensions and agricultural grants |
+| **Direct Benefits** | `isAadhaarDbtLinked` | Pre-checks bank account seeding (*MedhaSoft, e-Kalyan, DBT Agriculture*) |
+| **Merit & Specialty** | `hasClearedPrelims`, `hasFisheryPond`, `isMigrantWorker`, `isSportsMedalist` | *Civil Seva Protsahan (₹1 Lakh reward)*, *Matsya Palan*, *Pravasi Mazdoor Anudan*, *Khel Vikas* |
+
+---
+
+## 🤖 Grounded AI Assistance (OpenRouter RAG)
+
+The AI chatbot uses **Retrieval-Augmented Generation (RAG)** powered by OpenRouter's `meta-llama/llama-3.3-70b-instruct:free`:
+- Ingests verified scheme parameters and official government guidelines.
+- Strictly provides factual answers with official portal links.
+- Supports both Hindi and English citizen inquiries.
+
+---
+
+## 📧 Email OTP Authentication
+
+1. **Step 1 (`/register`)**: Citizen enters Name, Mobile, Email, and Password ➔ System sends a secure 6-digit OTP to their Gmail address.
+2. **Step 2 (`/verify-otp`)**: Citizen verifies the 6-digit OTP code ➔ Account is verified in Supabase PostgreSQL and authenticated via JWT.
+
+---
+
+## 📂 Project Folder Structure
+
 ```
-
----
-
-## ⚙️ Deterministic Eligibility Rule Engine
-
-Eligibility does not rely on guesswork. Every scheme's criteria is modeled as an Abstract Syntax Tree (AST) supporting relational operators and boolean groups:
-
-```mermaid
-flowchart TD
-    Start([Citizen Profile Input]) --> FetchRules[Fetch Scheme Rules from Supabase]
-    FetchRules --> GroupSplit{Group by rule_group}
-    
-    subgraph Group1 ["Rule Group 1 (AND Logic)"]
-        C1["Condition 1: is_bihar_resident == true"] --> R1{Pass?}
-        C2["Condition 2: age <= 25"] --> R2{Pass?}
-        C3["Condition 3: education IN [12TH_PASS, GRADUATE]"] --> R3{Pass?}
-        R1 & R2 & R3 -->|All Pass| G1Pass[Group 1 PASSED]
-        R1 & R2 & R3 -.->|Any Fail| G1Fail[Group 1 FAILED]
-    end
-
-    GroupSplit --> Group1
-    G1Pass --> EvalFinal{Any Group Passed?}
-    G1Fail --> EvalFinal
-
-    EvalFinal -->|Yes| PotEligible["POTENTIALLY_ELIGIBLE (100% Match)"]
-    EvalFinal -->|Missing Fields Only| NeedsVerif["NEEDS_VERIFICATION (60% Match)"]
-    EvalFinal -->|Criteria Failed| NotEligible["LIKELY_NOT_ELIGIBLE (0% Match)"]
-```
-
----
-
-## 🎓 Career & Skill Intelligence Engine
-
-The career engine bridges educational credentials and market opportunities using a hybrid scoring algorithm:
-
-$$\text{Match Score} = (0.35 \times \text{Education Fit}) + (0.45 \times \text{Skill Overlap}) + (0.20 \times \text{Interest Alignment})$$
-
-```mermaid
-flowchart LR
-    A[Citizen Profile] --> B[Skill & Education Parser]
-    B --> C[Career Pathways Catalog]
-    C --> D[Hybrid Score Evaluator]
-    D --> E[Top Career Recommendations]
-    E --> F[Skill Gap Delta]
-    F --> G[Direct BSDM Course Links]
-```
-
----
-
-## 🗂️ Core Features & Modules
-
-| Module | Features & Capabilities |
-|---|---|
-| **Scheme Intelligence** | • 25+ verified Bihar schemes across 5 key departments.<br>• Full-text bilingual search (Hindi & English).<br>• Filter by Category (*Education, Agriculture, Employment, Women, Welfare, MSME*). |
-| **Eligibility Wizard** | • Real-time evaluation across all 38 Bihar districts.<br>• Detailed criteria breakdown showing passed and failed conditions.<br>• Document checklist generator with interactive tick boxes. |
-| **Career Explorer** | • 8+ high-demand career pathways (*Full Stack Dev, Solar Technician, AgriTech, GDA Nursing*).<br>• Salary benchmarks and minimum education prerequisites.<br>• Skill gap readiness calculator mapped to BSDM programs. |
-| **Citizen Hub** | • Saved profiles and auto-calculated recommendations.<br>• Persistent cloud profile stored in Supabase PostgreSQL.<br>• Secure JWT authentication via HttpOnly cookies. |
-| **Admin & Governance** | • Real-time metrics and category distribution analytics.<br>• Scheme verification status updater.<br>• Immutable security audit logging (`audit_logs`). |
-
----
-
-## 📦 Project Folder Structure
-
-```text
 BiharAi/
-├── backend/                  # Node.js & Express REST API
-│   ├── prisma/
-│   │   ├── schema.prisma     # Supabase PostgreSQL relational schema
-│   │   └── seed.js           # Database seeder (25 schemes, rules, careers)
+├── frontend/                  # React 18 + TypeScript + Vite 5.4 + Tailwind CSS
 │   ├── src/
-│   │   ├── config/           # Environment & JWT configs
-│   │   ├── database/         # Prisma client & database connector
-│   │   ├── middleware/       # JWT Auth & centralized error handling
-│   │   ├── modules/
-│   │   │   ├── admin/        # Admin analytics & scheme verification
-│   │   │   ├── auth/         # Citizen registration & login
-│   │   │   ├── careers/      # Career recommender & skill gap engine
-│   │   │   ├── eligibility/  # Deterministic rule engine & condition evaluator
-│   │   │   ├── profile/      # Citizen demographic profile CRUD
-│   │   │   └── schemes/      # Scheme search, filter & detail endpoints
-│   │   ├── routes.js         # Master API router (/api/v1)
-│   │   └── server.js         # HTTP server entry point
-│   └── tests/                # Jest & Supertest automated test suites
-│
-├── frontend/                 # React 18 + TypeScript + Vite Web App
+│   │   ├── components/       # Common UI, Navbar, SearchAutocomplete, AiChatWidget
+│   │   ├── context/          # AuthContext, SavedSchemesContext
+│   │   ├── pages/            # HomePage, SchemesPage, EligibilityCheckerPage, VerifyOtpPage
+│   │   ├── services/         # api.ts (Axios client with dynamic baseURL)
+│   │   └── types/            # TypeScript data contracts & interfaces
+│   └── public/               # Static assets & Bihar heritage spotlight cards
+├── backend/                   # Node.js + Express + Prisma ORM API
+│   ├── prisma/               # schema.prisma (PostgreSQL models) & seed.js
 │   ├── src/
-│   │   ├── types/            # Strict TypeScript interfaces (User, Scheme, etc.)
-│   │   │   └── index.ts
-│   │   ├── components/       # Navbar.tsx, Footer.tsx, SchemeCard.tsx, EligibilityBadge.tsx
-│   │   │   └── common/
-│   │   ├── context/          # Typed AuthContext.tsx & language state
-│   │   ├── pages/            # 11 Typed pages (Home, Schemes, Details, Eligibility, Careers, etc.)
-│   │   ├── services/         # Typed Axios API client (api.ts)
-│   │   ├── App.tsx           # Typed React Router v6 route configuration
-│   │   └── main.tsx          # Vite React entry point
-│   ├── tsconfig.json         # TypeScript compiler configuration
-│   ├── tsconfig.node.json    # TypeScript Node configuration
-│   ├── tailwind.config.js    # Tailwind CSS styling configuration
-│   └── vite.config.js        # Vite dev server & proxy settings
-│
-├── data/
-│   └── seed/                 # Verified seed datasets
-│       ├── categories.json   # 6 Scheme taxonomy categories
-│       ├── departments.json  # 5 Bihar government departments
-│       ├── schemes.json      # 25 Verified Bihar government schemes
-│       ├── rules.json        # Deterministic AST rule definitions
-│       └── careers.json      # 8 Career pathways with skill mappings
-│
-├── docs/
-│   ├── hld/                  # High-Level Architecture Design (HLD.md)
-│   └── lld/                  # Low-Level Design & API Specifications (LLD.md)
-│
-└── README.md
+│   │   ├── modules/          # auth, eligibility, schemes, careers, ai, admin
+│   │   ├── services/         # email.service.js (Gmail REST API + SMTP)
+│   │   ├── database/         # db.js (Supabase client) & seedLoader.js
+│   │   └── server.js         # Express server entry point (0.0.0.0 binding)
+│   └── tests/                # Jest integration & eligibility test suite (16 tests)
+├── data/seed/                 # Verified scheme and eligibility rule seed files
+└── vercel.json                # Single-Page Application rewrite rules
 ```
 
 ---
 
-## ⚡ Quick Start Guide
+## ⚡ Quick Start Guide (Local Setup)
 
-### Prerequisites
-- [Node.js](https://nodejs.org) (v18+ recommended)
-- [Git](https://git-scm.com)
-- Free [Supabase](https://supabase.com) Account
-
----
-
-### 1. Clone Repository
+### 1. Clone & Install Dependencies
 ```bash
 git clone https://github.com/Santosh-kumar-sah/BSeva.git
-cd BSeva
-```
+cd BiharAi
 
----
-
-### 2. Backend Setup
-```bash
+# Install backend dependencies
 cd backend
 npm install
 
-# Configure environment variables in backend/.env
-# PORT=5000
-# DATABASE_URL="postgresql://postgres.[REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
-# DIRECT_URL="postgresql://postgres.[REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres"
-# JWT_SECRET="your-super-secret-jwt-key"
-
-# Push schema to Supabase PostgreSQL & Seed data
-npx prisma db push
-node prisma/seed.js
-
-# Run Automated Test Suite
-npm test
-
-# Start Backend Server
-npm run dev
-```
-
----
-
-### 3. Frontend Setup (TypeScript)
-```bash
+# Install frontend dependencies
 cd ../frontend
 npm install
+```
 
-# Type-check and Build
-npm run build
+### 2. Configure Environment Variables
+Create a `.env` file in `backend/`:
+```env
+PORT=5000
+NODE_ENV=development
+JWT_SECRET=your-secure-jwt-secret
+DATABASE_URL="your-supabase-connection-string"
+DIRECT_URL="your-supabase-direct-string"
+ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+OPENROUTER_API_KEY=your-openrouter-key
+OPENROUTER_MODEL=meta-llama/llama-3.3-70b-instruct:free
+```
 
-# Start Vite Development Server
+### 3. Run the Development Servers
+In Terminal 1 (Backend):
+```bash
+cd backend
 npm run dev
 ```
-Open **[http://localhost:5173](http://localhost:5173)** in your browser!
+
+In Terminal 2 (Frontend):
+```bash
+cd frontend
+npm run dev
+```
+
+Visit **http://localhost:5173** to explore the platform locally.
+
+### 4. Run Automated Tests
+```bash
+cd backend
+npm test
+```
 
 ---
 
-## 🔒 Security & Privacy Standards
+## 📜 Official Disclaimer
 
-- **Zero Sensitive Data Storage:** No collection of Aadhaar numbers, biometric data, or banking credentials during scheme discovery.
-- **Role-Based Access Control (RBAC):** Strict authorization guards for `CITIZEN`, `DATA_VERIFIER`, `ADMIN`, and `SUPER_ADMIN`.
-- **Immutable Audit Trails:** Every administrative status change is recorded in PostgreSQL with timestamp and actor ID.
-- **AI Safety:** Prompts and engines are strictly grounded in official sources with mandatory citations.
-
----
-
-## ⚠️ Official Disclaimer
-
-> **Independent Prototype Notice:**  
-> Bihar Sahayak (BSeva) is an independent technology platform designed to facilitate discovery and understanding of public opportunities. It is **not** an official agency of the Government of Bihar and does not grant final scheme approvals. Final eligibility, benefit disbursement, and decisions remain under the sole jurisdiction of the respective Bihar Government departments. Users should verify details on official portals before taking consequential action.
-
----
-
-## 👨‍💻 Author & Maintainer
-
-- **Developer:** Santosh Kumar Sah
-- **GitHub:** [@Santosh-kumar-sah](https://github.com/Santosh-kumar-sah)
-- **Repository:** [https://github.com/Santosh-kumar-sah/BSeva](https://github.com/Santosh-kumar-sah/BSeva)
-
-*Built with ❤️ for the citizens of Bihar 🇮🇳*
+*Bihar Sahayak (BSeva) is an independent GovTech initiative built to make government welfare information accessible and easy to understand for the citizens of Bihar. All scheme details and eligibility criteria are mapped to public notices from official Government of Bihar portals. Final applications and benefit disbursements are handled exclusively through official government platforms (such as ServicePlus, DBT Agriculture, and e-Kalyan).*
