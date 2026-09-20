@@ -11,7 +11,8 @@ import {
   ArrowRight,
   ChevronRight,
   Compass,
-  FileCheck
+  FileCheck,
+  Sparkles
 } from 'lucide-react';
 import { schemeService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -57,112 +58,95 @@ export default function HomePage() {
   return (
     <div className="space-y-16 pb-16">
       
-      {/* 1. Hero Section (Warm Portal Banner with High-Contrast Typography & CTAs) */}
-      <section className="bg-hero-bg text-text-primary pt-10 sm:pt-14 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 border-b border-border">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      {/* 1. Hero Section (Centered Clean GovTech Portal Banner) */}
+      <section className="bg-hero-bg text-text-primary pt-12 sm:pt-16 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 border-b border-border">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
           
-          {/* Left Column: Eyebrow, Headline, Subtext, Search, 3 Solid Action Buttons */}
-          <div className="lg:col-span-7 space-y-6 text-left">
-            
-            {/* Soft Tinted Eyebrow Badge (5-10% Brand Opacity) */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand/10 border border-brand/25 text-xs font-semibold text-brand shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
-              <span>{language === 'hi' ? 'बिहार सरकार की आधिकारिक योजना सेवा' : 'Official Bihar Govt Schemes & Skill Portal'}</span>
-            </div>
-
-            {/* Headline with Strong Contrast & Maroon Accent */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text-primary leading-[1.18]">
-              {language === 'hi' ? (
-                <>
-                  बिहार की सरकारी योजनाएं,{' '}
-                  <span className="text-brand underline decoration-brand/30 decoration-wavy decoration-2">एक ही मंच पर</span>
-                </>
-              ) : (
-                <>
-                  Every Bihar Govt Scheme,{' '}
-                  <span className="text-brand underline decoration-brand/30 decoration-wavy decoration-2">One Unified Portal</span>
-                </>
-              )}
-            </h1>
-
-            {/* Subtext */}
-            <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-xl font-normal">
-              {language === 'hi'
-                ? 'छात्रवृत्ति, कृषि अनुदान, कौशल प्रशिक्षण व स्वरोजगार — 14-कारकों के आधार पर तुरंत अपनी पात्रता जांचें और सीधे आधिकारिक सरकारी पोर्टल पर आवेदन करें।'
-                : 'Scholarships, farm subsidies, enterprise loans & BSDM skills — check your eligibility across 14 precise factors and connect directly to official government portals.'}
-            </p>
-
-            {/* Search Box */}
-            <div className="max-w-xl">
-              <SearchAutocomplete variant="hero" />
-            </div>
-
-            {/* 3 Call to Action Buttons (1 Filled Solid Maroon, 2 Colored Outline) */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              {/* Primary CTA (Solid Filled Maroon #7A2A2A with White Text) */}
-              <Link
-                to="/eligibility"
-                className="bg-brand hover:bg-brand-dark text-white font-bold px-6 py-3 rounded-lg transition-all inline-flex items-center justify-center gap-2 text-sm shadow-md hover:shadow-lg active:scale-98"
-              >
-                <CheckCircle2 className="w-5 h-5 text-white" strokeWidth={2} />
-                <span>{language === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}</span>
-              </Link>
-
-              {/* Secondary CTA 1 (Outlined in Brand Color) */}
-              <Link
-                to="/documents"
-                className="border-2 border-brand text-brand hover:bg-brand/10 font-bold px-5 py-2.5 rounded-lg transition-colors inline-flex items-center justify-center gap-2 text-sm bg-white shadow-xs"
-              >
-                <FileCheck className="w-4 h-4 text-brand" strokeWidth={2} />
-                <span>{language === 'hi' ? 'दस्तावेज़ चेकलिस्ट' : 'Document Checklist'}</span>
-              </Link>
-
-              {/* Secondary CTA 2 (Outlined in Brand Color) */}
-              <Link
-                to="/careers"
-                className="border-2 border-brand text-brand hover:bg-brand/10 font-bold px-5 py-2.5 rounded-lg transition-colors inline-flex items-center justify-center gap-2 text-sm bg-white shadow-xs"
-              >
-                <Compass className="w-4 h-4 text-brand" strokeWidth={2} />
-                <span>{language === 'hi' ? 'कौशल एवं करियर' : 'Career Guide'}</span>
-              </Link>
-            </div>
+          {/* Soft Tinted Eyebrow Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/10 border border-brand/25 text-xs font-semibold text-brand shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
+            <span>{language === 'hi' ? '🇮🇳 बिहार सरकार की आधिकारिक योजना सेवा' : '🇮🇳 Official Bihar Govt Schemes & Skill Portal'}</span>
           </div>
 
-          {/* Right Column: Heritage Image Pair with clean border */}
-          <div className="lg:col-span-5 grid grid-cols-2 gap-4">
-            
-            {/* Image 1: Rajgir */}
-            <div className="rounded-xl overflow-hidden shadow-card border border-border bg-white aspect-[3/4] relative">
-              <img
-                src="/images/bihar_rajgir_buddha.jpg"
-                alt="Shanti Stupa, Rajgir"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-text-primary/85 via-text-primary/20 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-white text-brand inline-block mb-1 border border-brand/20 shadow-xs">
-                  Rajgir
-                </span>
-                <p className="text-xs font-bold text-white">विश्व शांति स्तूप व धरोहर</p>
-              </div>
-            </div>
+          {/* Headline with Strong Contrast & Maroon Accent */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.18]">
+            {language === 'hi' ? (
+              <>
+                बिहार की सभी सरकारी योजनाएं,{' '}
+                <span className="text-brand underline decoration-brand/30 decoration-wavy decoration-2">एक ही मंच पर</span>
+              </>
+            ) : (
+              <>
+                Every Bihar Govt Scheme,{' '}
+                <span className="text-brand underline decoration-brand/30 decoration-wavy decoration-2">One Unified Portal</span>
+              </>
+            )}
+          </h1>
 
-            {/* Image 2: Nalanda */}
-            <div className="rounded-xl overflow-hidden shadow-card border border-border bg-white aspect-[3/4] mt-6 relative">
-              <img
-                src="/images/bihar_nalanda_vikramshila.jpg"
-                alt="Nalanda Mahavihara ruins"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-text-primary/85 via-text-primary/20 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-white text-brand inline-block mb-1 border border-brand/20 shadow-xs">
-                  Nalanda
-                </span>
-                <p className="text-xs font-bold text-white">नालंदा महाविहार ज्ञानपीठ</p>
-              </div>
-            </div>
+          {/* Centered Subtext */}
+          <p className="text-base sm:text-lg lg:text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto font-normal">
+            {language === 'hi'
+              ? 'छात्रवृत्ति, कृषि अनुदान, कौशल प्रशिक्षण व स्वरोजगार — 14-कारकों के आधार पर तुरंत अपनी पात्रता जांचें और सीधे आधिकारिक सरकारी पोर्टल पर आवेदन करें।'
+              : 'Scholarships, farm subsidies, enterprise loans & BSDM skills — check your eligibility across 14 precise factors and connect directly to official government portals.'}
+          </p>
 
+          {/* Centered Search Box */}
+          <div className="max-w-2xl mx-auto pt-2">
+            <SearchAutocomplete variant="hero" />
+          </div>
+
+          {/* Quick Keyword Chips */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs text-text-secondary max-w-2xl mx-auto">
+            <span className="font-semibold text-text-primary mr-1 flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-accent-gold" />
+              {language === 'hi' ? 'लोकप्रिय:' : 'Popular:'}
+            </span>
+            {[
+              { label: language === 'hi' ? 'पोस्ट मैट्रिक छात्रवृत्ति' : 'Post Matric Scholarship', query: 'छात्रवृत्ति' },
+              { label: language === 'hi' ? 'स्टूडेंट क्रेडिट कार्ड' : 'Student Credit Card', query: 'क्रेडिट कार्ड' },
+              { label: language === 'hi' ? 'कृषि यंत्रीकरण' : 'Farm Machinery', query: 'कृषि' },
+              { label: language === 'hi' ? 'KYP कौशल' : 'KYP Skill', query: 'कुशल युवा' },
+              { label: language === 'hi' ? 'मुख्यमंत्री उद्यमी' : 'Udyami Yojana', query: 'उद्यमी' },
+              { label: language === 'hi' ? 'पेंशन योजना' : 'Pension Schemes', query: 'पेंशन' },
+            ].map((tag, idx) => (
+              <Link
+                key={idx}
+                to={`/schemes?search=${encodeURIComponent(tag.query)}`}
+                className="px-3 py-1 rounded-full bg-white hover:bg-brand/10 text-text-primary hover:text-brand border border-border transition-colors font-medium shadow-xs"
+              >
+                {tag.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* 3 Centered Call to Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+            {/* Primary CTA (Solid Filled Maroon #7A2A2A with White Text) */}
+            <Link
+              to="/eligibility"
+              className="bg-brand hover:bg-brand-dark text-white font-bold px-7 py-3.5 rounded-lg transition-all inline-flex items-center justify-center gap-2 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-98"
+            >
+              <CheckCircle2 className="w-5 h-5 text-white" strokeWidth={2} />
+              <span>{language === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}</span>
+            </Link>
+
+            {/* Secondary CTA 1 (Outlined in Brand Color) */}
+            <Link
+              to="/documents"
+              className="border-2 border-brand text-brand hover:bg-brand/10 font-bold px-6 py-3 rounded-lg transition-colors inline-flex items-center justify-center gap-2 text-sm sm:text-base bg-white shadow-xs"
+            >
+              <FileCheck className="w-4 h-4 text-brand" strokeWidth={2} />
+              <span>{language === 'hi' ? 'दस्तावेज़ चेकलिस्ट' : 'Document Checklist'}</span>
+            </Link>
+
+            {/* Secondary CTA 2 (Outlined in Brand Color) */}
+            <Link
+              to="/careers"
+              className="border-2 border-brand text-brand hover:bg-brand/10 font-bold px-6 py-3 rounded-lg transition-colors inline-flex items-center justify-center gap-2 text-sm sm:text-base bg-white shadow-xs"
+            >
+              <Compass className="w-4 h-4 text-brand" strokeWidth={2} />
+              <span>{language === 'hi' ? 'कौशल एवं करियर' : 'Career Guide'}</span>
+            </Link>
           </div>
 
         </div>
