@@ -35,13 +35,12 @@ export default function SearchAutocomplete({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Popular quick tags
+  // Popular quick tags in Bihar
   const popularKeywords = language === 'hi' 
     ? ['स्टूडेंट क्रेडिट कार्ड', 'कन्या उत्थान', 'कृषि यंत्रीकरण', 'कुशल युवा कार्यक्रम (KYP)', 'पोस्ट मैट्रिक छात्रवृत्ति']
     : ['Student Credit Card', 'Kanya Utthan', 'Krishi Yantra Subsidy', 'Kushal Yuva (KYP)', 'Post Matric Scholarship'];
 
   useEffect(() => {
-    // Load all active schemes for instant zero-latency client search
     const loadSchemes = async () => {
       try {
         const res = await schemeService.getSchemes({ limit: 100 });
@@ -155,16 +154,16 @@ export default function SearchAutocomplete({
           placeholder={placeholder || defaultPlaceholder}
           autoComplete="off"
           spellCheck={false}
-          className={`w-full text-slate-900 bg-white placeholder:text-slate-400 focus:outline-none transition ${
+          className={`w-full text-slate-900 bg-white placeholder:text-slate-400 focus:outline-none transition-all duration-150 ${
             variant === 'hero'
-              ? 'pl-12 pr-28 py-3.5 rounded-2xl shadow-xl border border-slate-200 text-sm sm:text-base font-semibold focus:ring-2 focus:ring-orange-500'
+              ? 'pl-12 pr-28 py-3.5 rounded-2xl shadow-lg border border-slate-200/90 text-sm sm:text-base font-semibold focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500'
               : variant === 'navbar'
-              ? 'pl-9 pr-8 py-2 rounded-full border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm'
-              : 'pl-11 pr-24 py-3 rounded-xl border border-slate-200 text-sm font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm'
+              ? 'pl-9 pr-8 py-2 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-semibold focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white shadow-2xs'
+              : 'pl-11 pr-24 py-3 rounded-xl border border-slate-200 text-sm font-semibold focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 shadow-xs'
           } ${inputClassName}`}
         />
 
-        {/* Left Search Icon */}
+        {/* Search Icon */}
         <Search
           className={`text-slate-400 absolute pointer-events-none ${
             variant === 'hero' ? 'w-5 h-5 left-4' : variant === 'navbar' ? 'w-4 h-4 left-3' : 'w-4.5 h-4.5 left-3.5'
@@ -180,7 +179,7 @@ export default function SearchAutocomplete({
               inputRef.current?.focus();
             }}
             className={`text-slate-400 hover:text-slate-600 p-1 rounded-full absolute ${
-              showButton ? 'right-24' : 'right-3'
+              showButton ? 'right-24' : 'right-2.5'
             }`}
           >
             <X className="w-4 h-4" />
@@ -191,18 +190,17 @@ export default function SearchAutocomplete({
         {showButton && (
           <button
             type="submit"
-            className={`absolute right-2 px-5 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold text-xs rounded-xl shadow-md transition ${buttonClassName}`}
+            className={`absolute right-1.5 px-4.5 py-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all duration-150 cursor-pointer ${buttonClassName}`}
           >
             {language === 'hi' ? 'खोजें' : 'Search'}
           </button>
         )}
       </form>
 
-      {/* Suggestions & Popular Searches Dropdown */}
+      {/* Suggestions Dropdown */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden z-50 animate-in fade-in-50 duration-150 text-left">
+        <div className="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden z-50 animate-in fade-in-50 duration-150 text-left">
           
-          {/* Matched Suggestions */}
           {suggestions.length > 0 ? (
             <div className="py-2">
               <div className="px-4 py-1.5 text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -215,13 +213,13 @@ export default function SearchAutocomplete({
                   key={scheme.id}
                   type="button"
                   onClick={() => handleSelectScheme(scheme.slug)}
-                  className={`w-full px-4 py-2.5 text-left flex items-center justify-between gap-3 hover:bg-orange-50/80 transition group ${
+                  className={`w-full px-4 py-2.5 text-left flex items-center justify-between gap-3 hover:bg-orange-50/70 transition-colors group cursor-pointer ${
                     selectedIndex === idx ? 'bg-orange-50/90' : ''
                   }`}
                 >
                   <div className="space-y-0.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-orange-600 transition truncate">
+                      <span className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-orange-700 transition-colors truncate">
                         {language === 'hi' && scheme.title_hi ? scheme.title_hi : scheme.title_en}
                       </span>
                     </div>
@@ -236,7 +234,7 @@ export default function SearchAutocomplete({
                     </div>
                   </div>
 
-                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-orange-600 group-hover:translate-x-0.5 transition shrink-0" />
+                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-orange-600 group-hover:translate-x-0.5 transition-transform shrink-0" />
                 </button>
               ))}
 
@@ -247,7 +245,7 @@ export default function SearchAutocomplete({
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1"
+                  className="text-xs font-bold text-orange-700 hover:text-orange-800 flex items-center gap-1 cursor-pointer"
                 >
                   <span>{language === 'hi' ? 'सभी खोजें' : 'View all'}</span>
                   <ArrowRight className="w-3 h-3" />
@@ -262,13 +260,12 @@ export default function SearchAutocomplete({
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="px-4 py-1.5 bg-orange-600 text-white rounded-xl text-xs font-bold shadow hover:bg-orange-700 transition"
+                className="px-4 py-1.5 bg-orange-600 text-white rounded-xl text-xs font-bold shadow-xs hover:bg-orange-700 transition cursor-pointer"
               >
                 {language === 'hi' ? 'पूर्ण डायरेक्टरी में खोजें →' : 'Search Entire Catalog →'}
               </button>
             </div>
           ) : (
-            /* Popular Searches when query is empty */
             <div className="p-4 space-y-2.5">
               <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5 text-orange-500" />
@@ -280,7 +277,7 @@ export default function SearchAutocomplete({
                     key={idx}
                     type="button"
                     onClick={() => handleSelectKeyword(kw)}
-                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-orange-50 hover:text-orange-700 hover:border-orange-200 border border-slate-200/80 text-xs font-semibold text-slate-700 transition flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-orange-50 hover:text-orange-700 hover:border-orange-200 border border-slate-200/80 text-xs font-semibold text-slate-700 transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <Search className="w-3 h-3 text-slate-400" />
                     <span>{kw}</span>

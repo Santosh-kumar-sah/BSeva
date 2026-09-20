@@ -8,19 +8,20 @@ export default {
     extend: {
       colors: {
         bihar: {
-          saffron: '#FF671F',
-          orange: '#FF8533',
-          green: '#046A38',
-          navy: '#06038D',
-          dark: '#0f172a',
-          surface: '#f8fafc',
-          card: '#ffffff',
-          primary: '#2563eb',
-          accent: '#10b981'
+          terracotta: '#C2410C', // Madhubani warm terracotta primary
+          saffron: '#EA580C',    // Vibrant action saffron
+          amber: '#D97706',      // Nalanda ochre/gold
+          emerald: '#047857',    // Gangetic forest green
+          navy: '#0F172A',       // Deep mithila midnight
+          surface: '#F8FAFC',    // Clean neutral surface
+          card: '#FFFFFF',
+          border: '#E2E8F0',
+          muted: '#64748B',
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'Hind', 'system-ui', '-apple-system', 'sans-serif'],
+        hindi: ['Hind', '"Plus Jakarta Sans"', 'sans-serif'],
       }
     },
   },
