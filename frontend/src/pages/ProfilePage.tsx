@@ -124,7 +124,7 @@ export default function ProfilePage() {
 
       const res = await saveProfile(payload);
       if (res.success) {
-        setMessage(language === 'hi' ? 'प्रोफ़ाइल सफलतापूर्वक अपडेट हो गई!' : 'Profile saved successfully in Supabase PostgreSQL!');
+        setMessage(language === 'hi' ? 'प्रोफ़ाइल सफलतापूर्वक अपडेट हो गई!' : 'Profile saved successfully!');
         setTimeout(() => navigate('/dashboard'), 1500);
       }
     } catch (err: any) {
@@ -135,12 +135,12 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10 space-y-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
-          {language === 'hi' ? 'नागरिक प्रोफ़ाइल (Citizen Profile)' : 'Citizen Profile Settings'}
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="pb-4 border-b border-border">
+        <h1 className="text-2xl sm:text-3xl font-bold font-heading text-text-primary tracking-tight">
+          {language === 'hi' ? 'नागरिक प्रोफ़ाइल' : 'Citizen Profile Settings'}
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 mt-1">
+        <p className="text-xs sm:text-sm text-text-secondary mt-1">
           {language === 'hi'
             ? 'अपनी प्रोफ़ाइल को अपडेट रखें ताकि सरकारी योजनाओं और छात्रवृत्तियों की सही पात्रता प्राप्त हो सके।'
             : 'Keep your demographic and educational information accurate for deterministic scheme matching.'}
@@ -148,29 +148,29 @@ export default function ProfilePage() {
       </div>
 
       {message && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+        <div className="p-3.5 rounded-lg bg-success/10 border border-success/20 text-success text-xs font-medium flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 shrink-0" strokeWidth={1.5} />
           <span>{message}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+        <div className="p-3.5 rounded-lg bg-brand/10 border border-brand/20 text-brand text-xs font-medium flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0" strokeWidth={1.5} />
           <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <form onSubmit={handleSubmit} className="bg-surface rounded-xl border border-border p-6 sm:p-8 shadow-card space-y-6">
         
         {/* Basic user header */}
-        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-orange-600 text-white font-bold flex items-center justify-center text-lg">
+        <div className="p-4 rounded-lg bg-background border border-border flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-brand text-white font-bold flex items-center justify-center text-base">
             {user?.fullName?.[0] || 'U'}
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-900">{user?.fullName}</h3>
-            <p className="text-xs text-slate-500">{user?.phone} • {user?.email || 'No email'}</p>
+            <h3 className="text-sm font-semibold text-text-primary">{user?.fullName}</h3>
+            <p className="text-xs text-text-secondary">{user?.phone} • {user?.email || 'No email'}</p>
           </div>
         </div>
 
@@ -178,13 +178,13 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'जिला (District)' : 'District'}
             </label>
             <select
               value={formData.district}
               onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
             >
               {BIHAR_DISTRICTS.map((d) => (
                 <option key={d} value={d}>{d}</option>
@@ -193,7 +193,7 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'प्रखंड (Block - Optional)' : 'Block (Optional)'}
             </label>
             <input
@@ -201,12 +201,12 @@ export default function ProfilePage() {
               placeholder={language === 'hi' ? 'उदा. दानापुर, फुलवारी शरीफ' : 'e.g. Danapur'}
               value={formData.block}
               onChange={(e) => setFormData({ ...formData, block: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'आयु (Age)' : 'Age'}
             </label>
             <input
@@ -215,18 +215,18 @@ export default function ProfilePage() {
               max="100"
               value={formData.age}
               onChange={(e) => setFormData({ ...formData, age: Number(e.target.value) })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'लिंग (Gender)' : 'Gender'}
             </label>
             <select
               value={formData.gender}
               onChange={(e) => setFormData({ ...formData, gender: e.target.value as GenderType })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
             >
               <option value="MALE">Male (पुरुष)</option>
               <option value="FEMALE">Female (महिला)</option>
@@ -235,13 +235,13 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'सामाजिक वर्ग (Category)' : 'Social Category'}
             </label>
             <select
               value={formData.socialCategory}
               onChange={(e) => setFormData({ ...formData, socialCategory: e.target.value as SocialCategory })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
             >
               <option value="GENERAL">General</option>
               <option value="EBC">EBC (अत्यंत पिछड़ा वर्ग)</option>
@@ -253,13 +253,13 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'शिक्षा स्तर (Education Level)' : 'Education Level'}
             </label>
             <select
               value={formData.education}
               onChange={(e) => setFormData({ ...formData, education: e.target.value as EducationLevel })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
             >
               <option value="BELOW_10TH">Below 10th</option>
               <option value="10TH_PASS">10th Pass (मैट्रिक)</option>
@@ -271,7 +271,7 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'पारिवारिक वार्षिक आय (INR)' : 'Annual Income (INR)'}
             </label>
             <input
@@ -279,12 +279,12 @@ export default function ProfilePage() {
               min="0"
               value={formData.annualIncome}
               onChange={(e) => setFormData({ ...formData, annualIncome: Number(e.target.value) })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'व्यवसाय (Occupation)' : 'Occupation'}
             </label>
             <input
@@ -292,29 +292,28 @@ export default function ProfilePage() {
               placeholder={language === 'hi' ? 'उदा. छात्र, किसान, स्व-रोजगार' : 'e.g. Student, Farmer, Job Seeker'}
               value={formData.occupation}
               onChange={(e) => setFormData({ ...formData, occupation: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
             />
           </div>
 
         </div>
 
-        {/* ── Advanced Profile Factors (for better matching) ── */}
-        <div className="pt-4 border-t border-slate-200 space-y-4">
-          <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-            <span>🎯</span>
-            <span>{language === 'hi' ? 'अतिरिक्त विवरण (Additional Details)' : 'Additional Details'}</span>
+        {/* Advanced Profile Factors */}
+        <div className="pt-4 border-t border-border space-y-4">
+          <h3 className="text-sm font-bold font-heading text-text-primary">
+            {language === 'hi' ? 'अतिरिक्त विवरण (Additional Details)' : 'Additional Eligibility Factors'}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Marital Status */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-medium text-text-primary mb-1">
                 {language === 'hi' ? 'वैवाहिक स्थिति (Marital Status)' : 'Marital Status'}
               </label>
               <select
                 value={formData.maritalStatus}
                 onChange={(e) => setFormData({ ...formData, maritalStatus: e.target.value as any })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
               >
                 <option value="UNMARRIED">अविवाहित (Unmarried)</option>
                 <option value="MARRIED">विवाहित (Married)</option>
@@ -325,13 +324,13 @@ export default function ProfilePage() {
 
             {/* Employment Status */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-medium text-text-primary mb-1">
                 {language === 'hi' ? 'रोजगार स्थिति (Employment Status)' : 'Employment Status'}
               </label>
               <select
                 value={formData.employmentStatus}
                 onChange={(e) => setFormData({ ...formData, employmentStatus: e.target.value as any })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
               >
                 <option value="STUDENT">छात्र (Student)</option>
                 <option value="UNEMPLOYED">बेरोजगार (Unemployed)</option>
@@ -343,13 +342,13 @@ export default function ProfilePage() {
 
             {/* Ration Card Type */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-medium text-text-primary mb-1">
                 {language === 'hi' ? 'राशन कार्ड (Ration Card Type)' : 'Ration Card Type'}
               </label>
               <select
                 value={formData.rationCardType}
                 onChange={(e) => setFormData({ ...formData, rationCardType: e.target.value as any })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
               >
                 <option value="NONE">कोई नहीं / पता नहीं</option>
                 <option value="BPL_AAY">BPL - अंत्योदय (AAY)</option>
@@ -360,13 +359,13 @@ export default function ProfilePage() {
 
             {/* Area Type */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-medium text-text-primary mb-1">
                 {language === 'hi' ? 'निवास क्षेत्र (Area Type)' : 'Area Type'}
               </label>
               <select
                 value={formData.areaType}
                 onChange={(e) => setFormData({ ...formData, areaType: e.target.value as any })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
               >
                 <option value="RURAL">ग्रामीण (Rural / Panchayat)</option>
                 <option value="URBAN">शहरी (Urban / Nagar Nigam)</option>
@@ -374,73 +373,69 @@ export default function ProfilePage() {
             </div>
 
             {/* Farmer Type */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                {language === 'hi' ? 'किसान प्रकार (Farmer Type)' : 'Farmer Classification'}
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-medium text-text-primary mb-1">
+                {language === 'hi' ? 'किसान प्रकार (Farmer Classification)' : 'Farmer Classification'}
               </label>
               <select
                 value={formData.farmerType}
                 onChange={(e) => setFormData({ ...formData, farmerType: e.target.value as any })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand cursor-pointer"
               >
                 <option value="NOT_FARMER">किसान नहीं (Not a Farmer)</option>
                 <option value="LANDOWNER_RAIYAT">रैयत / भूस्वामी (Landowner)</option>
-                <option value="TENANT_SHARECROPPER">बटाईदार / गैर-रैयत (Tenant/Sharecropper)</option>
+                <option value="TENANT_SHARECROPPER">बटाईदार / गैर-रैयत (Tenant / Sharecropper)</option>
                 <option value="LANDLESS_LABORER">भूमिहीन मजदूर (Landless Laborer)</option>
               </select>
             </div>
           </div>
 
-          {/* Toggle Switches Row */}
+          {/* Toggle Switches */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            {/* Minority */}
-            <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+            <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors">
               <input
                 type="checkbox"
                 checked={formData.isMinority}
                 onChange={(e) => setFormData({ ...formData, isMinority: e.target.checked })}
-                className="w-4 h-4 accent-orange-600 rounded"
+                className="w-4 h-4 accent-brand rounded"
               />
-              <span className="text-xs font-medium text-slate-700">
+              <span className="text-xs font-medium text-text-primary">
                 {language === 'hi' ? 'अल्पसंख्यक समुदाय (Minority Community)' : 'Minority Community'}
               </span>
             </label>
 
-            {/* Govt Employee in Family */}
-            <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+            <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors">
               <input
                 type="checkbox"
                 checked={formData.hasGovtEmployeeInFamily}
                 onChange={(e) => setFormData({ ...formData, hasGovtEmployeeInFamily: e.target.checked })}
-                className="w-4 h-4 accent-orange-600 rounded"
+                className="w-4 h-4 accent-brand rounded"
               />
-              <span className="text-xs font-medium text-slate-700">
-                {language === 'hi' ? 'परिवार में सरकारी कर्मचारी / पेंशनभोगी' : 'Govt employee / pensioner in family'}
+              <span className="text-xs font-medium text-text-primary">
+                {language === 'hi' ? 'परिवार में सरकारी कर्मचारी / पेंशनर' : 'Govt employee in family'}
               </span>
             </label>
 
-            {/* Income Tax Payer */}
-            <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+            <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors">
               <input
                 type="checkbox"
                 checked={formData.isIncomeTaxPayer}
                 onChange={(e) => setFormData({ ...formData, isIncomeTaxPayer: e.target.checked })}
-                className="w-4 h-4 accent-orange-600 rounded"
+                className="w-4 h-4 accent-brand rounded"
               />
-              <span className="text-xs font-medium text-slate-700">
+              <span className="text-xs font-medium text-text-primary">
                 {language === 'hi' ? 'आयकर दाता (Income Tax Payer)' : 'Income Tax Payer'}
               </span>
             </label>
 
-            {/* Aadhaar DBT Linked */}
-            <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
+            <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors">
               <input
                 type="checkbox"
                 checked={formData.isAadhaarDbtLinked}
                 onChange={(e) => setFormData({ ...formData, isAadhaarDbtLinked: e.target.checked })}
-                className="w-4 h-4 accent-orange-600 rounded"
+                className="w-4 h-4 accent-brand rounded"
               />
-              <span className="text-xs font-medium text-slate-700">
+              <span className="text-xs font-medium text-text-primary">
                 {language === 'hi' ? 'आधार से बैंक खाता लिंक (DBT सीडिंग)' : 'Aadhaar-linked Bank Account (DBT)'}
               </span>
             </label>
@@ -448,29 +443,29 @@ export default function ProfilePage() {
 
           {/* Specialty Flags - Collapsible */}
           <details className="pt-2">
-            <summary className="text-xs font-bold text-slate-600 cursor-pointer hover:text-orange-600">
-              {language === 'hi' ? '▸ विशेष श्रेणी (UPSC, मत्स्य, प्रवासी, खेल, सोलर)' : '▸ Specialty Categories (UPSC, Fishery, Migrant, Sports, Solar)'}
+            <summary className="text-xs font-semibold text-brand cursor-pointer hover:underline">
+              {language === 'hi' ? '▸ विशेष योग्यताएं (UPSC, मत्स्य, प्रवासी, खेल, सोलर)' : '▸ Specialty Categories (UPSC, Fishery, Migrant, Sports, Solar)'}
             </summary>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3">
-              <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
-                <input type="checkbox" checked={formData.hasClearedPrelims} onChange={(e) => setFormData({ ...formData, hasClearedPrelims: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
-                <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'UPSC / BPSC प्रारंभिक परीक्षा उत्तीर्ण' : 'Cleared UPSC/BPSC Prelims'}</span>
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors">
+                <input type="checkbox" checked={formData.hasClearedPrelims} onChange={(e) => setFormData({ ...formData, hasClearedPrelims: e.target.checked })} className="w-4 h-4 accent-brand rounded" />
+                <span className="text-xs font-medium text-text-primary">{language === 'hi' ? 'UPSC / BPSC प्रारंभिक परीक्षा उत्तीर्ण' : 'Cleared UPSC/BPSC Prelims'}</span>
               </label>
-              <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
-                <input type="checkbox" checked={formData.hasFisheryPond} onChange={(e) => setFormData({ ...formData, hasFisheryPond: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
-                <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'मत्स्य पालन तालाब है' : 'Own a fishery pond'}</span>
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors">
+                <input type="checkbox" checked={formData.hasFisheryPond} onChange={(e) => setFormData({ ...formData, hasFisheryPond: e.target.checked })} className="w-4 h-4 accent-brand rounded" />
+                <span className="text-xs font-medium text-text-primary">{language === 'hi' ? 'मत्स्य पालन तालाब है' : 'Own a fishery pond'}</span>
               </label>
-              <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
-                <input type="checkbox" checked={formData.isMigrantWorker} onChange={(e) => setFormData({ ...formData, isMigrantWorker: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
-                <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'प्रवासी मजदूर (Migrant Worker)' : 'Migrant Worker'}</span>
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors">
+                <input type="checkbox" checked={formData.isMigrantWorker} onChange={(e) => setFormData({ ...formData, isMigrantWorker: e.target.checked })} className="w-4 h-4 accent-brand rounded" />
+                <span className="text-xs font-medium text-text-primary">{language === 'hi' ? 'प्रवासी मजदूर (Migrant Worker)' : 'Migrant Worker'}</span>
               </label>
-              <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
-                <input type="checkbox" checked={formData.isSportsMedalist} onChange={(e) => setFormData({ ...formData, isSportsMedalist: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
-                <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'राज्य / राष्ट्रीय स्तर पदक विजेता (Sports Medalist)' : 'State/National Sports Medalist'}</span>
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors">
+                <input type="checkbox" checked={formData.isSportsMedalist} onChange={(e) => setFormData({ ...formData, isSportsMedalist: e.target.checked })} className="w-4 h-4 accent-brand rounded" />
+                <span className="text-xs font-medium text-text-primary">{language === 'hi' ? 'राज्य / राष्ट्रीय स्तर पदक विजेता' : 'State/National Sports Medalist'}</span>
               </label>
-              <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100 transition">
-                <input type="checkbox" checked={formData.hasElectricityConnection} onChange={(e) => setFormData({ ...formData, hasElectricityConnection: e.target.checked })} className="w-4 h-4 accent-orange-600 rounded" />
-                <span className="text-xs font-medium text-slate-700">{language === 'hi' ? 'विद्युत कनेक्शन है (Electricity Connection)' : 'Has Electricity Connection'}</span>
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border cursor-pointer hover:border-brand/40 transition-colors sm:col-span-2">
+                <input type="checkbox" checked={formData.hasElectricityConnection} onChange={(e) => setFormData({ ...formData, hasElectricityConnection: e.target.checked })} className="w-4 h-4 accent-brand rounded" />
+                <span className="text-xs font-medium text-text-primary">{language === 'hi' ? 'विद्युत कनेक्शन है (Electricity Connection)' : 'Has Electricity Connection'}</span>
               </label>
             </div>
           </details>
@@ -479,7 +474,7 @@ export default function ProfilePage() {
         {/* Skills & Interests */}
         <div className="space-y-4 pt-2">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'कौशल (Skills - कॉमा से अलग करें)' : 'Skills (Comma separated)'}
             </label>
             <input
@@ -487,12 +482,12 @@ export default function ProfilePage() {
               placeholder="Basic Computer, Python, Typing, Electrical"
               value={formData.skills}
               onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'रुचियां (Interests - कॉमा से अलग करें)' : 'Interests (Comma separated)'}
             </label>
             <input
@@ -500,7 +495,7 @@ export default function ProfilePage() {
               placeholder="Information Technology, Agriculture, Civil Services"
               value={formData.interests}
               onChange={(e) => setFormData({ ...formData, interests: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium focus:ring-2 focus:ring-orange-500"
+              className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
             />
           </div>
         </div>
@@ -508,14 +503,14 @@ export default function ProfilePage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2"
+          className="w-full py-2.5 bg-brand hover:bg-brand-dark text-white font-medium text-sm rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           {loading ? (
             <RefreshCw className="w-4 h-4 animate-spin" />
           ) : (
             <>
-              <Save className="w-4 h-4" />
-              <span>{language === 'hi' ? 'प्रोफ़ाइल सहेजें' : 'Save Profile to Cloud'}</span>
+              <Save className="w-4 h-4" strokeWidth={1.5} />
+              <span>{language === 'hi' ? 'प्रोफ़ाइल सहेजें' : 'Save Profile'}</span>
             </>
           )}
         </button>

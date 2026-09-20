@@ -30,30 +30,30 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 p-8 shadow-sm space-y-6">
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-orange-500 rounded-2xl mx-auto flex items-center justify-center text-white font-black text-2xl shadow-md">
+    <div className="min-h-[75vh] flex items-center justify-center px-4 py-10">
+      <div className="max-w-md w-full bg-surface rounded-xl border border-border p-6 sm:p-8 shadow-card space-y-6">
+        <div className="text-center space-y-1.5">
+          <div className="w-10 h-10 bg-brand rounded-lg mx-auto flex items-center justify-center text-white font-bold text-lg shadow-sm">
             ब
           </div>
-          <h1 className="text-2xl font-black text-slate-900">
+          <h1 className="text-xl sm:text-2xl font-bold font-heading text-text-primary">
             {language === 'hi' ? 'नागरिक लॉगिन' : 'Citizen Login'}
           </h1>
-          <p className="text-xs text-slate-500">
-            {language === 'hi' ? 'अपने मोबाइल नंबर या ईमेल से लॉगिन करें' : 'Login with your registered mobile or email'}
+          <p className="text-xs text-text-secondary">
+            {language === 'hi' ? 'अपने पंजीकृत मोबाइल नंबर या ईमेल से लॉगिन करें' : 'Login with your registered mobile or email'}
           </p>
         </div>
 
         {error && (
-          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="p-3 rounded-lg bg-brand/10 border border-brand/20 text-brand text-xs font-medium flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" strokeWidth={1.5} />
             <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'मोबाइल नंबर या ईमेल' : 'Mobile Number or Email'}
             </label>
             <div className="relative">
@@ -63,14 +63,14 @@ export default function LoginPage() {
                 placeholder={language === 'hi' ? 'उदा. 9876543210' : 'e.g. 9876543210'}
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-orange-500 focus:bg-white transition"
+                className="w-full pl-9 pr-3 py-2 bg-background border border-border rounded-lg text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand focus:bg-surface transition-colors"
               />
-              <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <Phone className="w-4 h-4 text-text-secondary absolute left-3 top-2.5" strokeWidth={1.5} />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
+            <label className="block text-xs font-medium text-text-primary mb-1">
               {language === 'hi' ? 'पासवर्ड' : 'Password'}
             </label>
             <div className="relative">
@@ -80,31 +80,31 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-orange-500 focus:bg-white transition"
+                className="w-full pl-9 pr-3 py-2 bg-background border border-border rounded-lg text-xs font-medium text-text-primary focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand focus:bg-surface transition-colors"
               />
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <Lock className="w-4 h-4 text-text-secondary absolute left-3 top-2.5" strokeWidth={1.5} />
             </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-brand hover:bg-brand-dark text-white font-medium text-sm rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
             ) : (
               <>
-                <LogIn className="w-4 h-4" />
+                <LogIn className="w-4 h-4" strokeWidth={1.5} />
                 <span>{language === 'hi' ? 'लॉग इन करें' : 'Log In'}</span>
               </>
             )}
           </button>
         </form>
 
-        <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
+        <div className="text-center text-xs text-text-secondary pt-3 border-t border-border">
           <span>{language === 'hi' ? 'खाता नहीं है?' : "Don't have an account?"} </span>
-          <Link to="/register" className="font-bold text-orange-600 hover:text-orange-700">
+          <Link to="/register" className="font-semibold text-brand hover:underline">
             {language === 'hi' ? 'नया खाता बनाएं' : 'Register here'}
           </Link>
         </div>

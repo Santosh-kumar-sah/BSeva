@@ -43,21 +43,21 @@ export default function CareerDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-16 animate-pulse space-y-6">
-        <div className="h-6 bg-slate-200 rounded w-1/4"></div>
-        <div className="h-10 bg-slate-200 rounded w-3/4"></div>
-        <div className="h-48 bg-slate-100 rounded-3xl"></div>
+      <div className="max-w-4xl mx-auto px-4 py-12 animate-pulse space-y-4">
+        <div className="h-4 bg-surface border border-border rounded w-1/4"></div>
+        <div className="h-8 bg-surface border border-border rounded w-3/4"></div>
+        <div className="h-40 bg-surface border border-border rounded-xl"></div>
       </div>
     );
   }
 
   if (!career) {
     return (
-      <div className="max-w-md mx-auto px-4 py-20 text-center space-y-4">
-        <h2 className="text-xl font-bold text-slate-800">
+      <div className="max-w-md mx-auto px-4 py-16 text-center space-y-4">
+        <h2 className="text-lg font-bold font-heading text-text-primary">
           {language === 'hi' ? 'करियर पाथवे नहीं मिला' : 'Career Pathway Not Found'}
         </h2>
-        <Link to="/careers" className="inline-block px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">
+        <Link to="/careers" className="inline-block px-4 py-2 bg-brand text-white rounded-lg text-xs font-medium hover:bg-brand-dark transition-colors">
           {language === 'hi' ? 'करियर डायरेक्टरी पर लौटें' : 'Back to Careers'}
         </Link>
       </div>
@@ -75,86 +75,86 @@ export default function CareerDetailPage() {
     : 0;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Back Button */}
       <Link
         to="/careers"
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-blue-600 transition"
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary hover:text-brand transition-colors"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
         <span>{language === 'hi' ? 'सभी करियर पाथवे पर वापस' : 'Back to all careers'}</span>
       </Link>
 
       {/* Main Header */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+      <div className="bg-surface rounded-xl border border-border p-6 shadow-card space-y-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-background text-text-secondary border border-border">
             {career.industry}
           </span>
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
-            <TrendingUp className="w-3.5 h-3.5" />
-            {career.growth_prospects} Growth Prospects
+          <span className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-success/10 text-success border border-success/20 flex items-center gap-1">
+            <TrendingUp className="w-3.5 h-3.5" strokeWidth={1.5} />
+            {career.growth_prospects}
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+        <h1 className="text-2xl sm:text-3xl font-bold font-heading text-text-primary tracking-tight">
           {title}
         </h1>
 
-        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
+        <div className="p-3.5 rounded-lg bg-background border border-border grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
           <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase block">{language === 'hi' ? 'प्रारंभिक वेतन' : 'Avg Starting'}</span>
-            <span className="font-extrabold text-base text-slate-900">
+            <span className="text-[10px] text-text-secondary block">{language === 'hi' ? 'प्रारंभिक वेतन' : 'Avg Starting'}</span>
+            <span className="font-semibold text-sm text-text-primary">
               ₹{((career.avg_starting_salary_inr || 250000) / 100000).toFixed(1)}L / {language === 'hi' ? 'वर्ष' : 'yr'}
             </span>
           </div>
           <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase block">{language === 'hi' ? 'न्यूनतम शिक्षा' : 'Min Education'}</span>
-            <span className="font-bold text-base text-slate-900">{career.min_education}</span>
+            <span className="text-[10px] text-text-secondary block">{language === 'hi' ? 'न्यूनतम शिक्षा' : 'Min Education'}</span>
+            <span className="font-semibold text-sm text-text-primary">{career.min_education}</span>
           </div>
           <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase block">{language === 'hi' ? 'स्किल्स की संख्या' : 'Total Skills'}</span>
-            <span className="font-bold text-base text-slate-900">{requiredSkills.length} Required</span>
+            <span className="text-[10px] text-text-secondary block">{language === 'hi' ? 'आवश्यक कौशल' : 'Total Skills'}</span>
+            <span className="font-semibold text-sm text-text-primary">{requiredSkills.length} Required</span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left 2 Cols: Description & BSDM Training Roadmaps */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
-            <h2 className="text-lg font-extrabold text-slate-900">
+          <div className="bg-surface rounded-xl border border-border p-6 shadow-card space-y-3">
+            <h2 className="text-base font-bold font-heading text-text-primary">
               {language === 'hi' ? 'करियर का विवरण' : 'Career Overview'}
             </h2>
-            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+            <p className="text-sm text-text-secondary leading-relaxed">
               {desc}
             </p>
           </div>
 
           {/* BSDM Training Programs */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+          <div className="bg-surface rounded-xl border border-border p-6 shadow-card space-y-4">
             <div className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-orange-600" />
-              <h2 className="text-lg font-extrabold text-slate-900">
-                {language === 'hi' ? 'बिहार सरकार के ट्रेनिंग प्रोग्राम (BSDM)' : 'Govt Subsidized Training (BSDM)'}
+              <Award className="w-4 h-4 text-brand" strokeWidth={1.5} />
+              <h2 className="text-base font-bold font-heading text-text-primary">
+                {language === 'hi' ? 'बिहार सरकार के प्रशिक्षण कार्यक्रम (BSDM)' : 'Govt Subsidized Training (BSDM)'}
               </h2>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-text-secondary">
               {language === 'hi'
                 ? 'इन सरकारी योजनाओं एवं केंद्रों के माध्यम से निःशुल्क अथवा न्यूनतम शुल्क में आवश्यक कौशल प्राप्त करें:'
                 : 'Free or subsidized certification programs offered under Bihar Skill Development Mission:'}
             </p>
 
-            <div className="space-y-3 pt-2">
+            <div className="space-y-2.5 pt-1">
               {trainingPaths.map((tp, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-orange-50/60 border border-orange-200/80 flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-orange-600 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                <div key={idx} className="p-3.5 rounded-lg bg-background border border-border flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-md bg-brand text-white font-semibold text-xs flex items-center justify-center shrink-0 mt-0.5">
                     {idx + 1}
                   </div>
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-900">{tp}</h4>
-                    <span className="text-[11px] text-orange-700 font-semibold">
+                    <h4 className="text-xs sm:text-sm font-semibold text-text-primary">{tp}</h4>
+                    <span className="text-[11px] text-brand font-medium">
                       {language === 'hi' ? 'बिहार कौशल विकास मिशन (BSDM)' : 'Under Bihar Skill Mission'}
                     </span>
                   </div>
@@ -166,31 +166,31 @@ export default function CareerDetailPage() {
 
         {/* Right Col: Skill Gap Tool */}
         <div className="space-y-6">
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <div className="bg-surface rounded-xl border border-border p-5 shadow-card space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-extrabold text-slate-900">
-                {language === 'hi' ? 'स्किल गैप कैलकुलेटर' : 'Skill Readiness'}
+              <h3 className="text-sm font-bold font-heading text-text-primary">
+                {language === 'hi' ? 'स्किल तत्परता' : 'Skill Readiness'}
               </h3>
-              <span className="text-xs font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-semibold text-brand bg-brand/10 border border-brand/20 px-2 py-0.5 rounded-md">
                 {skillReadinessPercent}% Ready
               </span>
             </div>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-text-secondary">
               {language === 'hi'
-                ? 'जो स्किल्स आपके पास हैं, उन पर टिक करें:'
-                : 'Check off the skills you already know:'}
+                ? 'जो स्किल्स आपके पास हैं, उन्हें चुनें:'
+                : 'Check off the skills you already possess:'}
             </p>
 
             {/* Progress bar */}
-            <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+            <div className="w-full bg-background border border-border rounded-full h-2 overflow-hidden">
               <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                className="bg-brand h-2 rounded-full transition-all duration-300"
                 style={{ width: `${skillReadinessPercent}%` }}
-              ></div>
+              />
             </div>
 
-            <div className="space-y-2 pt-2">
+            <div className="space-y-2 pt-1">
               {requiredSkills.map((skill, idx) => {
                 const hasSkill = !!userSkills[skill];
                 return (
@@ -198,16 +198,16 @@ export default function CareerDetailPage() {
                     key={idx}
                     type="button"
                     onClick={() => toggleSkill(skill)}
-                    className={`w-full text-left p-3 rounded-xl border text-xs flex items-center gap-3 transition ${
+                    className={`w-full text-left p-2.5 rounded-lg border text-xs flex items-center gap-2.5 transition-colors cursor-pointer ${
                       hasSkill 
-                        ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold'
-                        : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                        ? 'bg-brand/5 border-brand/30 text-text-primary font-medium'
+                        : 'bg-background border-border text-text-secondary hover:text-text-primary hover:border-brand/30'
                     }`}
                   >
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
-                      hasSkill ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white'
+                    <div className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 ${
+                      hasSkill ? 'bg-brand border-brand text-white' : 'border-border bg-surface'
                     }`}>
-                      {hasSkill && <CheckCircle2 className="w-3 h-3" />}
+                      {hasSkill && <CheckCircle2 className="w-3 h-3" strokeWidth={2} />}
                     </div>
                     <span>{skill}</span>
                   </button>

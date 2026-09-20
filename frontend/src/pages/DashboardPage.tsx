@@ -9,16 +9,14 @@ import {
   ArrowRight,
   Edit3,
   Bookmark,
-  Building2,
   FileCheck
 } from 'lucide-react';
 import { eligibilityService, careerService } from '../services/api';
 import { EligibilityCheckResponse, CareerPath } from '../types';
-import SchemeCard from '../components/common/SchemeCard';
 
 export default function DashboardPage() {
   const { user, profile, language } = useAuth();
-  const { savedCount, savedItems } = useSavedSchemes();
+  const { savedCount } = useSavedSchemes();
   
   const [eligibilityResults, setEligibilityResults] = useState<EligibilityCheckResponse | null>(null);
   const [careerRecommendations, setCareerRecommendations] = useState<CareerPath[]>([]);
@@ -47,65 +45,65 @@ export default function DashboardPage() {
   }, [profile]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div className="bg-surface rounded-xl border border-border p-6 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center text-white text-2xl font-black shadow-md">
+          <div className="w-12 h-12 rounded-lg bg-brand text-white flex items-center justify-center font-bold text-lg shadow-sm">
             {user?.fullName?.[0] || 'U'}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black">
+              <h1 className="text-xl sm:text-2xl font-bold font-heading text-text-primary">
                 {language === 'hi' ? `नमस्ते, ${user?.fullName?.split(' ')[0]}` : `Welcome, ${user?.fullName?.split(' ')[0]}`}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-brand/10 text-brand border border-brand/20">
                 {user?.role}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-text-secondary mt-0.5">
               {profile?.district ? `${profile.district}, Bihar` : 'Bihar, India'} • {profile?.education || 'Citizen'}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <Link
             to="/saved"
-            className="px-4 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-xl text-xs font-bold border border-orange-400/30 backdrop-blur transition flex items-center gap-1.5"
+            className="px-3 py-1.5 bg-surface hover:bg-background text-text-primary rounded-lg text-xs font-medium border border-border transition-colors flex items-center gap-1.5"
           >
-            <Bookmark className="w-3.5 h-3.5" />
+            <Bookmark className="w-3.5 h-3.5 text-text-secondary" strokeWidth={1.5} />
             <span>{language === 'hi' ? `ट्रैकर (${savedCount})` : `Tracker (${savedCount})`}</span>
           </Link>
           <Link
             to="/profile"
-            className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold border border-white/20 backdrop-blur transition flex items-center gap-1.5"
+            className="px-3 py-1.5 bg-surface hover:bg-background text-text-primary rounded-lg text-xs font-medium border border-border transition-colors flex items-center gap-1.5"
           >
-            <Edit3 className="w-3.5 h-3.5" />
+            <Edit3 className="w-3.5 h-3.5 text-text-secondary" strokeWidth={1.5} />
             <span>{language === 'hi' ? 'प्रोफ़ाइल बदलें' : 'Edit Profile'}</span>
           </Link>
           <Link
             to="/eligibility"
-            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5"
+            className="px-4 py-1.5 bg-brand hover:bg-brand-dark text-white rounded-lg text-xs font-medium shadow-sm transition-colors flex items-center gap-1.5"
           >
-            <CheckSquare className="w-3.5 h-3.5" />
+            <CheckSquare className="w-3.5 h-3.5" strokeWidth={1.5} />
             <span>{language === 'hi' ? 'पुनः जांचें' : 'Recalculate'}</span>
           </Link>
         </div>
       </div>
 
       {/* Summary Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div className="bg-white rounded-2xl border border-emerald-200 p-5 sm:p-6 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-black text-xl">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-surface rounded-xl border border-border p-5 shadow-card flex items-center gap-4">
+          <div className="w-10 h-10 rounded-lg bg-success/10 text-success border border-success/20 flex items-center justify-center font-bold text-lg">
             {eligibilityResults?.summary.potentiallyEligibleCount ?? '-'}
           </div>
           <div>
-            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            <h4 className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">
               {language === 'hi' ? 'पात्र योजनाएं' : 'Eligible Schemes'}
             </h4>
-            <p className="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5">
+            <p className="text-xs sm:text-sm font-semibold text-text-primary mt-0.5">
               {language === 'hi' ? 'आवेदन योग्य' : 'Directly Qualified'}
             </p>
           </div>
@@ -113,50 +111,50 @@ export default function DashboardPage() {
 
         <Link
           to="/saved"
-          className="bg-white rounded-2xl border border-amber-200 p-5 sm:p-6 shadow-sm hover:shadow-md transition flex items-center gap-4 group"
+          className="bg-surface rounded-xl border border-border p-5 shadow-card hover:shadow-cardHover transition-all flex items-center gap-4 group"
         >
-          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-black text-xl group-hover:scale-110 transition">
+          <div className="w-10 h-10 rounded-lg bg-brand/10 text-brand border border-brand/20 flex items-center justify-center font-bold text-lg">
             {savedCount}
           </div>
           <div>
-            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            <h4 className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">
               {language === 'hi' ? 'ट्रैक की जा रही योजनाएं' : 'Tracked Schemes'}
             </h4>
-            <p className="text-xs sm:text-sm font-extrabold text-amber-700 mt-0.5 flex items-center gap-1">
+            <p className="text-xs sm:text-sm font-semibold text-brand mt-0.5 flex items-center gap-1">
               <span>{language === 'hi' ? 'ट्रैकर देखें' : 'View Tracker'}</span>
-              <ArrowRight className="w-3 h-3" />
+              <ArrowRight className="w-3 h-3" strokeWidth={1.5} />
             </p>
           </div>
         </Link>
 
-        <div className="bg-white rounded-2xl border border-blue-200 p-5 sm:p-6 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center font-black text-xl">
+        <div className="bg-surface rounded-xl border border-border p-5 shadow-card flex items-center gap-4">
+          <div className="w-10 h-10 rounded-lg bg-background text-text-primary border border-border flex items-center justify-center font-bold text-lg">
             {careerRecommendations.length}
           </div>
           <div>
-            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            <h4 className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">
               {language === 'hi' ? 'करियर पाथवे' : 'Career Pathways'}
             </h4>
-            <p className="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5">
-              {language === 'hi' ? 'BSDM स्किल फिट' : 'Skill-fit opportunities'}
+            <p className="text-xs sm:text-sm font-semibold text-text-primary mt-0.5">
+              {language === 'hi' ? 'BSDM कोर्स' : 'Skill Pathways'}
             </p>
           </div>
         </div>
 
         <Link
           to="/documents"
-          className="bg-white rounded-2xl border border-purple-200 p-5 sm:p-6 shadow-sm hover:shadow-md transition flex items-center gap-4 group"
+          className="bg-surface rounded-xl border border-border p-5 shadow-card hover:shadow-cardHover transition-all flex items-center gap-4 group"
         >
-          <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center font-black text-xl group-hover:scale-110 transition">
-            <FileCheck className="w-6 h-6" />
+          <div className="w-10 h-10 rounded-lg bg-background text-brand border border-border flex items-center justify-center font-bold text-lg">
+            <FileCheck className="w-5 h-5" strokeWidth={1.5} />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            <h4 className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">
               {language === 'hi' ? 'दस्तावेज ऑडिटर' : 'Doc Auditor'}
             </h4>
-            <p className="text-xs sm:text-sm font-extrabold text-purple-700 mt-0.5 flex items-center gap-1">
+            <p className="text-xs sm:text-sm font-semibold text-brand mt-0.5 flex items-center gap-1">
               <span>{language === 'hi' ? 'RTPS चेकलिस्ट' : 'RTPS Ready'}</span>
-              <ArrowRight className="w-3 h-3" />
+              <ArrowRight className="w-3 h-3" strokeWidth={1.5} />
             </p>
           </div>
         </Link>
@@ -164,62 +162,62 @@ export default function DashboardPage() {
 
       {/* Matched Schemes Section */}
       {eligibilityResults && eligibilityResults.results.potentiallyEligible.length > 0 && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-border">
             <div>
-              <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-emerald-600" />
+              <h2 className="text-lg font-bold font-heading text-text-primary flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-brand" strokeWidth={1.5} />
                 <span>{language === 'hi' ? 'आपके लिए अनुशंसित सरकारी योजनाएं' : 'Matched Schemes for Your Profile'}</span>
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                {language === 'hi' ? 'आपकी प्रोफ़ाइल के अनुसार 100% सटीक पात्रता विश्लेषण' : 'Schemes matching your district, age, income, and educational profile'}
+              <p className="text-xs text-text-secondary mt-0.5">
+                {language === 'hi' ? 'आपकी प्रोफ़ाइल के अनुसार सटीक पात्रता विश्लेषण' : 'Schemes matching your district, age, income, and educational profile'}
               </p>
             </div>
-            <Link to="/eligibility" className="text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1">
+            <Link to="/eligibility" className="text-xs font-semibold text-brand hover:text-brand-dark flex items-center gap-1">
               <span>{language === 'hi' ? 'सभी देखें' : 'View All'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {eligibilityResults.results.potentiallyEligible.slice(0, 6).map((res) => (
-              <div key={res.schemeId} className="bg-white rounded-2xl border border-emerald-200/80 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+              <div key={res.schemeId} className="bg-surface rounded-xl border border-border p-5 shadow-card hover:shadow-cardHover transition-all flex flex-col justify-between space-y-3">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-success/10 text-success border border-success/20">
                       {res.matchScore}% Match
                     </span>
-                    <span className="text-[10px] font-semibold text-slate-400">
+                    <span className="text-[10px] text-text-secondary">
                       {language === 'hi' ? 'पात्र' : 'Eligible'}
                     </span>
                   </div>
 
                   <Link to={`/schemes/${res.schemeSlug}`}>
-                    <h3 className="text-base font-bold text-slate-900 hover:text-emerald-700 transition line-clamp-2">
+                    <h3 className="text-base font-semibold font-heading text-text-primary hover:text-brand transition-colors line-clamp-2">
                       {language === 'hi' && res.title_hi ? res.title_hi : res.title_en}
                     </h3>
                   </Link>
 
                   {(res.benefits_hi || res.benefits_en) && (
-                    <p className="text-xs text-slate-600 line-clamp-2">
+                    <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed">
                       {language === 'hi' && res.benefits_hi ? res.benefits_hi : res.benefits_en}
                     </p>
                   )}
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-3 border-t border-border flex items-center justify-between">
                   <Link
                     to={`/schemes/${res.schemeSlug}`}
-                    className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+                    className="text-xs font-semibold text-brand hover:text-brand-dark flex items-center gap-1"
                   >
                     <span>{language === 'hi' ? 'विवरण' : 'Details'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
                   </Link>
                   <a
                     href={res.officialPortalUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-semibold text-slate-500 hover:text-slate-800"
+                    className="text-xs text-text-secondary hover:text-text-primary"
                   >
                     {language === 'hi' ? 'पोर्टल →' : 'Portal →'}
                   </a>
@@ -232,20 +230,20 @@ export default function DashboardPage() {
 
       {/* Career Recommendations Section */}
       {careerRecommendations.length > 0 && (
-        <div className="space-y-6 pt-4 border-t border-slate-200">
-          <div className="flex items-center justify-between">
+        <div className="space-y-4 pt-4 border-t border-border">
+          <div className="flex items-center justify-between pb-2 border-b border-border">
             <div>
-              <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                <Compass className="w-5 h-5 text-blue-600" />
+              <h2 className="text-lg font-bold font-heading text-text-primary flex items-center gap-2">
+                <Compass className="w-4 h-4 text-brand" strokeWidth={1.5} />
                 <span>{language === 'hi' ? 'सुझाए गए करियर और कौशल पाथवे' : 'Recommended Career & Skill Pathways'}</span>
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                {language === 'hi' ? 'आपकी शिक्षा और रुचि के आधार पर बिहार कौशल विकास मिशन (BSDM) सर्टिफाइड कोर्स' : 'Personalized training paths mapped with Bihar Skill Development Mission'}
+              <p className="text-xs text-text-secondary mt-0.5">
+                {language === 'hi' ? 'बिहार कौशल विकास मिशन (BSDM) सर्टिफाइड कोर्स' : 'Personalized training paths mapped with Bihar Skill Development Mission'}
               </p>
             </div>
-            <Link to="/careers" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+            <Link to="/careers" className="text-xs font-semibold text-brand hover:text-brand-dark flex items-center gap-1">
               <span>{language === 'hi' ? 'सभी करियर देखें' : 'Explore All'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
             </Link>
           </div>
 
@@ -253,43 +251,43 @@ export default function DashboardPage() {
             {careerRecommendations.slice(0, 4).map((career) => (
               <div
                 key={career.id}
-                className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition space-y-4"
+                className="bg-surface rounded-xl border border-border p-5 shadow-card hover:shadow-cardHover transition-all space-y-3"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-background text-text-secondary border border-border">
                       {career.industry}
                     </span>
-                    <h3 className="text-base font-black text-slate-900 mt-2">
+                    <h3 className="text-base font-semibold font-heading text-text-primary mt-2">
                       {language === 'hi' && career.title_hi ? career.title_hi : career.title_en}
                     </h3>
                   </div>
                   {career.avg_starting_salary_inr && (
                     <div className="text-right shrink-0">
-                      <span className="text-[10px] font-bold text-slate-400 block uppercase">
-                        {language === 'hi' ? 'औसत वेतन' : 'Avg Salary'}
+                      <span className="text-[10px] text-text-secondary block uppercase">
+                        {language === 'hi' ? 'वेतन' : 'Avg Salary'}
                       </span>
-                      <span className="text-sm font-black text-emerald-600">
+                      <span className="text-sm font-semibold text-success">
                         ₹{(career.avg_starting_salary_inr / 100000).toFixed(1)}L / वर्ष
                       </span>
                     </div>
                   )}
                 </div>
 
-                <p className="text-xs text-slate-600 line-clamp-2">
+                <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed">
                   {language === 'hi' && career.description_hi ? career.description_hi : career.description_en}
                 </p>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs text-slate-500">
+                <div className="pt-2 border-t border-border flex items-center justify-between">
+                  <span className="text-xs text-text-secondary">
                     {career.bsdm_training_path?.length || 3} {language === 'hi' ? 'प्रशिक्षण चरण' : 'Training Steps'}
                   </span>
                   <Link
                     to={`/careers/${career.slug}`}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                    className="text-xs font-semibold text-brand hover:text-brand-dark flex items-center gap-1"
                   >
                     <span>{language === 'hi' ? 'रोडमैप देखें' : 'View Roadmap'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
                   </Link>
                 </div>
               </div>

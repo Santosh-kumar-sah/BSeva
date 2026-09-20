@@ -49,7 +49,7 @@ export default function App() {
     <AuthProvider>
       <SavedSchemesProvider>
         <Router>
-          <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 relative">
+          <div className="min-h-screen flex flex-col bg-background text-text-primary relative">
             <Navbar />
             <main className="flex-1">
               <Routes>

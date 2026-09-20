@@ -7,21 +7,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        bihar: {
-          terracotta: '#C2410C', // Madhubani warm terracotta primary
-          saffron: '#EA580C',    // Vibrant action saffron
-          amber: '#D97706',      // Nalanda ochre/gold
-          emerald: '#047857',    // Gangetic forest green
-          navy: '#0F172A',       // Deep mithila midnight
-          surface: '#F8FAFC',    // Clean neutral surface
-          card: '#FFFFFF',
-          border: '#E2E8F0',
-          muted: '#64748B',
-        }
+        background: '#F5F1E6',
+        surface: '#FFFFFF',
+        border: '#E5DFCF',
+        'text-primary': '#201B16',
+        'text-secondary': '#6B6255',
+        brand: {
+          DEFAULT: '#7A2A2A',
+          dark: '#5E1F1F',
+        },
+        'accent-gold': '#B9862F',
+        success: '#2F6B4F',
+        'hero-bg': '#F0E8D8',
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Hind', 'system-ui', '-apple-system', 'sans-serif'],
-        hindi: ['Hind', '"Plus Jakarta Sans"', 'sans-serif'],
+        sans: ['Inter', '"Noto Sans Devanagari"', 'system-ui', '-apple-system', 'sans-serif'],
+        devanagari: ['"Noto Sans Devanagari"', 'Inter', 'sans-serif'],
+      },
+      borderRadius: {
+        lg: '8px',
+        xl: '12px',
+      },
+      boxShadow: {
+        card: '0 1px 3px rgba(32, 27, 22, 0.05), 0 1px 2px rgba(32, 27, 22, 0.03)',
+        cardHover: '0 4px 12px rgba(32, 27, 22, 0.08), 0 2px 4px rgba(32, 27, 22, 0.04)',
       }
     },
   },
