@@ -7,27 +7,13 @@
     background-color: #F5F1E6;
     color: #201B16;
     font-family: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
   }
 
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1.2;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
     color: #201B16;
-  }
-
-  h2 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    line-height: 1.3;
-    color: #201B16;
-  }
-
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.4;
-    color: #201B16;
+    letter-spacing: -0.015em;
   }
 }
 
@@ -42,10 +28,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #E5DFCF;
+  background: #D5CCA8;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6B6255;
+  background: #7A2A2A;
 }

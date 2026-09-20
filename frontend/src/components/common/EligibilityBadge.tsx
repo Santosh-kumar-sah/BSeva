@@ -1,36 +1,47 @@
 import React from 'react';
-import { CheckCircle2, AlertCircle, HelpCircle } from 'lucide-react';
+import { CheckCircle2, AlertCircle, XCircle } from 'lucide-react';
 
 interface EligibilityBadgeProps {
-  status: 'POTENTIALLY_ELIGIBLE' | 'LIKELY_NOT_ELIGIBLE' | 'NEEDS_VERIFICATION' | string;
+  status: 'POTENTIALLY_ELIGIBLE' | 'LIKELY_NOT_ELIGIBLE' | 'NEEDS_VERIFICATION';
   score?: number;
-  language?: 'hi' | 'en';
+  language?: string;
+  showScore?: boolean;
 }
 
-export default function EligibilityBadge({ status, score, language = 'hi' }: EligibilityBadgeProps) {
-  if (status === 'POTENTIALLY_ELIGIBLE') {
-    return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-success/10 text-success border border-success/30">
-        <CheckCircle2 className="w-4 h-4 text-success" strokeWidth={1.5} />
-        <span>{language === 'hi' ? 'संभावित रूप से पात्र' : 'Potentially Eligible'}</span>
-        {score !== undefined && <span className="font-semibold">({score}%)</span>}
-      </span>
-    );
-  }
+export default function EligibilityBadge({ 
+  status, 
+  score, 
+  language = 'hi', 
+  showScore = true 
+}: EligibilityBadgeProps) {
+  switch (status) {
+    case 'POTENTIALLY_ELIGIBLE':
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-success/15 text-success border border-success/30 shadow-xs">
+          <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} />
+          <span>{language === 'hi' ? 'योग्य' : 'Eligible'}</span>
+          {showScore && score !== undefined && <span className="ml-0.5 opacity-90">({score}%)</span>}
+        </span>
+      );
 
-  if (status === 'NEEDS_VERIFICATION') {
-    return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-accent-gold/10 text-accent-gold border border-accent-gold/30">
-        <HelpCircle className="w-4 h-4 text-accent-gold" strokeWidth={1.5} />
-        <span>{language === 'hi' ? 'सत्यापन आवश्यक' : 'Needs Verification'}</span>
-      </span>
-    );
-  }
+    case 'NEEDS_VERIFICATION':
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-accent-gold/20 text-[#855B17] border border-accent-gold/40 shadow-xs">
+          <AlertCircle className="w-3.5 h-3.5" strokeWidth={2} />
+          <span>{language === 'hi' ? 'सत्यापन आवश्यक' : 'Verify'}</span>
+          {showScore && score !== undefined && <span className="ml-0.5 opacity-90">({score}%)</span>}
+        </span>
+      );
 
-  return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-text-secondary/10 text-text-secondary border border-border">
-      <AlertCircle className="w-4 h-4 text-text-secondary" strokeWidth={1.5} />
-      <span>{language === 'hi' ? 'शर्तें पूरी नहीं हैं' : 'Not Eligible'}</span>
-    </span>
-  );
+    case 'LIKELY_NOT_ELIGIBLE':
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 border border-gray-300">
+          <XCircle className="w-3.5 h-3.5" strokeWidth={2} />
+          <span>{language === 'hi' ? 'अपात्र' : 'Not Eligible'}</span>
+        </span>
+      );
+
+    default:
+      return null;
+  }
 }

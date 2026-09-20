@@ -139,14 +139,14 @@ export default function DocumentReadinessPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
         <div>
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-brand uppercase tracking-wider mb-1">
-            <FileCheck className="w-4 h-4" strokeWidth={1.5} />
+          <div className="flex items-center gap-1.5 text-xs font-bold text-brand uppercase tracking-wider mb-1">
+            <FileCheck className="w-4 h-4" strokeWidth={2} />
             <span>{language === 'hi' ? 'दस्तावेज सत्यापन तैयारी' : 'Document Readiness Audit'}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-heading text-text-primary tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-text-primary tracking-tight">
             {language === 'hi' ? 'आवेदन पूर्व दस्तावेज चेकलिस्ट' : 'Pre-Application Document Auditor'}
           </h1>
-          <p className="text-sm text-text-secondary mt-1">
+          <p className="text-sm text-text-secondary mt-0.5">
             {language === 'hi'
               ? 'सरकारी पोर्टल (ServicePlus, PMS, DBT) पर आवेदन से पूर्व सभी प्रमाण पत्रों की स्थिति जांचें।'
               : 'Audit certificate validity and bank DBT mapping to prevent application rejections.'}
@@ -155,21 +155,21 @@ export default function DocumentReadinessPage() {
 
         <button
           onClick={handlePrint}
-          className="px-3 py-1.5 bg-surface hover:bg-background text-text-primary border border-border rounded-lg text-xs font-medium flex items-center gap-1.5 self-start sm:self-center transition-colors shadow-sm"
+          className="px-3.5 py-2 bg-white hover:bg-background text-text-primary border border-border rounded-lg text-xs font-semibold flex items-center gap-1.5 self-start sm:self-center transition-colors shadow-xs cursor-pointer"
         >
-          <Printer className="w-4 h-4 text-text-secondary" strokeWidth={1.5} />
+          <Printer className="w-4 h-4 text-brand" strokeWidth={2} />
           <span>{language === 'hi' ? 'प्रिंट / PDF' : 'Print / Save PDF'}</span>
         </button>
       </div>
 
       {/* Readiness Score Card */}
-      <div className="bg-surface rounded-xl p-6 border border-border shadow-card flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="bg-white rounded-xl p-6 border border-border shadow-card flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="space-y-2 text-center md:text-left">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-medium bg-success/10 text-success border border-success/20">
-            <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.5} />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-success/15 text-success border border-success/30 shadow-xs">
+            <ShieldCheck className="w-4 h-4" strokeWidth={2} />
             <span>{readinessPercent >= 80 ? (language === 'hi' ? 'आवेदन हेतु तैयार' : 'Application Ready') : (language === 'hi' ? 'कुछ दस्तावेज शेष' : 'Action Required')}</span>
           </div>
-          <h2 className="text-xl font-bold font-heading text-text-primary">
+          <h2 className="text-xl sm:text-2xl font-extrabold font-heading text-text-primary">
             {language === 'hi' ? `आपकी दस्तावेज तैयारी: ${readinessPercent}%` : `Your Document Readiness: ${readinessPercent}%`}
           </h2>
           <p className="text-xs text-text-secondary">
@@ -181,11 +181,11 @@ export default function DocumentReadinessPage() {
 
         {/* Progress Bar */}
         <div className="w-full md:w-64 space-y-2">
-          <div className="flex items-center justify-between text-xs font-semibold text-text-secondary">
+          <div className="flex items-center justify-between text-xs font-bold">
             <span className="text-success">{readyCount} Ready</span>
             <span className="text-brand">{totalMandatory - readyCount} Pending</span>
           </div>
-          <div className="w-full bg-background rounded-full h-2.5 overflow-hidden border border-border">
+          <div className="w-full bg-background rounded-full h-3 overflow-hidden border border-border p-0.5">
             <div
               className={`h-full rounded-full transition-all duration-300 ${
                 readinessPercent >= 80 ? 'bg-success' : 'bg-brand'
@@ -198,17 +198,17 @@ export default function DocumentReadinessPage() {
 
       {/* Official RTPS Notice Banner */}
       <div className="bg-hero-bg border border-border rounded-xl p-4 flex items-start gap-3 text-xs text-text-primary">
-        <Building2 className="w-4 h-4 text-brand shrink-0 mt-0.5" strokeWidth={1.5} />
+        <Building2 className="w-5 h-5 text-brand shrink-0 mt-0.5" strokeWidth={2} />
         <div className="space-y-0.5 leading-relaxed">
-          <span className="font-semibold block text-text-primary">
+          <span className="font-bold block text-text-primary">
             {language === 'hi' ? 'बिहार लोक सेवाओं का अधिकार (RTPS Bihar):' : 'Bihar Right to Public Services (RTPS):'}
           </span>
           <p className="text-text-secondary">
             {language === 'hi'
               ? 'आय, जाति, और निवास प्रमाण पत्र सीधे बिहार सरकार के आधिकारिक पोर्टल '
               : 'Income, Caste, and Domicile certificates are issued digitally on '}
-            <a href="https://serviceonline.bihar.gov.in" target="_blank" rel="noopener noreferrer" className="font-medium text-brand hover:underline inline-flex items-center gap-0.5">
-              ServicePlus Bihar <ExternalLink className="w-3 h-3" strokeWidth={1.5} />
+            <a href="https://serviceonline.bihar.gov.in" target="_blank" rel="noopener noreferrer" className="font-bold text-brand hover:underline inline-flex items-center gap-0.5">
+              ServicePlus Bihar <ExternalLink className="w-3 h-3" strokeWidth={2} />
             </a>
             {language === 'hi' ? ' पर निःशुल्क ऑनलाइन बनाए जाते हैं।' : ' free of charge with QR verification.'}
           </p>
@@ -217,7 +217,7 @@ export default function DocumentReadinessPage() {
 
       {/* Interactive Document Checklist */}
       <div className="space-y-3">
-        <h2 className="text-base font-semibold font-heading text-text-primary">
+        <h2 className="text-base font-bold font-heading text-text-primary">
           {language === 'hi' ? 'दस्तावेजों की विस्तृत सूची' : 'Document Audit Checklist'}
         </h2>
 
@@ -227,10 +227,10 @@ export default function DocumentReadinessPage() {
             return (
               <div
                 key={doc.id}
-                className={`p-4 rounded-xl border transition-colors shadow-card ${
+                className={`p-4 rounded-xl border transition-all shadow-card ${
                   isChecked
-                    ? 'bg-surface border-success/30'
-                    : 'bg-surface border-border hover:border-brand/40'
+                    ? 'bg-white border-success/40'
+                    : 'bg-white border-border hover:border-brand/40'
                 }`}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -244,28 +244,28 @@ export default function DocumentReadinessPage() {
                         ? 'bg-success border-success text-white'
                         : 'border-border bg-background hover:border-brand'
                     }`}>
-                      {isChecked && <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} />}
+                      {isChecked && <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2.5} />}
                     </div>
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className={`text-sm font-semibold ${isChecked ? 'text-text-primary line-through opacity-75' : 'text-text-primary'}`}>
+                        <h3 className={`text-sm font-bold ${isChecked ? 'text-text-primary line-through opacity-75' : 'text-text-primary'}`}>
                           {language === 'hi' ? doc.name_hi : doc.name_en}
                         </h3>
-                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                           doc.importance === 'MANDATORY' 
-                            ? 'bg-brand/10 text-brand border border-brand/20' 
+                            ? 'bg-brand/10 text-brand border border-brand/25' 
                             : 'bg-background text-text-secondary border border-border'
                         }`}>
                           {doc.importance}
                         </span>
                       </div>
 
-                      <p className="text-xs text-text-secondary mt-1">
-                        <span className="font-medium">{language === 'hi' ? doc.validityNotice_hi : doc.validityNotice_en}</span>
+                      <p className="text-xs text-text-secondary mt-1 font-medium">
+                        ⏱️ {language === 'hi' ? doc.validityNotice_hi : doc.validityNotice_en}
                       </p>
 
-                      <p className="text-xs text-text-secondary/80 mt-0.5">
-                        <span className="italic">{language === 'hi' ? doc.howToGet_hi : doc.howToGet_en}</span>
+                      <p className="text-xs text-text-secondary/80 mt-0.5 italic">
+                        📍 {language === 'hi' ? doc.howToGet_hi : doc.howToGet_en}
                       </p>
                     </div>
                   </button>
@@ -275,10 +275,10 @@ export default function DocumentReadinessPage() {
                       href={doc.rtpsServiceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-2.5 py-1 bg-background hover:bg-hero-bg text-brand rounded-lg text-xs font-medium shrink-0 flex items-center gap-1 border border-border transition-colors"
+                      className="px-3 py-1.5 bg-brand hover:bg-brand-dark text-white rounded-lg text-xs font-bold shrink-0 flex items-center gap-1 shadow-xs transition-colors"
                     >
                       <span>{language === 'hi' ? 'आवेदन करें' : 'Apply'}</span>
-                      <ExternalLink className="w-3 h-3" strokeWidth={1.5} />
+                      <ExternalLink className="w-3 h-3" strokeWidth={2} />
                     </a>
                   )}
                 </div>
@@ -289,12 +289,12 @@ export default function DocumentReadinessPage() {
       </div>
 
       {/* Next Step Action Card */}
-      <div className="bg-surface rounded-xl p-6 border border-border shadow-card flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-hero-bg rounded-xl p-6 border border-border shadow-card flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="space-y-1 text-center sm:text-left">
           <h3 className="text-base font-bold font-heading text-text-primary">
             {language === 'hi' ? 'दस्तावेज तैयार हैं? अपनी पात्रता जांचें' : 'All Documents Ready?'}
           </h3>
-          <p className="text-xs text-text-secondary">
+          <p className="text-xs text-text-secondary font-medium">
             {language === 'hi'
               ? 'अब अपनी योग्यता अनुसार उपयुक्त योजनाओं का चयन करें और सीधे आधिकारिक पोर्टल पर आवेदन करें।'
               : 'Proceed to find matched schemes and complete your online application.'}
@@ -303,10 +303,10 @@ export default function DocumentReadinessPage() {
 
         <Link
           to="/eligibility"
-          className="px-4 py-2 bg-brand hover:bg-brand-dark text-white rounded-lg font-medium text-xs shadow-sm transition-colors shrink-0 flex items-center gap-1.5"
+          className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-white rounded-lg font-bold text-xs shadow-md transition-all shrink-0 flex items-center gap-1.5 cursor-pointer active:scale-98"
         >
           <span>{language === 'hi' ? 'पात्रता जांचें' : 'Check Eligibility'}</span>
-          <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
+          <ArrowRight className="w-4 h-4" strokeWidth={2} />
         </Link>
       </div>
 
